@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -13,13 +17,10 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="569.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+
+<AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TabPane layoutY="16.0" prefHeight="544.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
         <tabs>
@@ -27,41 +28,43 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <Button fx:id="btn_print11" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Extraer con IA" />
+                        <Button fx:id="btn_reserve_print" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Extraer con IA" />
                         <Label layoutX="64.0" layoutY="56.0" text="Frase" />
                         <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-                        <TextField fx:id="txt_found_id11" layoutX="117.0" layoutY="130.0" />
-                        <Button fx:id="btn_save11" layoutX="472.0" layoutY="308.0" mnemonicParsing="false" text="Reservar" />
-                        <Button fx:id="btn_delete11" layoutX="471.0" layoutY="432.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Cancelar" />
+                        <TextField fx:id="txt_reserve_activity" layoutX="117.0" layoutY="130.0" />
+                        <Button fx:id="btn_reserve_confirm" layoutX="472.0" layoutY="308.0" mnemonicParsing="false" text="Reservar" />
+                        <Button fx:id="btn_reserve_cancel" layoutX="471.0" layoutY="432.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Cancelar" />
                         <Button fx:id="btn_clear11" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
                         <Label layoutX="48.0" layoutY="134.0" text="Actividad" />
                         <Label layoutX="331.0" layoutY="134.0" text="Fecha" />
-                        <Label layoutX="210.0" layoutY="14.0" text="Nueva reserva" />
-                        <TextArea layoutX="137.0" layoutY="36.0" prefHeight="55.0" prefWidth="295.0" />
-                        <DatePicker layoutX="378.0" layoutY="130.0" />
-                        <Button fx:id="btn_delete111" layoutX="471.0" layoutY="474.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Imprimir" />
-                        <Spinner layoutX="150.0" layoutY="166.0" />
+                        <Label layoutX="210.0" layoutY="5.0" text="Nueva reserva" />
+                        <TextArea fx:id="txt_reserve_prompt" layoutX="137.0" layoutY="28.0" prefHeight="55.0" prefWidth="295.0" />
+                        <DatePicker fx:id="dt" layoutX="378.0" layoutY="130.0" />
+                        <Button fx:id="btn_reserve_delete" layoutX="471.0" layoutY="474.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Imprimir" />
+                        <Spinner fx:id="spn_reserve_hour_start" layoutX="150.0" layoutY="166.0" />
                         <Label layoutX="48.0" layoutY="170.0" text="Hora de inicio" />
-                        <Spinner layoutX="414.0" layoutY="166.0" />
+                        <Spinner fx:id="spn_reserve_hour_end" layoutX="414.0" layoutY="166.0" />
                         <Label layoutX="332.0" layoutY="170.0" text="Hora de fin" />
-                        <Label layoutX="48.0" layoutY="219.0" text="Categorías requeridas" />
+                        <Label layoutX="27.0" layoutY="226.0" text="Categorías requeridas" />
                         <StackPane layoutX="28.0" layoutY="254.0" prefHeight="108.0" prefWidth="439.0">
                            <children>
-                              <TableView prefHeight="162.0" prefWidth="355.0">
+                              <TableView fx:id="tbl_reserve_categories" prefHeight="162.0" prefWidth="355.0">
                                 <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn prefWidth="75.0" text="C2" />
+                                  <TableColumn prefWidth="75.0" text="categoria" />
                                 </columns>
                               </TableView>
                            </children>
                         </StackPane>
                         <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0">
                            <children>
-                              <TableView prefHeight="162.0" prefWidth="355.0">
+                              <TableView fx:id="tbl_reserve_current" prefHeight="162.0" prefWidth="472.0">
                                  <columns>
                                     <TableColumn prefWidth="75.0" text="id" />
                                     <TableColumn prefWidth="75.0" text="actividad" />
                                     <TableColumn prefWidth="75.0" text="fecha" />
+                                    <TableColumn prefWidth="75.0" text="horario" />
+                                    <TableColumn prefWidth="75.0" text="recursos" />
+                                    <TableColumn prefWidth="75.0" text="estado" />
                                  </columns>
                               </TableView>
                            </children>
@@ -82,21 +85,6 @@
                         <TextField fx:id="txt_user_name" layoutX="154.0" layoutY="87.0" />
                         <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" />
                         <Label layoutX="94.0" layoutY="91.0" text="Nombre" />
-                        <ScrollPane fx:id="scrl_pane_list" layoutX="54.0" layoutY="289.0" prefHeight="101.0" prefWidth="470.0">
-                          <content>
-                              <GridPane fx:id="pane_grid_list" prefHeight="210.0" prefWidth="455.0">
-                                <columnConstraints>
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                              </GridPane>
-                          </content>
-                        </ScrollPane>
                         <Label layoutX="226.0" layoutY="156.0" text="Funcionario encontrado" />
                         <TextField fx:id="txt_found_id" layoutX="202.0" layoutY="185.0" />
                         <TextField fx:id="txt_found_name" layoutX="202.0" layoutY="222.0" />
@@ -107,6 +95,13 @@
                         <Label layoutX="138.0" layoutY="184.0" text="ID" />
                         <Label layoutX="138.0" layoutY="219.0" text="Nombre" />
                         <Label layoutX="138.0" layoutY="258.0" text="Telefono" />
+                        <TableView fx:id="tbl_reserve_current1" layoutX="53.0" layoutY="326.0" prefHeight="162.0" prefWidth="472.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="id" />
+                              <TableColumn prefWidth="75.0" text="nombre" />
+                              <TableColumn prefWidth="75.0" text="telefono" />
+                           </columns>
+                        </TableView>
                      </children>
                   </AnchorPane>
             </content>
@@ -120,21 +115,7 @@
                         <Label layoutX="94.0" layoutY="56.0" text="Descripción" />
                         <TextField fx:id="txt_id" layoutX="184.0" layoutY="52.0" />
                         <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" />
-                        <ScrollPane fx:id="scrl_pane_user_list1" layoutX="54.0" layoutY="289.0" prefHeight="101.0" prefWidth="470.0">
-                           <content>
-                              <GridPane fx:id="pane_grid_user_list1" prefHeight="210.0" prefWidth="455.0">
-                                 <columnConstraints>
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                                 </columnConstraints>
-                                 <rowConstraints>
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                 </rowConstraints>
-                              </GridPane>
-                           </content>
-                        </ScrollPane>
+                        <ScrollPane fx:id="scrl_pane_user_list1" layoutX="54.0" layoutY="289.0" prefHeight="101.0" prefWidth="470.0" />
                         <Label layoutX="226.0" layoutY="156.0" text="Categoría encontrada" />
                         <TextField fx:id="txt_found_id1" layoutX="202.0" layoutY="185.0" />
                         <TextField fx:id="txt_found_name1" layoutX="202.0" layoutY="222.0" />
@@ -147,7 +128,93 @@
                   </AnchorPane>
                </content>
             </Tab>
+            <Tab text="Calendarizacion">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
+                        <Button fx:id="btn_clear111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
+                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
+                        <DatePicker fx:id="dt_week" layoutX="93.0" layoutY="38.0" />
+                        <StackPane fx:id="stck_calendar" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
+                           <children>
+                              <TableView fx:id="tbl_calendar" prefHeight="245.0" prefWidth="518.0">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" text="categoria" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </StackPane>
+                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
+                        <Button fx:id="btn_week_search" layoutX="321.0" layoutY="38.0" mnemonicParsing="false" text="Buscar" />
+                        <Button fx:id="btn_week_print" layoutX="402.0" layoutY="38.0" mnemonicParsing="false" text="Imprimir" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Estadisticas">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
+                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
+                        <DatePicker fx:id="dt_calendar1" layoutX="93.0" layoutY="38.0" />
+                        <StackPane fx:id="stck_calendar1" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="348.0">
+                           <children>
+                              <BarChart fx:id="graph_resources">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </BarChart>
+                           </children>
+                        </StackPane>
+                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
+                        <ChoiceBox fx:id="chb_calendar_category1" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
+                        <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
+                        <Button fx:id="btn_calendar_search1" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
+                        <Button fx:id="btn_calendar_print1" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
+                        <BarChart fx:id="graph_activities" layoutX="321.0" layoutY="101.0">
+                           <xAxis>
+                              <CategoryAxis side="BOTTOM" />
+                           </xAxis>
+                           <yAxis>
+                              <NumberAxis side="LEFT" />
+                           </yAxis>
+                        </BarChart>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Actividades">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
+                        <Button fx:id="btn_clear11111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
+                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
+                        <DatePicker fx:id="dt_calendar11" layoutX="93.0" layoutY="38.0" />
+                        <StackPane fx:id="stck_calendar11" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
+                           <children>
+                              <TableView fx:id="tbl_activities1" prefHeight="245.0" prefWidth="518.0">
+                                 <columns>
+                                    <TableColumn prefWidth="75.0" text="categoria" />
+                                 </columns>
+                              </TableView>
+                           </children>
+                        </StackPane>
+                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
+                        <ChoiceBox fx:id="chb_calendar_category11" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
+                        <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
+                        <Button fx:id="btn_calendar_search11" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
+                        <Button fx:id="btn_calendar_print11" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
         </tabs>
       </TabPane>
    </children>
-</Pane>
+</AnchorPane>
