@@ -6,6 +6,7 @@ public class User {
     private String id;
     private String name;
     private String password;
+    private String phoneNumber;
     private Boolean isAdmin;
     private ReservationList reservationList;
 
