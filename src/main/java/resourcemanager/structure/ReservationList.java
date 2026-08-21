@@ -4,7 +4,7 @@ import resourcemanager.Reservation;
 
 import java.util.ArrayList;
 
-public class ReservationList {
+public class ReservationList extends ObjectList {
     private ArrayList<Reservation> reservations;
 
     public ReservationList(){

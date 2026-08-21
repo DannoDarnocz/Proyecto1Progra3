@@ -17,4 +17,8 @@ public class User {
         this.isAdmin=isAdmin;
         reservationList=new ReservationList();
     }
+
+    public String getId(){
+        return id;
+    }
 }

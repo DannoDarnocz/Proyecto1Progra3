@@ -176,7 +176,7 @@
                         <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
                         <Button fx:id="btn_calendar_search1" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
                         <Button fx:id="btn_calendar_print1" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
-                        <BarChart fx:id="graph_activities" layoutX="321.0" layoutY="101.0">
+                        <BarChart fx:id="graph_activities" layoutX="349.0" layoutY="152.0" prefHeight="326.0" prefWidth="423.0">
                            <xAxis>
                               <CategoryAxis side="BOTTOM" />
                            </xAxis>
