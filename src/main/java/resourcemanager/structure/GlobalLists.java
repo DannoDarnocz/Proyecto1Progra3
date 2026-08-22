@@ -1,5 +1,4 @@
 package resourcemanager.structure;
-
 import resourcemanager.Category;
 import resourcemanager.Reservation;
 import resourcemanager.Resource;
@@ -7,14 +6,15 @@ import resourcemanager.User;
 import resourcemanager.filehandler.*;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 public class GlobalLists {
     private static GlobalLists instance;
-    private List<User> userList;
-    private List<Resource> resourceList;
-    private List<Reservation> reservationList;
-    private List<Category> categoryList;
+    public static UserList userList = new UserList();
+    public static ResourceList resourceList = new ResourceList();
+    public static ReservationList reservationList = new ReservationList();
+    public static CategoryList categoryList = new CategoryList();
 
     private GlobalLists() {
         // singleotn
@@ -28,23 +28,11 @@ public class GlobalLists {
     }
 
     public void loadAll() throws Exception {
-        categoryList = LoadXML.loadList(new File("categories.xml"), Category.class);
-        resourceList = LoadXML.loadList(new File("resources.xml"), Resource.class);
-        reservationList = LoadXML.loadList(new File("reservations.xml"), Reservation.class);
-        userList = LoadXML.loadList(new File("users.xml"), User.class);
+        userList = LoadXML.load("/resourcemanager/data/users.xml", UserList.class);
     }
 
-    public User searchUser(String targetId){
-        for(User user : userList) {
-            if(user.getId().equals(targetId)) {
-                return user;
-            }
-        }
-        return null;
-    }
-
-    public List<User> getUsers() { return userList; }
-    public List<Resource> getResources() { return resourceList; }
-    public List<Reservation> getReservations() { return reservationList; }
-    public List<Category> getCategories() { return categoryList; }
+    public UserList getUsers() { return userList; }
+    public ResourceList getResources() { return resourceList; }
+    public ReservationList getReservations() { return reservationList; }
+    public CategoryList getCategories() { return categoryList; }
 }
