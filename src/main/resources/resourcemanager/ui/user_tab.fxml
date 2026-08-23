@@ -10,24 +10,24 @@
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.UserTabController">
    <children>
-      <Button fx:id="btn_user_search" layoutX="344.0" layoutY="65.0" mnemonicParsing="false" text="Buscar" />
-      <Button fx:id="btn_user_print" layoutX="439.0" layoutY="65.0" mnemonicParsing="false" text="Imprimir" />
-      <Label layoutX="94.0" layoutY="56.0" text="ID" />
-      <TextField fx:id="txt_user_id" layoutX="154.0" layoutY="52.0" />
-      <TextField fx:id="txt_user_name" layoutX="154.0" layoutY="87.0" />
-      <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" />
-      <Label layoutX="94.0" layoutY="91.0" text="Nombre" />
-      <Label layoutX="226.0" layoutY="156.0" text="Funcionario encontrado" />
-      <TextField fx:id="txt_found_id" layoutX="202.0" layoutY="185.0" />
-      <TextField fx:id="txt_found_name" layoutX="202.0" layoutY="222.0" />
-      <TextField fx:id="txt_found_phone" layoutX="202.0" layoutY="254.0" />
-      <Button fx:id="btn_save" layoutX="413.0" layoutY="185.0" mnemonicParsing="false" text="Guardar" />
-      <Button fx:id="btn_delete" layoutX="413.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="61.0" text="Borrar" />
-      <Button fx:id="btn_clear" layoutX="413.0" layoutY="254.0" mnemonicParsing="false" text="Limpiar" />
-      <Label layoutX="138.0" layoutY="184.0" text="ID" />
-      <Label layoutX="138.0" layoutY="219.0" text="Nombre" />
-      <Label layoutX="138.0" layoutY="258.0" text="Telefono" />
-      <TableView fx:id="tbl_reserve_current1" layoutX="53.0" layoutY="326.0" prefHeight="162.0" prefWidth="472.0">
+      <Button fx:id="btn_user_search" layoutX="344.0" layoutY="65.0" mnemonicParsing="false" text="Buscar" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="206.0" />
+      <Button fx:id="btn_user_print" layoutX="439.0" layoutY="65.0" mnemonicParsing="false" text="Imprimir" AnchorPane.topAnchor="65.0" AnchorPane.rightAnchor="100.0" />
+      <Label layoutX="94.0" layoutY="56.0" text="ID" AnchorPane.topAnchor="56.0" AnchorPane.leftAnchor="94.0" />
+      <TextField fx:id="txt_user_id" layoutX="154.0" layoutY="52.0" AnchorPane.topAnchor="52.0" AnchorPane.leftAnchor="154.0" />
+      <TextField fx:id="txt_user_name" layoutX="154.0" layoutY="87.0" AnchorPane.topAnchor="87.0" AnchorPane.leftAnchor="154.0" />
+      <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.topAnchor="138.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="35.0" />
+      <Label layoutX="94.0" layoutY="91.0" text="Nombre" AnchorPane.topAnchor="91.0" AnchorPane.leftAnchor="94.0" />
+      <Label layoutX="226.0" layoutY="156.0" text="Funcionario encontrado" AnchorPane.topAnchor="156.0" AnchorPane.leftAnchor="226.0" />
+      <TextField fx:id="txt_found_id" layoutX="202.0" layoutY="185.0" AnchorPane.topAnchor="185.0" AnchorPane.leftAnchor="202.0" />
+      <TextField fx:id="txt_found_name" layoutX="202.0" layoutY="222.0" AnchorPane.topAnchor="222.0" AnchorPane.leftAnchor="202.0" />
+      <TextField fx:id="txt_found_phone" layoutX="202.0" layoutY="254.0" AnchorPane.topAnchor="254.0" AnchorPane.leftAnchor="202.0" />
+      <Button fx:id="btn_save" layoutX="413.0" layoutY="185.0" mnemonicParsing="false" text="Guardar" AnchorPane.topAnchor="185.0" AnchorPane.rightAnchor="126.0" />
+      <Button fx:id="btn_delete" layoutX="413.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="61.0" text="Borrar" AnchorPane.topAnchor="222.0" AnchorPane.rightAnchor="126.0" />
+      <Button fx:id="btn_clear" layoutX="413.0" layoutY="254.0" mnemonicParsing="false" text="Limpiar" AnchorPane.topAnchor="254.0" AnchorPane.rightAnchor="126.0" />
+      <Label layoutX="138.0" layoutY="184.0" text="ID" AnchorPane.topAnchor="184.0" AnchorPane.leftAnchor="138.0" />
+      <Label layoutX="138.0" layoutY="219.0" text="Nombre" AnchorPane.topAnchor="219.0" AnchorPane.leftAnchor="138.0" />
+      <Label layoutX="138.0" layoutY="258.0" text="Telefono" AnchorPane.topAnchor="258.0" AnchorPane.leftAnchor="138.0" />
+      <TableView fx:id="tbl_reserve_current1" layoutX="53.0" layoutY="326.0" prefHeight="162.0" prefWidth="472.0" AnchorPane.topAnchor="326.0" AnchorPane.leftAnchor="53.0" AnchorPane.rightAnchor="75.0" AnchorPane.bottomAnchor="25.0">
          <columns>
             <TableColumn prefWidth="75.0" text="id" />
             <TableColumn prefWidth="75.0" text="nombre" />

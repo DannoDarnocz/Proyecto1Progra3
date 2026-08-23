@@ -19,26 +19,26 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.MainController">
    <children>
-      <TabPane layoutY="16.0" prefHeight="544.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE">
-        <tabs>
+      <TabPane layoutY="16.0" prefHeight="544.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <tabs>
             <Tab text="Reservas">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="reservations_tab.fxml" />
+                        <fx:include source="reservations_tab.fxml" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
             </Tab>
-          <Tab text="Funcionarios">
+            <Tab text="Funcionarios">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="user_tab.fxml" />
+                        <fx:include source="user_tab.fxml" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
-          </Tab>
+            </Tab>
             <Tab text="Categorías">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="600.0">
@@ -95,12 +95,12 @@
                         <StackPane fx:id="stck_calendar1" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="348.0">
                            <children>
                               <BarChart fx:id="graph_resources">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
+                                 <xAxis>
+                                    <CategoryAxis side="BOTTOM" />
+                                 </xAxis>
+                                 <yAxis>
+                                    <NumberAxis side="LEFT" />
+                                 </yAxis>
                               </BarChart>
                            </children>
                         </StackPane>
@@ -147,7 +147,7 @@
                   </AnchorPane>
                </content>
             </Tab>
-        </tabs>
+         </tabs>
       </TabPane>
    </children>
 </AnchorPane>

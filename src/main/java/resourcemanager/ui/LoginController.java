@@ -21,6 +21,10 @@ import resourcemanager.structure.UserList;
 
 
 public class LoginController {
+
+    private static final double FIXED_WIDTH = 600;
+    private static final double FIXED_HEIGHT = 700;
+
     @FXML Button btn_login;
     @FXML TextField txt_user;
     @FXML
@@ -76,8 +80,12 @@ public class LoginController {
             Parent raiz = FXMLLoader.load(getClass().getResource(archivoFxml));
             // cambiar el escenario a la siguiente ventana
             Stage stage=(Stage)((Node)evento.getSource()).getScene().getWindow();
-            stage.setHeight(700);
             stage.getScene().setRoot(raiz); // devolver a la raiz al cerrarla
+            stage.setResizable(true);
+            stage.setWidth(FIXED_WIDTH);
+            stage.setHeight(FIXED_HEIGHT);
+            stage.setMinWidth(FIXED_WIDTH);
+            stage.setMinHeight(FIXED_HEIGHT);
         } catch (Exception e){
             e.printStackTrace(); // imprimir en consola el errorr
         }
