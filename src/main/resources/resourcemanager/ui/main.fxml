@@ -1,31 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
-<?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
 
 <AnchorPane xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.MainController">
    <children>
-      <TabPane layoutY="16.0" prefHeight="544.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TabPane layoutY="16.0" prefHeight="544.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <tabs>
             <Tab text="Reservas">
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="reservations_tab.fxml" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <fx:include source="reservations_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
@@ -34,7 +21,7 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <fx:include source="user_tab.fxml" AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                        <fx:include source="user_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
@@ -43,20 +30,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="600.0">
                      <children>
-                        <Button fx:id="btn_search1" layoutX="361.0" layoutY="52.0" mnemonicParsing="false" text="Buscar" />
-                        <Button fx:id="btn_print1" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Imprimir" />
-                        <Label layoutX="94.0" layoutY="56.0" text="Descripción" />
-                        <TextField fx:id="txt_id" layoutX="184.0" layoutY="52.0" />
-                        <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" />
-                        <ScrollPane fx:id="scrl_pane_user_list1" layoutX="54.0" layoutY="289.0" prefHeight="101.0" prefWidth="470.0" />
-                        <Label layoutX="226.0" layoutY="156.0" text="Categoría encontrada" />
-                        <TextField fx:id="txt_found_id1" layoutX="202.0" layoutY="185.0" />
-                        <TextField fx:id="txt_found_name1" layoutX="202.0" layoutY="222.0" />
-                        <Button fx:id="btn_save1" layoutX="413.0" layoutY="185.0" mnemonicParsing="false" text="Guardar" />
-                        <Button fx:id="btn_delete1" layoutX="413.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="61.0" text="Borrar" />
-                        <Button fx:id="btn_clear1" layoutX="413.0" layoutY="254.0" mnemonicParsing="false" text="Limpiar" />
-                        <Label layoutX="138.0" layoutY="184.0" text="ID" />
-                        <Label layoutX="113.0" layoutY="226.0" text="Descripción" />
+                        <fx:include source="category_tab.fxml" />
                      </children>
                   </AnchorPane>
                </content>
@@ -65,22 +39,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-                        <Button fx:id="btn_clear111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
-                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-                        <DatePicker fx:id="dt_week" layoutX="93.0" layoutY="38.0" />
-                        <StackPane fx:id="stck_calendar" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
-                           <children>
-                              <TableView fx:id="tbl_calendar" prefHeight="245.0" prefWidth="518.0">
-                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="categoria" />
-                                 </columns>
-                              </TableView>
-                           </children>
-                        </StackPane>
-                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-                        <Button fx:id="btn_week_search" layoutX="321.0" layoutY="38.0" mnemonicParsing="false" text="Buscar" />
-                        <Button fx:id="btn_week_print" layoutX="402.0" layoutY="38.0" mnemonicParsing="false" text="Imprimir" />
+                        <fx:include source="calendar_tab.fxml" />
                      </children>
                   </AnchorPane>
                </content>
@@ -89,34 +48,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-                        <DatePicker fx:id="dt_calendar1" layoutX="93.0" layoutY="38.0" />
-                        <StackPane fx:id="stck_calendar1" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="348.0">
-                           <children>
-                              <BarChart fx:id="graph_resources">
-                                 <xAxis>
-                                    <CategoryAxis side="BOTTOM" />
-                                 </xAxis>
-                                 <yAxis>
-                                    <NumberAxis side="LEFT" />
-                                 </yAxis>
-                              </BarChart>
-                           </children>
-                        </StackPane>
-                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-                        <ChoiceBox fx:id="chb_calendar_category1" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
-                        <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
-                        <Button fx:id="btn_calendar_search1" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
-                        <Button fx:id="btn_calendar_print1" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
-                        <BarChart fx:id="graph_activities" layoutX="349.0" layoutY="152.0" prefHeight="326.0" prefWidth="423.0">
-                           <xAxis>
-                              <CategoryAxis side="BOTTOM" />
-                           </xAxis>
-                           <yAxis>
-                              <NumberAxis side="LEFT" />
-                           </yAxis>
-                        </BarChart>
+                        <fx:include source="stats_tab.fxml" />
                      </children>
                   </AnchorPane>
                </content>
@@ -125,24 +57,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-                        <Button fx:id="btn_clear11111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
-                        <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-                        <DatePicker fx:id="dt_calendar11" layoutX="93.0" layoutY="38.0" />
-                        <StackPane fx:id="stck_calendar11" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
-                           <children>
-                              <TableView fx:id="tbl_activities1" prefHeight="245.0" prefWidth="518.0">
-                                 <columns>
-                                    <TableColumn prefWidth="75.0" text="categoria" />
-                                 </columns>
-                              </TableView>
-                           </children>
-                        </StackPane>
-                        <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-                        <ChoiceBox fx:id="chb_calendar_category11" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
-                        <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
-                        <Button fx:id="btn_calendar_search11" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
-                        <Button fx:id="btn_calendar_print11" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
+                        <fx:include source="activity_tab.fxml" />
                      </children>
                   </AnchorPane>
                </content>
