@@ -26,6 +26,7 @@ public class LoginController {
     private static final double FIXED_HEIGHT = 700;
 
     @FXML Button btn_login;
+    @FXML Button btn_change_pwd;
     @FXML TextField txt_user;
     @FXML
     PasswordField pwd_password;
@@ -55,9 +56,7 @@ public class LoginController {
     @FXML
     private void initialize(){
         // verificar inicio de sesión al darle al botón
-        java.lang.System.out.println(">>> initialize called, btn_login=" + btn_login);
         btn_login.setOnAction(event -> {
-            java.lang.System.out.println(">>> button clicked");
             String userInput = txt_user.getText().trim();
             String passwordInput = pwd_password.getText().trim();
 

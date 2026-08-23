@@ -14,8 +14,9 @@
             <Font size="28.0" />
          </font>
       </Label>
-      <Button fx:id="btn_login" layoutX="247.0" layoutY="287.0" mnemonicParsing="false" text="Iniciar sesión" />
+      <Button fx:id="btn_login" layoutX="204.0" layoutY="287.0" mnemonicParsing="false" text="Iniciar sesión" />
       <TextField fx:id="txt_user" layoutX="215.0" layoutY="168.0" promptText="ID de usuario" />
       <PasswordField fx:id="pwd_password" layoutX="215.0" layoutY="217.0" promptText="Contraseña" />
+      <Button fx:id="btn_change_pwd" layoutX="309.0" layoutY="287.0" mnemonicParsing="false" text="Cambiar clave" />
    </children>
 </Pane>
