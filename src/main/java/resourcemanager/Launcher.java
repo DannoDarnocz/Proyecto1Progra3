@@ -22,7 +22,7 @@ public class Launcher extends Application {
             throw new RuntimeException(e);
         }
 
-
+        java.lang.System.out.println(getClass().getResource("ui/login.fxml"));
         Parent raiz = FXMLLoader.load(getClass().getResource("ui/login.fxml")); // convertir codigo fxml obteniendolo de la clase del recurso especificado
         escenarioPrincipal.setTitle("Administrador de Recursos"); // ponerle titulo a la ventana
         escenarioPrincipal.setScene(new Scene(raiz,600,400)); // nueva escena del raiz

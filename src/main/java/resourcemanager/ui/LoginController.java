@@ -51,8 +51,10 @@ public class LoginController {
     @FXML
     private void initialize(){
         // verificar inicio de sesión al darle al botón
+        java.lang.System.out.println(">>> initialize called, btn_login=" + btn_login);
         btn_login.setOnAction(event -> {
-            String userInput = txt_user.getText().trim(); // eliminar espacios en blanco
+            java.lang.System.out.println(">>> button clicked");
+            String userInput = txt_user.getText().trim();
             String passwordInput = pwd_password.getText().trim();
 
             // todo: implementar verificacion de usuarios
@@ -60,11 +62,24 @@ public class LoginController {
             if(foundUser != null){
                 showAlert("Inicio de sesion correcto","Bienvenido", Alert.AlertType.CONFIRMATION);
                 // todo: arreglar esta porquería
-                Utilities.switchScreen(event, "/resourcemanager/ui/main.fxml");
+                cambiarPantalla(event, "/resourcemanager/ui/main.fxml");
             }
             else{
                 showAlert("Error","Usuario o contraseña incorrecto", Alert.AlertType.ERROR);
             }
         });
+    }
+
+    private void cambiarPantalla(ActionEvent evento, String archivoFxml){
+        try{
+            // cargar archivo pasado por parametro
+            Parent raiz = FXMLLoader.load(getClass().getResource(archivoFxml));
+            // cambiar el escenario a la siguiente ventana
+            Stage stage=(Stage)((Node)evento.getSource()).getScene().getWindow();
+            stage.setHeight(700);
+            stage.getScene().setRoot(raiz); // devolver a la raiz al cerrarla
+        } catch (Exception e){
+            e.printStackTrace(); // imprimir en consola el errorr
+        }
     }
 }
