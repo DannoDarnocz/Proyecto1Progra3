@@ -1,4 +1,4 @@
-package resourcemanager;
+package resourcemanager.model;
 
 public class Category {
     private String id;

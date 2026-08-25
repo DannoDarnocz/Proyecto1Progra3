@@ -4,18 +4,17 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 
-<AnchorPane fx:controller="resourcemanager.ui.StatsTabController"  minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="779.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.StatsTabController">
    <children>
       <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-      <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-      <DatePicker fx:id="dt_calendar1" layoutX="93.0" layoutY="38.0" />
+      <Label layoutX="46.0" layoutY="14.0" text="Fecha" />
+      <DatePicker fx:id="dt_resource_start" layoutX="39.0" layoutY="39.0" prefHeight="26.0" prefWidth="115.0" />
       <StackPane fx:id="stck_calendar1" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="348.0">
          <children>
             <BarChart fx:id="graph_resources">
@@ -29,10 +28,7 @@
          </children>
       </StackPane>
       <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-      <ChoiceBox fx:id="chb_calendar_category1" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
-      <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
-      <Button fx:id="btn_calendar_search1" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
-      <Button fx:id="btn_calendar_print1" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
+      <Button fx:id="btn_resource_search" layoutX="310.0" layoutY="39.0" mnemonicParsing="false" text="Buscar" />
       <BarChart fx:id="graph_activities" layoutX="349.0" layoutY="152.0" prefHeight="326.0" prefWidth="423.0">
          <xAxis>
             <CategoryAxis side="BOTTOM" />
@@ -41,5 +37,10 @@
             <NumberAxis side="LEFT" />
          </yAxis>
       </BarChart>
+      <DatePicker fx:id="dt_resource_end" layoutX="168.0" layoutY="39.0" prefHeight="26.0" prefWidth="131.0" />
+      <Label layoutX="410.0" layoutY="13.0" text="Fecha" />
+      <DatePicker fx:id="dt_week_start" layoutX="403.0" layoutY="38.0" prefHeight="26.0" prefWidth="115.0" />
+      <Button fx:id="btn_week_search" layoutX="674.0" layoutY="39.0" mnemonicParsing="false" text="Buscar" />
+      <DatePicker fx:id="dt_week_end" layoutX="533.0" layoutY="39.0" prefHeight="26.0" prefWidth="115.0" />
    </children>
 </AnchorPane>

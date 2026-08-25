@@ -1,7 +1,7 @@
 package resourcemanager.structure;
 
-import resourcemanager.Reservation;
-import resourcemanager.Resource;
+import resourcemanager.model.Reservation;
+import resourcemanager.model.Resource;
 
 import java.util.ArrayList;
 

@@ -7,15 +7,20 @@ import javafx.scene.Parent; // en algun momento se ocupa regresar al padre
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.stage.Stage; // necesitamos un escenario para correr
-import resourcemanager.ui.Utilities;
 
 // importar solo los elementos de la UI que se ocupa porque cualquier cosa lo que se importe
 // se compila de todas formas incluiso aunque no se utiliza
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import resourcemanager.User;
+import resourcemanager.filehandler.LoadXML;
+import resourcemanager.logic.Authenticate;
+import resourcemanager.model.User;
+import resourcemanager.model.dto.UserLogin;
+import resourcemanager.structure.CurrentSession;
 import resourcemanager.structure.GlobalLists;
 import resourcemanager.structure.UserList;
+
+import java.io.FileNotFoundException;
 
 // los label no cambian en esta pantalla asi que no hace falta importarlo, no genera eventos
 
@@ -31,6 +36,8 @@ public class LoginController {
     @FXML
     PasswordField pwd_password;
 
+    /// Esto ya no aplica
+    /*
     private User attemptLogin(String userId, String password){
         UserList users = GlobalLists.userList;
         User foundUser = users.findById(userId);
@@ -39,19 +46,8 @@ public class LoginController {
         // poner flag de que es admin de una vez
         adminLoggedIn = foundUser.getIsAdmin();
         return foundUser;
-    }
+    }*/
 
-    public static boolean adminLoggedIn = false;
-
-    private void showAlert(String title, String msg, Alert.AlertType type){
-        // configurar alerta
-        Alert loadingAlert = new Alert(type);
-        loadingAlert.setHeaderText(title);
-        loadingAlert.setContentText(msg);
-
-        // mostrarla
-        loadingAlert.show();
-    }
 
     @FXML
     private void initialize(){
@@ -60,19 +56,40 @@ public class LoginController {
             String userInput = txt_user.getText().trim();
             String passwordInput = pwd_password.getText().trim();
 
-            // todo: implementar verificacion de usuarios
-            User foundUser = attemptLogin(userInput, passwordInput);
-            if(foundUser != null){
-                showAlert("Inicio de sesion correcto","Bienvenido", Alert.AlertType.CONFIRMATION);
-                // todo: arreglar esta porquería
-                cambiarPantalla(event, "/resourcemanager/ui/main.fxml");
+            if(userInput.isEmpty()||passwordInput.isEmpty()){
+                showAlert("Error","Debe llenar ambos campos", Alert.AlertType.ERROR);
             }
             else{
-                showAlert("Error","Usuario o contraseña incorrecto", Alert.AlertType.ERROR);
+                // datos correctos, construir DTO
+                UserLogin loginDTO = new UserLogin(userInput, passwordInput);
+
+                // enviarlo a capa logica y recibir el usuario encontrado (si hay) y todo sale bien
+                try{
+                    User foundUser = Authenticate.authenticate(loginDTO);
+
+                    if(foundUser != null){
+                        // almacenar usuario en clase singleton para que las otras pantallas lo conozcan
+                        CurrentSession currentSession = CurrentSession.getInstance();
+                        currentSession.setLoggedUser(foundUser);
+
+                        cambiarPantalla(event, "/resourcemanager/ui/main.fxml");
+                    }
+                    else{
+                        showAlert("Error","Usuario o contraseña incorrecto", Alert.AlertType.ERROR);
+                    }
+                }catch (FileNotFoundException e) {
+                    showAlert("Error","No se ha encontrado la base de datos de usuarios", Alert.AlertType.ERROR);
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
+
         });
     }
 
+    // todo: mover esto a otra clase
     private void cambiarPantalla(ActionEvent evento, String archivoFxml){
         try{
             // cargar archivo pasado por parametro
@@ -89,4 +106,14 @@ public class LoginController {
             e.printStackTrace(); // imprimir en consola el errorr
         }
     }
+    private void showAlert(String title, String msg, Alert.AlertType type){
+        // configurar alerta
+        Alert loadingAlert = new Alert(type);
+        loadingAlert.setHeaderText(title);
+        loadingAlert.setContentText(msg);
+
+        // mostrarla
+        loadingAlert.show();
+    }
+
 }

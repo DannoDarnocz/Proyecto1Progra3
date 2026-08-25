@@ -1,13 +1,5 @@
 package resourcemanager.structure;
-import resourcemanager.Category;
-import resourcemanager.Reservation;
-import resourcemanager.Resource;
-import resourcemanager.User;
 import resourcemanager.filehandler.*;
-
-import java.io.File;
-import java.net.URL;
-import java.util.List;
 
 public class GlobalLists {
     private static GlobalLists instance;

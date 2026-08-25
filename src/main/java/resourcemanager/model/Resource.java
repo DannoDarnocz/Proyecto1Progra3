@@ -1,4 +1,5 @@
-package resourcemanager;
+package resourcemanager.model;
+
 
 public class Resource {
     private String id;

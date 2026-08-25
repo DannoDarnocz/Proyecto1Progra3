@@ -1,9 +1,8 @@
 package resourcemanager.structure;
 
-import resourcemanager.Category;
-import resourcemanager.Reservation;
+import resourcemanager.model.Category;
 
 import java.util.ArrayList;
 
-public class CategoryList  extends ArrayList<Reservation>{
+public class CategoryList  extends ArrayList<Category>{
 }

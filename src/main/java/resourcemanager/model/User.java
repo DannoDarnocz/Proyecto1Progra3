@@ -1,4 +1,4 @@
-package resourcemanager;
+package resourcemanager.model;
 
 import resourcemanager.structure.ReservationList;
 
