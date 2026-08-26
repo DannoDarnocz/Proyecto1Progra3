@@ -30,7 +30,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="600.0">
                      <children>
-                        <fx:include source="category_tab.fxml" />
+                        <fx:include source="category_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
@@ -39,7 +39,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <fx:include source="calendar_tab.fxml" />
+                        <fx:include source="calendar_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
@@ -48,7 +48,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <fx:include source="stats_tab.fxml" />
+                        <fx:include source="stats_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>
@@ -57,7 +57,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
                      <children>
-                        <fx:include source="activity_tab.fxml" />
+                        <fx:include source="activity_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
                </content>

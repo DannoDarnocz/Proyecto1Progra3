@@ -12,11 +12,11 @@
 
 <AnchorPane fx:controller="resourcemanager.ui.ActivityTabController" minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-      <Button fx:id="btn_clear11111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
-      <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-      <DatePicker fx:id="dt_calendar11" layoutX="93.0" layoutY="38.0" />
-      <StackPane fx:id="stck_calendar11" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
+      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.topAnchor="114.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="39.0" />
+      <Button fx:id="btn_clear11111" layoutX="483.0" layoutY="66.0" mnemonicParsing="false" text="Limpiar" AnchorPane.topAnchor="66.0" AnchorPane.leftAnchor="483.0" />
+      <Label layoutX="46.0" layoutY="42.0" text="Fecha" AnchorPane.topAnchor="42.0" AnchorPane.leftAnchor="46.0" />
+      <DatePicker fx:id="dt_calendar11" layoutX="93.0" layoutY="38.0" AnchorPane.topAnchor="38.0" AnchorPane.leftAnchor="93.0" />
+      <StackPane fx:id="stck_calendar11" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0" AnchorPane.topAnchor="152.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.0" AnchorPane.bottomAnchor="33.0">
          <children>
             <TableView fx:id="tbl_activities1" prefHeight="245.0" prefWidth="518.0">
                <columns>
@@ -25,10 +25,10 @@
             </TableView>
          </children>
       </StackPane>
-      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-      <ChoiceBox fx:id="chb_calendar_category11" layoutX="117.0" layoutY="75.0" prefWidth="150.0" />
-      <Label layoutX="46.0" layoutY="79.0" text="Categoria" />
-      <Button fx:id="btn_calendar_search11" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" />
-      <Button fx:id="btn_calendar_print11" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" />
+      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.topAnchor="391.0" AnchorPane.leftAnchor="28.0" />
+      <ChoiceBox fx:id="chb_calendar_category11" layoutX="117.0" layoutY="75.0" prefWidth="150.0" AnchorPane.topAnchor="75.0" AnchorPane.leftAnchor="117.0" />
+      <Label layoutX="46.0" layoutY="79.0" text="Categoria" AnchorPane.topAnchor="79.0" AnchorPane.leftAnchor="46.0" />
+      <Button fx:id="btn_calendar_search11" layoutX="321.0" layoutY="66.0" mnemonicParsing="false" text="Buscar" AnchorPane.topAnchor="66.0" AnchorPane.leftAnchor="321.0" />
+      <Button fx:id="btn_calendar_print11" layoutX="402.0" layoutY="66.0" mnemonicParsing="false" text="Imprimir" AnchorPane.topAnchor="66.0" AnchorPane.leftAnchor="402.0" />
    </children>
 </AnchorPane>

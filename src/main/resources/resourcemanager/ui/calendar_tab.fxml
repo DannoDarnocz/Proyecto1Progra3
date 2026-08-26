@@ -11,11 +11,11 @@
 
 <AnchorPane fx:controller="resourcemanager.ui.CalendarTabController"  minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" />
-      <Button fx:id="btn_clear111" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" />
-      <Label layoutX="46.0" layoutY="42.0" text="Fecha" />
-      <DatePicker fx:id="dt_week" layoutX="93.0" layoutY="38.0" />
-      <StackPane fx:id="stck_calendar" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0">
+      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.topAnchor="114.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="39.0" />
+      <Button fx:id="btn_clear111" layoutX="483.0" layoutY="38.0" mnemonicParsing="false" text="Limpiar" AnchorPane.topAnchor="38.0" AnchorPane.leftAnchor="483.0" />
+      <Label layoutX="46.0" layoutY="42.0" text="Fecha" AnchorPane.topAnchor="42.0" AnchorPane.leftAnchor="46.0" />
+      <DatePicker fx:id="dt_week" layoutX="93.0" layoutY="38.0" AnchorPane.topAnchor="38.0" AnchorPane.leftAnchor="93.0" />
+      <StackPane fx:id="stck_calendar" layoutX="29.0" layoutY="152.0" prefHeight="326.0" prefWidth="542.0" AnchorPane.topAnchor="152.0" AnchorPane.leftAnchor="29.0" AnchorPane.rightAnchor="29.0" AnchorPane.bottomAnchor="33.0">
          <children>
             <TableView fx:id="tbl_calendar" prefHeight="245.0" prefWidth="518.0">
                <columns>
@@ -24,8 +24,8 @@
             </TableView>
          </children>
       </StackPane>
-      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" />
-      <Button fx:id="btn_week_search" layoutX="321.0" layoutY="38.0" mnemonicParsing="false" text="Buscar" />
-      <Button fx:id="btn_week_print" layoutX="402.0" layoutY="38.0" mnemonicParsing="false" text="Imprimir" />
+      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.topAnchor="391.0" AnchorPane.leftAnchor="28.0" />
+      <Button fx:id="btn_week_search" layoutX="321.0" layoutY="38.0" mnemonicParsing="false" text="Buscar" AnchorPane.topAnchor="38.0" AnchorPane.leftAnchor="321.0" />
+      <Button fx:id="btn_week_print" layoutX="402.0" layoutY="38.0" mnemonicParsing="false" text="Imprimir" AnchorPane.topAnchor="38.0" AnchorPane.leftAnchor="402.0" />
    </children>
 </AnchorPane>

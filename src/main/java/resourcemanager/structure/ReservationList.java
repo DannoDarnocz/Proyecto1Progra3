@@ -1,6 +1,6 @@
 package resourcemanager.structure;
 
-import resourcemanager.Reservation;
+import resourcemanager.model.Reservation;
 
 import java.sql.Array;
 import java.util.ArrayList;
