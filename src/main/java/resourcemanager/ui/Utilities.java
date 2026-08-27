@@ -29,11 +29,12 @@ public class Utilities {
         }
     }
 
-    public static void showAlert(String title, String msg, Alert.AlertType type){
+    public static Alert showAlert(String title, String msg, Alert.AlertType type){
         Alert alert = new Alert(type);
         alert.setHeaderText(title);
         alert.setContentText(msg);
         alert.show();
+        return alert;
     }
 
 }

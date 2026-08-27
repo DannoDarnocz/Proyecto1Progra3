@@ -1,6 +1,8 @@
 package resourcemanager.model;
 
-import resourcemanager.structure.ReservationList;
+
+import javax.management.InstanceAlreadyExistsException;
+import java.util.ArrayList;
 
 public class User {
     private String id;
@@ -8,7 +10,7 @@ public class User {
     private String password;
     private String phoneNumber;
     private Boolean isAdmin;
-    private ReservationList reservationList;
+    private ArrayList<Reservation> reservationList;
 
     public User(){
         id="undefined";
@@ -16,7 +18,7 @@ public class User {
         password="123";
         phoneNumber="undefined";
         isAdmin=false;
-        reservationList = new ReservationList();
+        reservationList = new ArrayList<Reservation>();
     }
 
     public User(String id,String name,String password, Boolean isAdmin){
@@ -24,7 +26,7 @@ public class User {
         this.name=name;
         this.password=password;
         this.isAdmin=isAdmin;
-        reservationList=new ReservationList();
+        reservationList=new ArrayList<Reservation>();
     }
 
     public String getId() { return id; }
@@ -42,6 +44,16 @@ public class User {
     public Boolean getIsAdmin() { return isAdmin; }
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
 
-    public ReservationList getReservationList() { return reservationList; }
-    public void setReservationList(ReservationList reservationList) { this.reservationList = reservationList; }
+    public void addReservation(Reservation r) throws InstanceAlreadyExistsException{
+        if(reservationList.contains(r)){
+            throw new InstanceAlreadyExistsException();
+        }
+        reservationList.add(r); // automaticamente revisa si existe, sino no hace nada
+    }
+    public void removeReservation(Reservation r){
+        reservationList.remove(r); // automaticamente revisa si existe, sino no hace nada
+    }
+
+    public ArrayList<Reservation> getReservationList() { return reservationList; }
+    public void setReservationList(ArrayList<Reservation> reservationList) { this.reservationList = reservationList; }
 }

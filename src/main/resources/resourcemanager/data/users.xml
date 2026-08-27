@@ -1,27 +1,5 @@
 <users>
     <user>
-        <id>1</id>
-        <name>Pepito</name>
-        <password>123</password>
-        <phoneNumber>8485-1111</phoneNumber>
-        <isAdmin>true</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res9</id>
-                    <category>
-                        <id>cat1</id>
-                        <description>Electronics</description>
-                    </category>
-                    <description>Tostadora Gamer</description>
-                </resource>
-                <id>rsv6767</id>
-                <startDate>2026-01-10</startDate>
-                <endDate>2026-01-15</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
         <id>usr1</id>
         <name>Alice Johnson</name>
         <password>pass123</password>
@@ -29,17 +7,19 @@
         <isAdmin>true</isAdmin>
         <reservationList>
             <reservation>
-                <resource>
-                    <id>res1</id>
-                    <category>
-                        <id>cat1</id>
-                        <description>Electronics</description>
-                    </category>
-                    <description>Laptop - Dell XPS 15</description>
-                </resource>
+                <resources>
+                    <resource>
+                        <id>res1</id>
+                        <category>
+                            <id>cat1</id>
+                            <description>Electronics</description>
+                        </category>
+                        <description>Laptop - Dell XPS 15</description>
+                    </resource>
+                </resources>
                 <id>rsv1</id>
-                <startDate>2026-01-10</startDate>
-                <endDate>2026-01-15</endDate>
+                <startDate>2026-02-01T10:05:30</startDate>
+                <endDate>2026-02-01T10:06:00</endDate>
             </reservation>
         </reservationList>
     </user>
@@ -51,17 +31,27 @@
         <isAdmin>false</isAdmin>
         <reservationList>
             <reservation>
-                <resource>
-                    <id>res2</id>
-                    <category>
-                        <id>cat2</id>
-                        <description>Furniture</description>
-                    </category>
-                    <description>Office Desk</description>
-                </resource>
+                <resources>
+                    <resource>
+                        <id>res2</id>
+                        <category>
+                            <id>cat2</id>
+                            <description>Furniture</description>
+                        </category>
+                        <description>Office Desk</description>
+                    </resource>
+                    <resource>
+                        <id>res3</id>
+                        <category>
+                            <id>cat3</id>
+                            <description>Vehicles</description>
+                        </category>
+                        <description>Toyota Corolla</description>
+                    </resource>
+                </resources>
                 <id>rsv2</id>
-                <startDate>2026-02-01</startDate>
-                <endDate>2026-02-05</endDate>
+                <startDate>2026-02-01T10:15:30</startDate>
+                <endDate>2026-02-01T10:16:00</endDate>
             </reservation>
         </reservationList>
     </user>
@@ -73,17 +63,19 @@
         <isAdmin>false</isAdmin>
         <reservationList>
             <reservation>
-                <resource>
-                    <id>res3</id>
-                    <category>
-                        <id>cat3</id>
-                        <description>Vehicles</description>
-                    </category>
-                    <description>Toyota Corolla</description>
-                </resource>
+                <resources>
+                    <resource>
+                        <id>res4</id>
+                        <category>
+                            <id>cat4</id>
+                            <description>Sports Equipment</description>
+                        </category>
+                        <description>Tennis Racket</description>
+                    </resource>
+                </resources>
                 <id>rsv3</id>
-                <startDate>2026-03-10</startDate>
-                <endDate>2026-03-12</endDate>
+                <startDate>2026-02-02T10:15:30</startDate>
+                <endDate>2026-02-02T10:16:00</endDate>
             </reservation>
         </reservationList>
     </user>
@@ -95,150 +87,29 @@
         <isAdmin>false</isAdmin>
         <reservationList>
             <reservation>
-                <resource>
-                    <id>res4</id>
-                    <category>
-                        <id>cat4</id>
-                        <description>Sports Equipment</description>
-                    </category>
-                    <description>Tennis Racket</description>
-                </resource>
+                <resources>
+                    <resource>
+                        <id>res5</id>
+                        <category>
+                            <id>cat5</id>
+                            <description>Books</description>
+                        </category>
+                        <description>Clean Code by Robert Martin</description>
+                    </resource>
+                    <resource>
+                        <id>res6</id>
+                        <category>
+                            <id>cat6</id>
+                            <description>Tools</description>
+                        </category>
+                        <description>Cordless Drill</description>
+                    </resource>
+                </resources>
                 <id>rsv4</id>
-                <startDate>2026-04-05</startDate>
-                <endDate>2026-04-06</endDate>
+                <startDate>2026-02-06T10:15:30</startDate>
+                <endDate>2026-02-06T10:16:00</endDate>
             </reservation>
         </reservationList>
     </user>
-    <user>
-        <id>usr5</id>
-        <name>Elena Cruz</name>
-        <password>pass567</password>
-        <phoneNumber>8888-1115</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res5</id>
-                    <category>
-                        <id>cat5</id>
-                        <description>Books</description>
-                    </category>
-                    <description>Clean Code by Robert Martin</description>
-                </resource>
-                <id>rsv5</id>
-                <startDate>2026-05-01</startDate>
-                <endDate>2026-05-20</endDate>
-            </reservation>
-            <reservation>
-                <resource>
-                    <id>res6</id>
-                    <category>
-                        <id>cat6</id>
-                        <description>Tools</description>
-                    </category>
-                    <description>Cordless Drill</description>
-                </resource>
-                <id>rsv6</id>
-                <startDate>2026-06-15</startDate>
-                <endDate>2026-06-16</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr6</id>
-        <name>Franklin Ortiz</name>
-        <password>pass678</password>
-        <phoneNumber>8888-1116</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res7</id>
-                    <category>
-                        <id>cat7</id>
-                        <description>Kitchen Appliances</description>
-                    </category>
-                    <description>Microwave Oven</description>
-                </resource>
-                <id>rsv7</id>
-                <startDate>2026-07-01</startDate>
-                <endDate>2026-07-03</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr7</id>
-        <name>Gabriela Solis</name>
-        <password>pass789</password>
-        <phoneNumber>8888-1117</phoneNumber>
-        <isAdmin>true</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res8</id>
-                    <category>
-                        <id>cat8</id>
-                        <description>Office Supplies</description>
-                    </category>
-                    <description>Stapler Set</description>
-                </resource>
-                <id>rsv8</id>
-                <startDate>2026-08-10</startDate>
-                <endDate>2026-08-11</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr8</id>
-        <name>Hector Ramirez</name>
-        <password>pass890</password>
-        <phoneNumber>8888-1118</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res9</id>
-                    <category>
-                        <id>cat9</id>
-                        <description>Camping Gear</description>
-                    </category>
-                    <description>4-Person Tent</description>
-                </resource>
-                <id>rsv9</id>
-                <startDate>2026-09-01</startDate>
-                <endDate>2026-09-07</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr9</id>
-        <name>Isabel Vargas</name>
-        <password>pass901</password>
-        <phoneNumber>8888-1119</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resource>
-                    <id>res10</id>
-                    <category>
-                        <id>cat10</id>
-                        <description>Musical Instruments</description>
-                    </category>
-                    <description>Acoustic Guitar</description>
-                </resource>
-                <id>rsv10</id>
-                <startDate>2026-10-01</startDate>
-                <endDate>2026-10-02</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr10</id>
-        <name>Javier Mora</name>
-        <password>pass012</password>
-        <phoneNumber>8888-1120</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-        </reservationList>
-    </user>
+
 </users>

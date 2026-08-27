@@ -17,6 +17,18 @@ public class Resource {
         this.description="undefined";
     }
 
+    @Override
+    // esto es para que al buscar un resource en la ArrayList con "contains", sirva porque si no están
+    // en el mismo espacio de memoria entonces se trata como otro elemento diferente
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        // si es de otra clase o el otro es null entonces no
+        if (other == null || getClass() != other.getClass()) return false;
+        // casting para revisar id
+        Resource otherResource = (Resource) other;
+        return this.id.equals(otherResource.getId());
+    }
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

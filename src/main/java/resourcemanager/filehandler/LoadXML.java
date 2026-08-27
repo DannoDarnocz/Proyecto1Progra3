@@ -1,4 +1,5 @@
 package resourcemanager.filehandler;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
@@ -7,9 +8,11 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 public class LoadXML {
 
@@ -25,6 +28,13 @@ public class LoadXML {
             throw new FileNotFoundException("Resource not found: " + resourcePath);
         }
         return mapper.readValue(is, classType);
+    }
+
+    public static <T> ArrayList<T> loadList(String resourcePath, Class<T> itemClass) throws Exception {
+        InputStream is =  LoadXML.class.getResourceAsStream(resourcePath);
+        JavaType listType = mapper.getTypeFactory()
+                .constructCollectionType(List.class, itemClass);
+        return mapper.readValue(is, listType);
     }
 
     // buscar el usuario que corresponda con el ID

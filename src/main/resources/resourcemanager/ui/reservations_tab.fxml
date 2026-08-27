@@ -14,25 +14,25 @@
 
 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.ReservationTabController">
    <children>
-      <Button fx:id="btn_reserve_print" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Extraer con IA" AnchorPane.topAnchor="52.0" AnchorPane.rightAnchor="67.0" />
-      <Label layoutX="64.0" layoutY="56.0" text="Frase" AnchorPane.topAnchor="56.0" AnchorPane.leftAnchor="64.0" />
-      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.topAnchor="114.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="39.0" />
-      <TextField fx:id="txt_reserve_activity" layoutX="117.0" layoutY="130.0" AnchorPane.topAnchor="130.0" AnchorPane.leftAnchor="117.0" />
-      <Button fx:id="btn_reserve_confirm" layoutX="472.0" layoutY="308.0" mnemonicParsing="false" text="Reservar" AnchorPane.topAnchor="308.0" AnchorPane.rightAnchor="67.0" />
+      <Button fx:id="btn_reserve_ai" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Extraer con IA" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="52.0" />
+      <Label layoutX="64.0" layoutY="56.0" text="Frase" AnchorPane.leftAnchor="64.0" AnchorPane.topAnchor="56.0" />
+      <Separator layoutX="39.0" layoutY="114.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.leftAnchor="39.0" AnchorPane.rightAnchor="39.0" AnchorPane.topAnchor="114.0" />
+      <TextField fx:id="txt_reserve_activity" layoutX="117.0" layoutY="130.0" AnchorPane.leftAnchor="117.0" AnchorPane.topAnchor="130.0" />
+      <Button fx:id="btn_reserve_confirm" layoutX="472.0" layoutY="308.0" mnemonicParsing="false" text="Reservar" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="308.0" />
       <Button fx:id="btn_reserve_cancel" layoutX="471.0" layoutY="432.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Cancelar" AnchorPane.bottomAnchor="53.0" AnchorPane.rightAnchor="27.0" />
-      <Button fx:id="btn_clear11" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" AnchorPane.topAnchor="266.0" AnchorPane.rightAnchor="67.0" />
-      <Label layoutX="48.0" layoutY="134.0" text="Actividad" AnchorPane.topAnchor="134.0" AnchorPane.leftAnchor="48.0" />
-      <Label layoutX="331.0" layoutY="134.0" text="Fecha" AnchorPane.topAnchor="134.0" AnchorPane.leftAnchor="331.0" />
-      <Label layoutX="210.0" layoutY="5.0" text="Nueva reserva" AnchorPane.topAnchor="5.0" AnchorPane.leftAnchor="210.0" />
-      <TextArea fx:id="txt_reserve_prompt" layoutX="137.0" layoutY="28.0" prefHeight="55.0" prefWidth="295.0" AnchorPane.topAnchor="28.0" AnchorPane.leftAnchor="137.0" AnchorPane.rightAnchor="168.0" />
-      <DatePicker fx:id="dt" layoutX="378.0" layoutY="130.0" AnchorPane.topAnchor="130.0" AnchorPane.leftAnchor="378.0" />
+      <Button fx:id="btn_clear11" layoutX="347.0" layoutY="266.0" mnemonicParsing="false" text="Limpiar" AnchorPane.rightAnchor="67.0" AnchorPane.topAnchor="266.0" />
+      <Label layoutX="48.0" layoutY="134.0" text="Actividad" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="134.0" />
+      <Label layoutX="331.0" layoutY="134.0" text="Fecha" AnchorPane.leftAnchor="331.0" AnchorPane.topAnchor="134.0" />
+      <Label layoutX="210.0" layoutY="5.0" text="Nueva reserva" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="5.0" />
+      <TextArea fx:id="txt_reserve_prompt" layoutX="137.0" layoutY="28.0" prefHeight="55.0" prefWidth="295.0" AnchorPane.leftAnchor="137.0" AnchorPane.rightAnchor="168.0" AnchorPane.topAnchor="28.0" />
+      <DatePicker fx:id="dt" layoutX="378.0" layoutY="130.0" AnchorPane.leftAnchor="378.0" AnchorPane.topAnchor="130.0" />
       <Button fx:id="btn_reserve_delete" layoutX="471.0" layoutY="474.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="102.0" text="Imprimir" AnchorPane.bottomAnchor="11.0" AnchorPane.rightAnchor="27.0" />
-      <Spinner fx:id="spn_reserve_hour_start" layoutX="150.0" layoutY="166.0" AnchorPane.topAnchor="166.0" AnchorPane.leftAnchor="150.0" />
-      <Label layoutX="48.0" layoutY="170.0" text="Hora de inicio" AnchorPane.topAnchor="170.0" AnchorPane.leftAnchor="48.0" />
-      <Spinner fx:id="spn_reserve_hour_end" layoutX="414.0" layoutY="166.0" AnchorPane.topAnchor="166.0" AnchorPane.leftAnchor="414.0" />
-      <Label layoutX="332.0" layoutY="170.0" text="Hora de fin" AnchorPane.topAnchor="170.0" AnchorPane.leftAnchor="332.0" />
-      <Label layoutX="27.0" layoutY="226.0" text="Categorías requeridas" AnchorPane.topAnchor="226.0" AnchorPane.leftAnchor="27.0" />
-      <StackPane layoutX="28.0" layoutY="254.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.topAnchor="254.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0">
+      <Spinner fx:id="spn_reserve_hour_start" layoutX="150.0" layoutY="166.0" AnchorPane.leftAnchor="150.0" AnchorPane.topAnchor="166.0" />
+      <Label layoutX="48.0" layoutY="170.0" text="Hora de inicio" AnchorPane.leftAnchor="48.0" AnchorPane.topAnchor="170.0" />
+      <Spinner fx:id="spn_reserve_hour_end" layoutX="414.0" layoutY="166.0" AnchorPane.leftAnchor="414.0" AnchorPane.topAnchor="166.0" />
+      <Label layoutX="332.0" layoutY="170.0" text="Hora de fin" AnchorPane.leftAnchor="332.0" AnchorPane.topAnchor="170.0" />
+      <Label layoutX="27.0" layoutY="226.0" text="Categorías requeridas" AnchorPane.leftAnchor="27.0" AnchorPane.topAnchor="226.0" />
+      <StackPane layoutX="28.0" layoutY="254.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0" AnchorPane.topAnchor="254.0">
          <children>
             <TableView fx:id="tbl_reserve_categories" prefHeight="162.0" prefWidth="355.0">
                <columns>
@@ -41,20 +41,11 @@
             </TableView>
          </children>
       </StackPane>
-      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.topAnchor="391.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0" AnchorPane.bottomAnchor="12.0">
+      <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0" AnchorPane.topAnchor="391.0">
          <children>
-            <TableView fx:id="tbl_reserve_current" prefHeight="162.0" prefWidth="472.0">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="id" />
-                  <TableColumn prefWidth="75.0" text="actividad" />
-                  <TableColumn prefWidth="75.0" text="fecha" />
-                  <TableColumn prefWidth="75.0" text="horario" />
-                  <TableColumn prefWidth="75.0" text="recursos" />
-                  <TableColumn prefWidth="75.0" text="estado" />
-               </columns>
-            </TableView>
+            <TableView fx:id="tbl_reserve_current" prefHeight="162.0" prefWidth="472.0" />
          </children>
       </StackPane>
-      <Label layoutX="34.0" layoutY="373.0" text="Mis reservas" AnchorPane.topAnchor="373.0" AnchorPane.leftAnchor="34.0" />
+      <Label layoutX="34.0" layoutY="373.0" text="Mis reservas" AnchorPane.leftAnchor="34.0" AnchorPane.topAnchor="373.0" />
    </children>
 </AnchorPane>
