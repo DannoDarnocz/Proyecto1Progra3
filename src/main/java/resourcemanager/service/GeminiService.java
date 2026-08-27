@@ -23,8 +23,18 @@ public class GeminiService {
     }
     public String enviarMensaje(String textoUsuario)
             throws IOException, InterruptedException {
+        String instruccion = """
+    Responde exclusivamente con un JSON válido, sin texto adicional, con este formato:
+    {
+      "nombre": "string",
+      "ciudad": "string",
+      "categoria": "una de: Electronica, Ropa, Comida",
+      "filaTablaId": "id numérico de la fila a seleccionar o null"
+    }
+    Petición del usuario: """ + textoUsuario;
+
         String url = ENDPOINT_BASE + MODELO + ":generateContent";
-        JSONObject parte = new JSONObject().put("text", textoUsuario);
+        JSONObject parte = new JSONObject().put("text", instruccion);
         JSONObject contenido = new JSONObject()
                 .put("parts", new JSONArray().put(parte));
         JSONObject cuerpo = new JSONObject()

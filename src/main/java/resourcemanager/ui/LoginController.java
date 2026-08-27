@@ -1,12 +1,7 @@
 package resourcemanager.ui;
-import javafx.event.ActionEvent; // para los movimientos de las pantallas (click, drag, drop...)
 import javafx.fxml.FXML; // poder entender fxml
-import javafx.fxml.FXMLLoader; // para poder moverse a otra pantalla
-import javafx.scene.Node; // como en grafos de estructuras, es un árbol
-import javafx.scene.Parent; // en algun momento se ocupa regresar al padre
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
-import javafx.stage.Stage; // necesitamos un escenario para correr
 
 // importar solo los elementos de la UI que se ocupa porque cualquier cosa lo que se importe
 // se compila de todas formas incluiso aunque no se utiliza
@@ -18,15 +13,11 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
-import resourcemanager.filehandler.LoadXML;
 import resourcemanager.logic.Authenticate;
 import resourcemanager.logic.PasswordManager;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLogin;
 import resourcemanager.structure.CurrentSession;
-import resourcemanager.structure.GlobalLists;
-import resourcemanager.structure.UserList;
-import resourcemanager.logic.PasswordManager;
 
 import java.io.FileNotFoundException;
 import java.util.Optional;
@@ -125,7 +116,10 @@ public class LoginController {
             Optional<String> nuevaPassword = pedirNuevaContrasena();
             if(nuevaPassword.isEmpty()) return; // canceló o no coincidían
 
-            PasswordManager.updatePassword(userInput,nuevaPassword.get());
+            // crear dto para la nueva contraseña (el user queda igual obviamente)
+            UserLogin newUserLogin = new UserLogin(userInput,nuevaPassword.get());
+
+            PasswordManager.updatePassword(newUserLogin);
 
             Utilities.showAlert("Exito","Contraseña actualizada correctamente", Alert.AlertType.INFORMATION);
             pwd_password.clear();

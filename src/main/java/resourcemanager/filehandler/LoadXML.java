@@ -1,5 +1,6 @@
 package resourcemanager.filehandler;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -8,9 +9,9 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 public class LoadXML {
-    private static final String USERS_PATH = "/resourcemanager/data/users.xml";
 
     private static final XmlMapper mapper = new XmlMapper();
     static {
@@ -18,18 +19,18 @@ public class LoadXML {
         mapper.registerModule(new JavaTimeModule());
     }
     // loader para xml genéricos
-    public static <T> T load(String resourcePath, Class<T> clazz) throws Exception {
+    public static <T> T loadAll(String resourcePath, Class<T> classType) throws Exception {
         InputStream is =  LoadXML.class.getResourceAsStream(resourcePath);
         if (is == null) {
             throw new FileNotFoundException("Resource not found: " + resourcePath);
         }
-        return mapper.readValue(is, clazz);
+        return mapper.readValue(is, classType);
     }
 
     // buscar el usuario que corresponda con el ID
     public static User findUserById(String id) throws Exception {
         // obtener inputstream del archivo en la ruta de usuario
-        try (InputStream is = LoadXML.class.getResourceAsStream(USERS_PATH)) {
+        try (InputStream is = LoadXML.class.getResourceAsStream(FileLocations.USERS_PATH)) {
             // no hay nadota
             if (is == null) throw new FileNotFoundException("Archivo de usuarios inexistente");
 

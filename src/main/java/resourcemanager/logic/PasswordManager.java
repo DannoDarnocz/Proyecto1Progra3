@@ -1,7 +1,8 @@
 package resourcemanager.logic;
 
+import resourcemanager.filehandler.LoadXML;
 import resourcemanager.model.User;
-import resourcemanager.structure.GlobalLists;
+import resourcemanager.model.dto.UserLogin;
 
 import java.util.regex.Pattern;
 
@@ -23,9 +24,13 @@ public class PasswordManager {
         return password != null && PASSWORD_POLICY.matcher(password).matches();
     }
 
-    public static void updatePassword(String userID, String newPassword) throws Exception{
-        GlobalLists.getInstance().updatePassword(userID,newPassword); //Actualiza la clave
-        User memUser = GlobalLists.userList.findById(userID); //Obtiene el usuario guardado en memoria
-        if (memUser!=null) {memUser.setPassword(newPassword);} //Si existe, actualiza clave
+    public static void updatePassword(UserLogin newUserLogin) throws Exception{
+        String id = newUserLogin.getUser();
+        String newPassword = newUserLogin.getPassword();
+
+        User memUser = LoadXML.findUserById(id); //Obtiene el usuario guardado en memoria
+        if (memUser!=null) {memUser.setPassword(newPassword);} //Si existe, actualiza clave de forma logica
+
+        
     }
 }

@@ -1,23 +1,5 @@
 package resourcemanager.ui;
 
-import javafx.fxml.FXML;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import resourcemanager.model.Category;
-import resourcemanager.model.Reservation;
-import resourcemanager.model.Resource;
-import resourcemanager.structure.GlobalLists;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 public class StatsTabController {
 /*
     // cantidad de recursos usados por categoría en un periodo
