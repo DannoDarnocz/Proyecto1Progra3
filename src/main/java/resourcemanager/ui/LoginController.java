@@ -59,7 +59,7 @@ public class LoginController {
                 // datos correctos, construir DTO
                 UserLogin loginDTO = new UserLogin(userInput, passwordInput);
 
-                // enviarlo a capa logica y recibir el usuario encontrado (si hay) y todo sale bien
+                // enviarlo a capa logica y recibir el usuario encontrado (si hay) y sale bien
                 try{
                     User foundUser = Authenticate.authenticate(loginDTO);
 
