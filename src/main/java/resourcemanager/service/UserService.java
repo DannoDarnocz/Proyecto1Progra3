@@ -1,5 +1,23 @@
 package resourcemanager.service;
 
-public class UserService {
+import resourcemanager.logic.UserLogic;
+import resourcemanager.model.Reservation;
+import resourcemanager.model.User;
+import resourcemanager.structure.CurrentSession;
 
+import java.util.ArrayList;
+
+public class UserService {
+    public static User getLoggedUser(){
+        CurrentSession session = CurrentSession.getInstance();
+        return session.getLoggedUser();
+    }
+
+    public static User findUserById(String id) throws Exception{
+        return UserLogic.findUserById(id);
+    }
+
+    public static ArrayList<Reservation> findReservationsForUser(User user){
+        return UserLogic.findReservationsForUser(user);
+    }
 }

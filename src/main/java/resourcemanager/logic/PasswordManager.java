@@ -1,12 +1,12 @@
 package resourcemanager.logic;
 
-import resourcemanager.filehandler.LoadXML;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLoginDTO;
 
 import java.util.regex.Pattern;
 
 public class PasswordManager {
+    // TODO: Mover esto, cambiar nombres ingles
     private static final Pattern PASSWORD_POLICY = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{8,}$"); //Reglas de negocio REGEX
     public static final String PASSWORD_POLICY_MSG = "Debe tener al menos 8 caracteres, e incluir mayúsculas, minúsculas, números y símbolos (ej: !@#$%).";
 
@@ -28,9 +28,9 @@ public class PasswordManager {
         String id = newUserLogin.getUser();
         String newPassword = newUserLogin.getPassword();
 
-        User memUser = LoadXML.findUserById(id); //Obtiene el usuario guardado en memoria
+        User memUser = UserLogic.findUserById(id); //Obtiene el usuario guardado en memoria
         if (memUser!=null) {memUser.setPassword(newPassword);} //Si existe, actualiza clave de forma logica
 
-        
+
     }
 }

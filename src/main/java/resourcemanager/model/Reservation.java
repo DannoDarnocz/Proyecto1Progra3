@@ -2,16 +2,17 @@ package resourcemanager.model;
 
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import resourcemanager.logic.ResourceLogic;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class Reservation {
-    // esto es para que al tomar el XML sepa que es un array. El tag de resources contiene multiples resource (o uno)
-    @JacksonXmlElementWrapper(useWrapping = true, localName = "resources")
-    @JacksonXmlProperty(localName = "resource")
-    private ArrayList<Resource> resources;
+    // dejarle saber al lector XML cómo manejar estas etiquetas
+    @JacksonXmlElementWrapper(useWrapping = true, localName = "resourceIdList")
+    @JacksonXmlProperty(localName = "resourceId")
+    private ArrayList<String> resourceIdList;
+
     private String id;
     private String description;
     private LocalDateTime startDate;
@@ -19,7 +20,7 @@ public class Reservation {
     private boolean isActive;
 
     public Reservation(){
-        this.resources=new ArrayList<Resource>();
+        this.resourceIdList =new ArrayList<String>();
         description = "undefined";
         this.id="undefined";
         startDate = null;
@@ -27,15 +28,15 @@ public class Reservation {
     }
 
     public Reservation(String id, String description, LocalDateTime startDate, LocalDateTime endDate){
-        this.resources=new ArrayList<Resource>();
+        this.resourceIdList =new ArrayList<String>();
         this.isActive=true; // siempre empeiza activa porque no tendria sentido que empiece inactiva
         this.id=id;
         this.description = description;
         this.startDate=startDate;
         this.endDate=endDate;
     }
-    public ArrayList<Resource> getResources() { return resources; }
-    public void setResource(ArrayList<Resource> resource) { this.resources = resource; }
+    public ArrayList<String> getResourceIdList() { return resourceIdList; }
+    public void setResourceIdList(ArrayList<String> resource) { this.resourceIdList = resource; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
@@ -63,7 +64,10 @@ public class Reservation {
     }
 
     // TODO: DTO o no?
-    public void addResource(Resource r){
-        this.resources.add(r);
+    public void addResource(String r) throws Exception {
+        // si no existe dentro de la lista de recursos y ademas sí existe el recurso
+        if(!resourceIdList.contains(r) && ResourceLogic.findResourceById(r)!=null){
+            this.resourceIdList.add(r);
+        }
     }
 }

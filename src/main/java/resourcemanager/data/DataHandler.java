@@ -1,21 +1,24 @@
-package resourcemanager.filehandler;
+package resourcemanager.data;
 
+import resourcemanager.logic.CategoryLogic;
 import resourcemanager.logic.ReservationLogic;
+import resourcemanager.logic.ResourceLogic;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.Resource;
 import resourcemanager.model.User;
 
+import javax.management.InstanceNotFoundException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class DataFinder  {
+public class DataHandler {
     public static ArrayList<Resource> findFreeResources() throws Exception {
         // cargar todos los recursos (la lista se modificará conforme se encuentren recursos ocupados)
 
-        ArrayList<Resource> leftoverResources= LoadXML.loadList(FileLocations.RESOURCES_PATH, Resource.class);
-        ArrayList<User> allUsers = LoadXML.loadList(FileLocations.USERS_PATH, User.class);
+        ArrayList<Resource> leftoverResources= LoadFromXML.loadResources();
+        ArrayList<User> allUsers = LoadFromXML.loadUsers();
 
         // recorrer todos los usuarios e ir viendo cuáles estan ocupados
         for(User currentUser : allUsers){
@@ -23,13 +26,12 @@ public class DataFinder  {
             // recorrer todas las id de reservaciones del usuario
             for(String currentReservationid : currentUserReservations){
                 // buscar reserva por id
-
                 Reservation currentReservation = ReservationLogic.findReservationById(currentReservationid);
-                if(currentReservation!=null && currentReservation.isActive()) {
-                    // solo cuenta si esta activa
-                    ArrayList<Resource> currentResources = currentReservation.getResources();
+                if(currentReservation!=null) {
+                    ArrayList<String> currentResourcesIDs = currentReservation.getResourceIdList();
                     // recorrer todos los recursos de la reservación
-                    for (Resource currentResource : currentResources) {
+                    for (String currentResourceID : currentResourcesIDs) {
+                        Resource currentResource = ResourceLogic.findResourceById(currentResourceID);
                         if (leftoverResources.contains(currentResource)) {
                             leftoverResources.remove(currentResource);
                         } else {
@@ -47,7 +49,7 @@ public class DataFinder  {
         ArrayList<Resource> freeResources = findFreeResources();
 
         for(Resource r : freeResources){
-            if(r.getCategory().equals(category)) return r;
+            if(r.getCategoryId().equals(category)) return r;
         }
         return null;
     }
@@ -61,7 +63,16 @@ public class DataFinder  {
         Set<Category> categoriesWithFreeResources = new LinkedHashSet<>();
 
         for(Resource currentResource : freeResouces){
-            categoriesWithFreeResources.add(currentResource.getCategory());
+            System.out.println("current resource category id " + currentResource.getCategoryId());
+            // obtener id de categoria actual y buscar la instancia
+            String categoryId = currentResource.getCategoryId();
+
+            Category currentCategory = CategoryLogic.findCategoryById(categoryId);
+
+            // si no se encuentra hay algo raro
+            if(currentCategory==null) throw new InstanceNotFoundException("La categoria con ese ID no existe");
+
+            categoriesWithFreeResources.add(currentCategory);
         }
 
         // convertir a arraylist creandola y copiando lo que tiene

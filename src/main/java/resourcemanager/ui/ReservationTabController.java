@@ -6,15 +6,15 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import resourcemanager.filehandler.DataFinder;
-import resourcemanager.logic.ReservationLogic;
-import resourcemanager.logic.UserLogic;
+import resourcemanager.data.DataHandler;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.ReservationDTO;
+import resourcemanager.service.CategoryService;
 import resourcemanager.service.GeminiService;
 import resourcemanager.service.ReservationService;
+import resourcemanager.service.UserService;
 import resourcemanager.structure.CurrentSession;
 
 import java.time.LocalDate;
@@ -53,9 +53,6 @@ public class ReservationTabController {
     private void initialize() {
         // --- INICIALIZAR TABLA DE CATEGORIAS
         try{
-            // buscar categorias con al menos 1 recurso dispónible
-            ArrayList<Category> availableCategories = DataFinder.findFreeCategories();
-
             // crear columnas
             TableColumn<Category, String> columnId =
                     new TableColumn<>("ID");
@@ -78,10 +75,13 @@ public class ReservationTabController {
             selectionModel.setSelectionMode(
                     SelectionMode.MULTIPLE);
 
+            // buscar categorias con al menos 1 recurso dispónible
+            ArrayList<Category> availableCategories = CategoryService.findFreeCategories();
+
+            System.out.print(availableCategories.size());
+
             // agregar cada categoría disponible
-            for(Category currentCategory : availableCategories){
-                tbl_reserve_categories.getItems().add(currentCategory);
-            }
+            tbl_reserve_categories.getItems().setAll(availableCategories);
 
         } catch (Exception e){
             e.printStackTrace();
@@ -116,22 +116,17 @@ public class ReservationTabController {
         tbl_reserve_current.getColumns().add(columnStart);
         tbl_reserve_current.getColumns().add(columnEnd);
 
-        // agregar reservaciones disponibles para el usuario que inició sesion
-        CurrentSession session = CurrentSession.getInstance();
-        User currentUser = session.getLoggedUser();
-        ArrayList<String> userReservationsId = currentUser.getReservationIdList();
-        ObservableList<Reservation> reservations = FXCollections.observableArrayList();
+        // obtener el usuario que inició sesión para obtener sus reservas
+        User currentUser = UserService.getLoggedUser();
+        ArrayList<Reservation> userReservations = UserService.findReservationsForUser(currentUser);
 
-        // agregar cada una buscando el ID
-        for(String currentId : userReservationsId){
-            try{
-                Reservation currentReservation = ReservationService.findReservationById(currentId);
-                tbl_reserve_current.getItems().add(currentReservation);
-                System.out.print(currentReservation.getId());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
+        // agregar todas las encontradas
+        if(userReservations!=null){
+            tbl_reserve_current.getItems().setAll(userReservations);
+        }
+        else{
+            System.out.println("NO HAY RESERVAS!!!!");
         }
 
         if(!currentUser.getIsAdmin()){

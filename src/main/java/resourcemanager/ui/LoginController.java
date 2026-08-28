@@ -1,4 +1,5 @@
 package resourcemanager.ui;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import javafx.fxml.FXML; // poder entender fxml
 import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
@@ -17,6 +18,7 @@ import resourcemanager.logic.Authenticate;
 import resourcemanager.logic.PasswordManager;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLoginDTO;
+import resourcemanager.service.AuthService;
 import resourcemanager.structure.CurrentSession;
 
 import java.io.FileNotFoundException;
@@ -59,21 +61,22 @@ public class LoginController {
                 // datos correctos, construir DTO
                 UserLoginDTO loginDTO = new UserLoginDTO(userInput, passwordInput);
 
-                // enviarlo a capa logica y recibir el usuario encontrado (si hay) y sale bien
+                // enviarlo a serivicio que envia a capa logica y recibir el usuario encontrado (si hay) y sale bien
                 try{
-                    User foundUser = Authenticate.authenticate(loginDTO);
+                    User foundUser = AuthService.authenticate(loginDTO);
 
+                    // si se encontró entonces pasar a la pantalla principal
                     if(foundUser != null){
-                        // almacenar usuario en clase singleton para que las otras pantallas lo conozcan
-                        CurrentSession currentSession = CurrentSession.getInstance();
-                        currentSession.setLoggedUser(foundUser);
-
                         Utilities.cambiarPantalla(event, "/resourcemanager/ui/main.fxml",750,700,true);
                     }
                     else{
                         Utilities.showAlert("Error","Usuario o contraseña incorrecto", Alert.AlertType.ERROR);
                     }
-                }catch (FileNotFoundException e) {
+                } catch (JsonMappingException e){
+                    Utilities.showAlert("Error","La base de datos posee un archivo formateado de forma incorrecta", Alert.AlertType.ERROR);
+                    e.printStackTrace();
+                }
+                catch (FileNotFoundException e) {
                     Utilities.showAlert("Error","No se ha encontrado la base de datos de usuarios", Alert.AlertType.ERROR);
                     e.printStackTrace();
                 } catch (Exception e) {

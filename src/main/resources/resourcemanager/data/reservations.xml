@@ -1,32 +1,19 @@
 <reservations>
     <reservation>
-        <resources>
-            <resource>
-                <id>res1</id>
-                <category>
-                    <id>cat1</id>
-                    <description>Electronics</description>
-                </category>
-                <description>Laptop - Dell XPS 15</description>
-            </resource>
-        </resources>
         <id>rsv1</id>
-        <startDate>2026-01-10</startDate>
-        <endDate>2026-01-15</endDate>
+        <startDate>2026-01-10T10:00:00</startDate>
+        <endDate>2026-01-15T11:00:00</endDate>
+        <resourceIdList>
+            <resourceId>res1</resourceId>
+        </resourceIdList>
     </reservation>
     <reservation>
-        <resources>
-            <resource>
-                <id>res2</id>
-                <category>
-                    <id>cat1</id>
-                    <description>Electronics</description>
-                </category>
-                <description>Laptop - Dell XPS 15</description>
-            </resource>
-        </resources>
-        <id>rsv1</id>
-        <startDate>2026-01-10</startDate>
-        <endDate>2026-01-15</endDate>
+        <id>rsv2</id>
+        <startDate>2026-01-10T12:00:00</startDate>
+        <endDate>2026-01-15T13:20:00</endDate>
+
+        <resourceIdList>
+            <resourceId>res2</resourceId>
+        </resourceIdList>
     </reservation>
 </reservations>

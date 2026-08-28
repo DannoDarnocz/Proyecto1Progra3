@@ -1,4 +1,4 @@
-package resourcemanager.filehandler;
+package resourcemanager.data;
 
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import java.io.File;

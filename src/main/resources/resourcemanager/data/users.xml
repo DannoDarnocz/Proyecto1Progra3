@@ -1,13 +1,13 @@
 <users>
     <user>
-        <id>pendejo</id>
+        <id>1</id>
         <name>Pepito Papaya</name>
         <password>123</password>
         <phoneNumber>8888-1111</phoneNumber>
         <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservationId>res1</reservationId>
-        </reservationList>
+        <reservationIdList>
+            <reservationId>rsv1</reservationId>
+        </reservationIdList>
     </user>
     <user>
         <id>admin</id>
@@ -15,8 +15,8 @@
         <password>123</password>
         <phoneNumber>8888-1111</phoneNumber>
         <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservationId>res2</reservationId>
-        </reservationList>
+        <reservationIdList>
+            <reservationId>rsv2</reservationId>
+        </reservationIdList>
     </user>
 </users>

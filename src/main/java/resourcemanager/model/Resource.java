@@ -1,14 +1,17 @@
 package resourcemanager.model;
 
 
+import resourcemanager.logic.CategoryLogic;
+import resourcemanager.logic.ResourceLogic;
+
 public class Resource {
     private String id;
-    private Category category;
+    private String categoryId;
     private String description;
 
-    public Resource(String id, Category category, String description){
+    public Resource(String id, String category, String description){
         this.id=id;
-        this.category = category;
+        this.categoryId = category;
         this.description=description;
     }
 
@@ -32,8 +35,13 @@ public class Resource {
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
-    public Category getCategory() { return category; }
-    public void setCategory(Category category) { this.category = category; }
+    public String getCategoryId() { return categoryId; }
+    public void setCategoryId(String category) throws Exception {
+
+        // verificar que exista
+        Category c = CategoryLogic.findCategoryById(categoryId);
+        if (c != null) this.categoryId = category;
+    }
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
