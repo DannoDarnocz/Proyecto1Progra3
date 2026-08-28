@@ -1,7 +1,11 @@
 package resourcemanager.model;
 
 
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
 import java.util.ArrayList;
 
 public class User {
@@ -10,7 +14,12 @@ public class User {
     private String password;
     private String phoneNumber;
     private Boolean isAdmin;
-    private ArrayList<Reservation> reservationList;
+    private ArrayList<String> reservationIdList; // guardar IDs de las reservas, no las reservas como tal para facilitar XML
+
+    // dejarle saber al lector XML cómo manejar estas etiquetas
+    @JacksonXmlElementWrapper(useWrapping = true, localName = "reservationList")
+    @JacksonXmlProperty(localName = "reservationId")
+    private ArrayList<String> reservationIds;
 
     public User(){
         id="undefined";
@@ -18,7 +27,7 @@ public class User {
         password="123";
         phoneNumber="undefined";
         isAdmin=false;
-        reservationList = new ArrayList<Reservation>();
+        reservationIdList = new ArrayList<String>();
     }
 
     public User(String id,String name,String password, Boolean isAdmin){
@@ -26,7 +35,7 @@ public class User {
         this.name=name;
         this.password=password;
         this.isAdmin=isAdmin;
-        reservationList=new ArrayList<Reservation>();
+        reservationIdList = new ArrayList<String>();
     }
 
     public String getId() { return id; }
@@ -44,16 +53,23 @@ public class User {
     public Boolean getIsAdmin() { return isAdmin; }
     public void setIsAdmin(Boolean isAdmin) { this.isAdmin = isAdmin; }
 
-    public void addReservation(Reservation r) throws InstanceAlreadyExistsException{
-        if(reservationList.contains(r)){
-            throw new InstanceAlreadyExistsException();
+    public ArrayList<String> getReservationIdList() { return reservationIdList; }
+    public void setReservationList(ArrayList<String> reservationList) { this.reservationIdList = reservationList; }
+
+    // TODO: DTO o no?
+    // se maneja la lista por fuera porque User es un DTO, no puede tener métodos específicos
+    public void addReservation(Reservation r) throws InstanceAlreadyExistsException {
+        if(reservationIdList.contains(r.getId())){
+            throw new InstanceAlreadyExistsException("Reserva a agregar ya esta asignada a usuario");
         }
-        reservationList.add(r); // automaticamente revisa si existe, sino no hace nada
-    }
-    public void removeReservation(Reservation r){
-        reservationList.remove(r); // automaticamente revisa si existe, sino no hace nada
+        reservationIdList.add(r.getId()); // automaticamente revisa si existe, sino no hace nada
     }
 
-    public ArrayList<Reservation> getReservationList() { return reservationList; }
-    public void setReservationList(ArrayList<Reservation> reservationList) { this.reservationList = reservationList; }
+    public void removeReservation(Reservation r) throws InstanceNotFoundException{
+        // solo la quita del usuario, NO la elimina del archivo xml de resources ni lo pone disactivo porque eso no le corresponde
+        if(reservationIdList.contains(r.getId())){
+            reservationIdList.remove(r.getId());
+        }
+        throw new InstanceNotFoundException("Reserva a borrar no existe");
+    }
 }

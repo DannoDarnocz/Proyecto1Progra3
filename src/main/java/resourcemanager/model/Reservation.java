@@ -16,6 +16,7 @@ public class Reservation {
     private String description;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private boolean isActive;
 
     public Reservation(){
         this.resources=new ArrayList<Resource>();
@@ -27,6 +28,7 @@ public class Reservation {
 
     public Reservation(String id, String description, LocalDateTime startDate, LocalDateTime endDate){
         this.resources=new ArrayList<Resource>();
+        this.isActive=true; // siempre empeiza activa porque no tendria sentido que empiece inactiva
         this.id=id;
         this.description = description;
         this.startDate=startDate;
@@ -46,12 +48,22 @@ public class Reservation {
 
     public LocalDateTime getEndDate() { return endDate; }
     public void setEndDate(LocalDateTime endDate) { this.endDate = endDate; }
-    public void addResource(Resource r){
-        resources.add(r);
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 
     @Override
     public String toString(){
         return "id: " + id+", description: "+ description+", startDate: "+startDate+", endDate: " +endDate;
+    }
+
+    // TODO: DTO o no?
+    public void addResource(Resource r){
+        this.resources.add(r);
     }
 }

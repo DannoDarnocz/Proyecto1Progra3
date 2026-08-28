@@ -7,16 +7,16 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import resourcemanager.filehandler.DataFinder;
+import resourcemanager.logic.ReservationLogic;
+import resourcemanager.logic.UserLogic;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
-import resourcemanager.model.Resource;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.ReservationDTO;
 import resourcemanager.service.GeminiService;
+import resourcemanager.service.ReservationService;
 import resourcemanager.structure.CurrentSession;
 
-import javax.management.InstanceAlreadyExistsException;
-import java.nio.file.FileAlreadyExistsException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -119,13 +119,23 @@ public class ReservationTabController {
         // agregar reservaciones disponibles para el usuario que inició sesion
         CurrentSession session = CurrentSession.getInstance();
         User currentUser = session.getLoggedUser();
-        ArrayList<Reservation> userReservations = currentUser.getReservationList();
+        ArrayList<String> userReservationsId = currentUser.getReservationIdList();
         ObservableList<Reservation> reservations = FXCollections.observableArrayList();
 
-        // agregar cada una
-        for(Reservation currentReservation : userReservations){
-            tbl_reserve_current.getItems().add(currentReservation);
-            System.out.print(currentReservation.getId());
+        // agregar cada una buscando el ID
+        for(String currentId : userReservationsId){
+            try{
+                Reservation currentReservation = ReservationService.findReservationById(currentId);
+                tbl_reserve_current.getItems().add(currentReservation);
+                System.out.print(currentReservation.getId());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        if(!currentUser.getIsAdmin()){
+            btn_reserve_cancel.setDisable(true); // solo admins pueden cancelar reservas
         }
 
         // cancelar reserva seleccionada
@@ -146,16 +156,25 @@ public class ReservationTabController {
             }
             else{
                 Reservation selected = selectedItems.getFirst(); // como es solo 1, deberia solo estar ahi
-                currentUser.removeReservation(selected);
+                Alert confirmation = Utilities.showAlert("Aviso","Desea borrar?", Alert.AlertType.CONFIRMATION);
 
-                Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
+                // TODO: IMPLEMENTAR CONFIRMACION (ahora igual lo borra, le vale verga)
+                try{
+                    currentUser.removeReservation(selected);
 
-                // todo: borrarlo del sistema en el xml
-                // quitar fila
-                tbl_reserve_current.getItems().remove(selected);
+                    Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
 
-                // quitar seleccion
-                selectionModel.clearSelection();
+                    // todo: borrarlo del sistema en el xml
+                    // quitar fila
+                    tbl_reserve_current.getItems().remove(selected);
+
+                    // quitar seleccion
+                    selectionModel.clearSelection();
+                } catch (Exception e) {
+                    Utilities.showAlert("Error","No se pudo eliminar", Alert.AlertType.ERROR);
+                    e.printStackTrace();
+                }
+
             }
 
         });
@@ -176,12 +195,10 @@ public class ReservationTabController {
                 ObservableList<Category> selectedItems =
                         selectionModel.getSelectedItems();
 
-
-                // TODO: MOVER A CAPA LOGICA
                 if (selectedItems.isEmpty()) {
                     Utilities.showAlert("Error", "Debe de seleccionar al menos una categoria", Alert.AlertType.ERROR);
                 } else {
-
+                    // obtener datos
                     String description = txt_reserve_activity.getText();
 
                     // obtener fecha
@@ -192,26 +209,24 @@ public class ReservationTabController {
                     LocalDateTime start = date.atStartOfDay();
                     LocalDateTime end = date.atStartOfDay();
 
-                    ReservationDTO r = new ReservationDTO("testy", description, start, end, );
-
-
-                    }
-
-                    // finalmente agregar reserva construida al usuario
-                    // TODO: AGREGAR A XML
+                    ReservationDTO dto = new ReservationDTO(description, start, end);
                     try {
-                        System.out.println(r);
-                        currentUser.addReservation(r);
-                    } catch (InstanceAlreadyExistsException e) {
+                        // lógica maneja la creación y asignación de recursos
+                        Reservation r = ReservationService.createReservationForUser(dto, selectedItems, currentUser);
+
+                        Utilities.showAlert("Confirmacion", "Se ha reservado con exito", Alert.AlertType.INFORMATION);
+
+                        // quitar seleccion
+                        selectionModel.clearSelection();
+
+                        // agregar nueva reserva a la tabla
+                        tbl_reserve_current.getItems().add(r);
+                    } catch (Exception e) {
+                        Utilities.showAlert("Error","No se ha podido reservar. " + e.getMessage(), Alert.AlertType.ERROR);
                         e.printStackTrace();
                     }
 
-                    Utilities.showAlert("Confirmacion", "Se ha reservado con exito", Alert.AlertType.INFORMATION);
-                    // quitar seleccion
-                    selectionModel.clearSelection();
 
-                    // agregar nueva reserva
-                    tbl_reserve_current.getItems().add(r);
                 }
 
             }

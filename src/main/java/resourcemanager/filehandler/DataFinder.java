@@ -1,5 +1,6 @@
 package resourcemanager.filehandler;
 
+import resourcemanager.logic.ReservationLogic;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.Resource;
@@ -18,17 +19,22 @@ public class DataFinder  {
 
         // recorrer todos los usuarios e ir viendo cuáles estan ocupados
         for(User currentUser : allUsers){
-            ArrayList<Reservation> currentUserReservations = currentUser.getReservationList();
-            // recorrer todas las reservaciones
-            for(Reservation currentReservation : currentUserReservations){
-                ArrayList<Resource> currentResources = currentReservation.getResources();
-                // recorrer todos los recursos de la reservación
-                for(Resource currentResource : currentResources){
-                    if(leftoverResources.contains(currentResource)){
-                        leftoverResources.remove(currentResource);
-                    }
-                    else{
-                        // todo: algo anda raro porque todas las resources deberian estar
+            ArrayList<String> currentUserReservations = currentUser.getReservationIdList();
+            // recorrer todas las id de reservaciones del usuario
+            for(String currentReservationid : currentUserReservations){
+                // buscar reserva por id
+
+                Reservation currentReservation = ReservationLogic.findReservationById(currentReservationid);
+                if(currentReservation!=null && currentReservation.isActive()) {
+                    // solo cuenta si esta activa
+                    ArrayList<Resource> currentResources = currentReservation.getResources();
+                    // recorrer todos los recursos de la reservación
+                    for (Resource currentResource : currentResources) {
+                        if (leftoverResources.contains(currentResource)) {
+                            leftoverResources.remove(currentResource);
+                        } else {
+                            // todo: algo anda raro porque todas las resources deberian estar
+                        }
                     }
                 }
             }

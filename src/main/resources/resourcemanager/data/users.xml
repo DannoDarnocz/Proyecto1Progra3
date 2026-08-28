@@ -1,115 +1,22 @@
 <users>
     <user>
-        <id>usr1</id>
-        <name>Alice Johnson</name>
-        <password>pass123</password>
+        <id>pendejo</id>
+        <name>Pepito Papaya</name>
+        <password>123</password>
         <phoneNumber>8888-1111</phoneNumber>
-        <isAdmin>true</isAdmin>
+        <isAdmin>false</isAdmin>
         <reservationList>
-            <reservation>
-                <resources>
-                    <resource>
-                        <id>res1</id>
-                        <category>
-                            <id>cat1</id>
-                            <description>Electronics</description>
-                        </category>
-                        <description>Laptop - Dell XPS 15</description>
-                    </resource>
-                </resources>
-                <id>rsv1</id>
-                <startDate>2026-02-01T10:05:30</startDate>
-                <endDate>2026-02-01T10:06:00</endDate>
-            </reservation>
+            <reservationId>res1</reservationId>
         </reservationList>
     </user>
     <user>
-        <id>usr2</id>
-        <name>Bob Smith</name>
-        <password>pass234</password>
-        <phoneNumber>8888-1112</phoneNumber>
+        <id>admin</id>
+        <name>SuperPepito HyperPapaya</name>
+        <password>123</password>
+        <phoneNumber>8888-1111</phoneNumber>
         <isAdmin>false</isAdmin>
         <reservationList>
-            <reservation>
-                <resources>
-                    <resource>
-                        <id>res2</id>
-                        <category>
-                            <id>cat2</id>
-                            <description>Furniture</description>
-                        </category>
-                        <description>Office Desk</description>
-                    </resource>
-                    <resource>
-                        <id>res3</id>
-                        <category>
-                            <id>cat3</id>
-                            <description>Vehicles</description>
-                        </category>
-                        <description>Toyota Corolla</description>
-                    </resource>
-                </resources>
-                <id>rsv2</id>
-                <startDate>2026-02-01T10:15:30</startDate>
-                <endDate>2026-02-01T10:16:00</endDate>
-            </reservation>
+            <reservationId>res2</reservationId>
         </reservationList>
     </user>
-    <user>
-        <id>usr3</id>
-        <name>Carla Diaz</name>
-        <password>pass345</password>
-        <phoneNumber>8888-1113</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resources>
-                    <resource>
-                        <id>res4</id>
-                        <category>
-                            <id>cat4</id>
-                            <description>Sports Equipment</description>
-                        </category>
-                        <description>Tennis Racket</description>
-                    </resource>
-                </resources>
-                <id>rsv3</id>
-                <startDate>2026-02-02T10:15:30</startDate>
-                <endDate>2026-02-02T10:16:00</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-    <user>
-        <id>usr4</id>
-        <name>David Lee</name>
-        <password>pass456</password>
-        <phoneNumber>8888-1114</phoneNumber>
-        <isAdmin>false</isAdmin>
-        <reservationList>
-            <reservation>
-                <resources>
-                    <resource>
-                        <id>res5</id>
-                        <category>
-                            <id>cat5</id>
-                            <description>Books</description>
-                        </category>
-                        <description>Clean Code by Robert Martin</description>
-                    </resource>
-                    <resource>
-                        <id>res6</id>
-                        <category>
-                            <id>cat6</id>
-                            <description>Tools</description>
-                        </category>
-                        <description>Cordless Drill</description>
-                    </resource>
-                </resources>
-                <id>rsv4</id>
-                <startDate>2026-02-06T10:15:30</startDate>
-                <endDate>2026-02-06T10:16:00</endDate>
-            </reservation>
-        </reservationList>
-    </user>
-
 </users>
