@@ -1,13 +1,13 @@
 package resourcemanager.model.dto;
 
-public class UserLogin {
+public class UserLoginDTO {
     private String user;
     private String password;
 
-    public UserLogin() {
+    public UserLoginDTO() {
     }
 
-    public UserLogin(String user, String password) {
+    public UserLoginDTO(String user, String password) {
         this.user = user;
         this.password = password;
     }

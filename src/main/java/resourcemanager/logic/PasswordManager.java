@@ -2,7 +2,7 @@ package resourcemanager.logic;
 
 import resourcemanager.filehandler.LoadXML;
 import resourcemanager.model.User;
-import resourcemanager.model.dto.UserLogin;
+import resourcemanager.model.dto.UserLoginDTO;
 
 import java.util.regex.Pattern;
 
@@ -24,7 +24,7 @@ public class PasswordManager {
         return password != null && PASSWORD_POLICY.matcher(password).matches();
     }
 
-    public static void updatePassword(UserLogin newUserLogin) throws Exception{
+    public static void updatePassword(UserLoginDTO newUserLogin) throws Exception{
         String id = newUserLogin.getUser();
         String newPassword = newUserLogin.getPassword();
 

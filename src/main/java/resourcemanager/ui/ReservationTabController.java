@@ -11,6 +11,7 @@ import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.Resource;
 import resourcemanager.model.User;
+import resourcemanager.model.dto.ReservationDTO;
 import resourcemanager.service.GeminiService;
 import resourcemanager.structure.CurrentSession;
 
@@ -180,7 +181,6 @@ public class ReservationTabController {
                 if (selectedItems.isEmpty()) {
                     Utilities.showAlert("Error", "Debe de seleccionar al menos una categoria", Alert.AlertType.ERROR);
                 } else {
-                    ArrayList<Resource> selectedResources = new ArrayList<>();
 
                     String description = txt_reserve_activity.getText();
 
@@ -192,34 +192,9 @@ public class ReservationTabController {
                     LocalDateTime start = date.atStartOfDay();
                     LocalDateTime end = date.atStartOfDay();
 
-                    Reservation r = new Reservation("testy", description, start, end);
+                    ReservationDTO r = new ReservationDTO("testy", description, start, end, );
 
-                    // recorrer todas las categorias, buscar el primer recurso
-                    for (Category c : selectedItems) {
-                        if (c == null) System.out.println("DFHJKHDJKHSK");
 
-                        try {
-
-                            Resource firstFound = DataFinder.findFirstResourceFree(c);
-                            if (firstFound != null) {
-                                System.out.println(firstFound);
-                                selectedResources.add(firstFound);
-
-                                if (selectedItems.isEmpty()) {
-                                    Utilities.showAlert("Error", "No hay categorias seleccionadas", Alert.AlertType.ERROR);
-                                } else {
-                                    // agregar recurso a la reserva
-                                    r.addResource(firstFound);
-                                }
-                            } else {
-                                // algo anda raro
-                                Utilities.showAlert("Error", "No se encontró recurso disponible para la categoría seleccionada", Alert.AlertType.ERROR);
-                                System.out.println("No se encontro recurso para ctaegoria que en teoria estaba libre");
-                            }
-                        } catch (Exception e) {
-                            Utilities.showAlert("Error", "Ha ocurrido un error para obtener un recurso de categoria: " + c.getDescription(), Alert.AlertType.ERROR);
-                            e.printStackTrace();
-                        }
                     }
 
                     // finalmente agregar reserva construida al usuario

@@ -16,7 +16,7 @@ import javafx.scene.control.TextInputDialog;
 import resourcemanager.logic.Authenticate;
 import resourcemanager.logic.PasswordManager;
 import resourcemanager.model.User;
-import resourcemanager.model.dto.UserLogin;
+import resourcemanager.model.dto.UserLoginDTO;
 import resourcemanager.structure.CurrentSession;
 
 import java.io.FileNotFoundException;
@@ -57,7 +57,7 @@ public class LoginController {
             }
             else{
                 // datos correctos, construir DTO
-                UserLogin loginDTO = new UserLogin(userInput, passwordInput);
+                UserLoginDTO loginDTO = new UserLoginDTO(userInput, passwordInput);
 
                 // enviarlo a capa logica y recibir el usuario encontrado (si hay) y sale bien
                 try{
@@ -97,7 +97,7 @@ public class LoginController {
         }
 
         try{
-            UserLogin loginDTO = new UserLogin(userInput, currentPwdInput);
+            UserLoginDTO loginDTO = new UserLoginDTO(userInput, currentPwdInput);
             User foundUser = Authenticate.authenticate(loginDTO);
 
             if(foundUser == null){
@@ -117,7 +117,7 @@ public class LoginController {
             if(nuevaPassword.isEmpty()) return; // canceló o no coincidían
 
             // crear dto para la nueva contraseña (el user queda igual obviamente)
-            UserLogin newUserLogin = new UserLogin(userInput,nuevaPassword.get());
+            UserLoginDTO newUserLogin = new UserLoginDTO(userInput,nuevaPassword.get());
 
             PasswordManager.updatePassword(newUserLogin);
 

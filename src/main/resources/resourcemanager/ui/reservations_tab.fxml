@@ -5,7 +5,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Spinner?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -34,11 +33,7 @@
       <Label layoutX="27.0" layoutY="226.0" text="Categorías requeridas" AnchorPane.leftAnchor="27.0" AnchorPane.topAnchor="226.0" />
       <StackPane layoutX="28.0" layoutY="254.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0" AnchorPane.topAnchor="254.0">
          <children>
-            <TableView fx:id="tbl_reserve_categories" prefHeight="162.0" prefWidth="355.0">
-               <columns>
-                  <TableColumn prefWidth="75.0" text="categoria" />
-               </columns>
-            </TableView>
+            <TableView fx:id="tbl_reserve_categories" prefHeight="162.0" prefWidth="355.0" />
          </children>
       </StackPane>
       <StackPane layoutX="28.0" layoutY="391.0" prefHeight="108.0" prefWidth="439.0" AnchorPane.bottomAnchor="12.0" AnchorPane.leftAnchor="28.0" AnchorPane.rightAnchor="133.0" AnchorPane.topAnchor="391.0">

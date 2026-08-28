@@ -2,13 +2,10 @@ package resourcemanager.logic;
 
 import resourcemanager.filehandler.LoadXML;
 import resourcemanager.model.User;
-import resourcemanager.model.dto.UserLogin;
-
-import java.io.FileNotFoundException;
-import java.nio.file.FileSystemException;
+import resourcemanager.model.dto.UserLoginDTO;
 
 public class Authenticate {
-    public static User authenticate(UserLogin input) throws Exception {
+    public static User authenticate(UserLoginDTO input) throws Exception {
         String id = input.getUser();
         // obtener usuario solo enviando el id en vez del DTO (sino el codigo no seria reutilizable bajo otro contexto)
         User foundUser = LoadXML.findUserById(id);
