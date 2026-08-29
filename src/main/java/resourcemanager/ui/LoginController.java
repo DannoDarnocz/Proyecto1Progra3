@@ -14,12 +14,10 @@ import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
-import resourcemanager.logic.Authenticate;
-import resourcemanager.logic.PasswordManager;
+import resourcemanager.logic.AuthLogic;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLoginDTO;
 import resourcemanager.service.AuthService;
-import resourcemanager.structure.CurrentSession;
 
 import java.io.FileNotFoundException;
 import java.util.Optional;
@@ -101,8 +99,9 @@ public class LoginController {
 
         try{
             UserLoginDTO loginDTO = new UserLoginDTO(userInput, currentPwdInput);
-            User foundUser = Authenticate.authenticate(loginDTO);
+            User foundUser = AuthService.authenticate(loginDTO);
 
+            // si es null es porque no se encontró o la contraseña es incorrecta (por seguridad es mejor no concoer ninguno)
             if(foundUser == null){
                 Utilities.showAlert("Error","Usuario o contraseña incorrectos", Alert.AlertType.ERROR);
                 return;
@@ -110,7 +109,7 @@ public class LoginController {
 
             Optional<String> telefonoIngresado = pedirTelefono();
             if(telefonoIngresado.isEmpty()) return; // canceló
-            if(!PasswordManager.verifyPhone(foundUser,telefonoIngresado.get())){
+            if(!AuthLogic.verifyPhone(foundUser,telefonoIngresado.get())){
                 Utilities.showAlert("Error","El teléfono ingresado no coincide con el registrado", Alert.AlertType.ERROR);
                 return;
             }
@@ -122,7 +121,7 @@ public class LoginController {
             // crear dto para la nueva contraseña (el user queda igual obviamente)
             UserLoginDTO newUserLogin = new UserLoginDTO(userInput,nuevaPassword.get());
 
-            PasswordManager.updatePassword(newUserLogin);
+            AuthLogic.updatePassword(newUserLogin);
 
             Utilities.showAlert("Exito","Contraseña actualizada correctamente", Alert.AlertType.INFORMATION);
             pwd_password.clear();
@@ -161,7 +160,7 @@ public class LoginController {
         PasswordField confirmarPwd = new PasswordField();
         confirmarPwd.setPromptText("Confirmar contraseña");
 
-        Label requisitosLabel = new Label(PasswordManager.PASSWORD_POLICY_MSG);
+        Label requisitosLabel = new Label(AuthLogic.PASSWORD_POLICY_MSG);
         requisitosLabel.setWrapText(true);
         requisitosLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666666;");
 
@@ -184,8 +183,8 @@ public class LoginController {
                     Utilities.showAlert("Error","Las contraseñas no coinciden", Alert.AlertType.ERROR);
                     return null;
                 }
-                if(!PasswordManager.cumplePolitica(nueva)){
-                    Utilities.showAlert("Contraseña inválida",PasswordManager.PASSWORD_POLICY_MSG, Alert.AlertType.ERROR);
+                if(!AuthLogic.satisfiesPolicy(nueva)){
+                    Utilities.showAlert("Contraseña inválida", AuthLogic.PASSWORD_POLICY_MSG, Alert.AlertType.ERROR);
                     return null;
                 }
 

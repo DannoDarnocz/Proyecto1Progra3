@@ -3,6 +3,7 @@ package resourcemanager.logic;
 import javafx.collections.ObservableList;
 import resourcemanager.data.DataHandler;
 import resourcemanager.data.LoadFromXML;
+import resourcemanager.data.SaveToXML;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.Resource;
@@ -59,7 +60,7 @@ public class ReservationLogic {
                     // agregar recurso a la reserva
                     r.addResource(firstFound.getId());
                 } else {
-                    // algo anda raro
+                    // algo anda raro porque se supone que deberia haber recurso
                     throw new InstanceNotFoundException("No se encontró recurso para la categoría seleccionada.");
                 }
             } catch (Exception e) {
@@ -72,15 +73,29 @@ public class ReservationLogic {
 
     public static Reservation createReservationForUser(ReservationDTO dto, ObservableList<Category> observableList, User user) throws Exception {
         // crear reservación real desde la información enviada por DTO
-        Reservation r = createFromDTO(dto);
+        Reservation newReservation = createFromDTO(dto);
 
         // popular recursos de la reserva con lo seleccionado por usuario
-        assignResources(r, observableList);
+        assignResources(newReservation, observableList);
 
         // agregar reserva construida
-        user.addReservation(r);
+        user.addReservation(newReservation);
 
-        return r;
+        // guardar a XML
+        try{
+            // actualizar usuario porque ahora tiene reserva
+            if(SaveToXML.updateUser(user)){
+                // si se pudo guardar entonces ahora guardamos la reserva en su propio archivo
+                SaveToXML.addReservation(newReservation);
+            }
+            else{
+                throw new InstanceNotFoundException("No se pudo actualizar el usuario en el XML porque no se encontró");
+            }
+        } catch (Exception e) {
+            throw e; //lanzar hacia arriba de nuevo
+        }
+
+        return newReservation;
     }
 
 

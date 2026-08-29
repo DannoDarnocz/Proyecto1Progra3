@@ -129,10 +129,6 @@ public class ReservationTabController {
             System.out.println("NO HAY RESERVAS!!!!");
         }
 
-        if(!currentUser.getIsAdmin()){
-            btn_reserve_cancel.setDisable(true); // solo admins pueden cancelar reservas
-        }
-
         // cancelar reserva seleccionada
         btn_reserve_cancel.setOnAction(event -> {
             // para obtener seleccionada
@@ -172,6 +168,16 @@ public class ReservationTabController {
 
             }
 
+        });
+
+        btn_clear11.setOnAction(event -> {
+            // para obtener modelo de seleccion
+            TableView.TableViewSelectionModel selectionModel =
+                    tbl_reserve_categories.getSelectionModel();
+            selectionModel.setSelectionMode(
+                    SelectionMode.SINGLE);
+            // quitar seleccion
+            selectionModel.clearSelection();
         });
 
         btn_reserve_confirm.setOnAction(event -> {

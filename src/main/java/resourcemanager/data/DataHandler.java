@@ -48,8 +48,9 @@ public class DataHandler {
     public static Resource findFirstResourceFree(Category category) throws Exception{
         ArrayList<Resource> freeResources = findFreeResources();
 
+        // buscar cual recurso de los libres tiene un ID de categoria que se busca
         for(Resource r : freeResources){
-            if(r.getCategoryId().equals(category)) return r;
+            if(r.getCategoryId().equals(category.getId())) return r;
         }
         return null;
     }

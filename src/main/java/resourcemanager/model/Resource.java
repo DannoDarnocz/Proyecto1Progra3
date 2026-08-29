@@ -37,9 +37,8 @@ public class Resource {
 
     public String getCategoryId() { return categoryId; }
     public void setCategoryId(String category) throws Exception {
-
         // verificar que exista
-        Category c = CategoryLogic.findCategoryById(categoryId);
+        Category c = CategoryLogic.findCategoryById(category);
         if (c != null) this.categoryId = category;
     }
 

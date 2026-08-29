@@ -1,5 +1,4 @@
 package resourcemanager.data;
-import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import resourcemanager.model.Category;
@@ -10,10 +9,8 @@ import resourcemanager.model.User;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 public class LoadFromXML {
 
@@ -22,11 +19,6 @@ public class LoadFromXML {
         // no maneja LocalDate de una vez, se ocupa esta dependencia
         mapper.registerModule(new JavaTimeModule());
     }
-
-    private static final String USERS_PATH = "/resourcemanager/data/users.xml";
-    private static final String RESOURCES_PATH = "/resourcemanager/data/resources.xml";
-    private static final String RESERVATIONS_PATH = "/resourcemanager/data/reservations.xml";
-    private static final String CATEGORIES_PATH = "/resourcemanager/data/categories.xml";
 
     // cargar lista generica de lo que lea en el archivo, donde cada item es indicado por itemTagName
     private static <T> ArrayList<T> loadList(String resourcePath, String itemTagName, Class<T> itemClass) throws Exception {
@@ -50,18 +42,18 @@ public class LoadFromXML {
     }
 
     public static ArrayList<User> loadUsers() throws Exception {
-        return loadList(USERS_PATH, "user", User.class);
+        return loadList(DataPaths.USERS_PATH, "user", User.class);
     }
 
     public static ArrayList<Resource> loadResources() throws Exception {
-        return loadList(RESOURCES_PATH, "resource", Resource.class);
+        return loadList(DataPaths.RESOURCES_PATH, "resource", Resource.class);
     }
 
     public static ArrayList<Reservation> loadReservations() throws Exception {
-        return loadList(RESERVATIONS_PATH, "reservation", Reservation.class);
+        return loadList(DataPaths.RESERVATIONS_PATH, "reservation", Reservation.class);
     }
 
     public static ArrayList<Category> loadCategories() throws Exception {
-        return loadList(CATEGORIES_PATH, "category", Category.class);
+        return loadList(DataPaths.CATEGORIES_PATH, "category", Category.class);
     }
 }

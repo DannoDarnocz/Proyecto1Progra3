@@ -4,7 +4,12 @@ import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLoginDTO;
 import resourcemanager.structure.CurrentSession;
 
+import java.util.regex.Pattern;
+
 public class AuthLogic {
+    public static final String PASSWORD_POLICY_MSG = "Debe tener al menos 8 caracteres, e incluir mayúsculas, minúsculas, números y símbolos (ej: !@#$%).";
+    private static final Pattern PASSWORD_POLICY = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^a-zA-Z0-9]).{8,}$"); //Reglas de negocio REGEX
+
     public static User authenticate(UserLoginDTO input) throws Exception {
         String id = input.getUser();
         // obtener usuario solo enviando el id en vez del DTO (sino el codigo no seria reutilizable bajo otro contexto)
@@ -27,4 +32,26 @@ public class AuthLogic {
         }
     }
 
+    public static Boolean verifyPhone(User user, String phoneNumber){
+        if (user==null || phoneNumber==null) return false;
+
+        String guardado = user.getPhoneNumber() == null ? "" : user.getPhoneNumber().trim();
+        String digitado = phoneNumber.trim();
+        return !guardado.isEmpty() && guardado.equalsIgnoreCase(digitado);
+    }
+
+
+    public static Boolean satisfiesPolicy(String password){
+        return password != null && PASSWORD_POLICY.matcher(password).matches();
+    }
+
+    public static void updatePassword(UserLoginDTO newUserLogin) throws Exception{
+        String id = newUserLogin.getUser();
+        String newPassword = newUserLogin.getPassword();
+
+        User memUser = UserLogic.findUserById(id); //Obtiene el usuario guardado en memoria
+        if (memUser!=null) {memUser.setPassword(newPassword);} //Si existe, actualiza clave de forma logica
+
+
+    }
 }
