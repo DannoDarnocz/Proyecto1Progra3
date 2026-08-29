@@ -1,5 +1,14 @@
 package resourcemanager.logic;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.ObjectCodec;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import resourcemanager.data.DataHandler;
 import resourcemanager.data.LoadFromXML;
@@ -9,10 +18,15 @@ import resourcemanager.model.Reservation;
 import resourcemanager.model.Resource;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.ReservationDTO;
+import resourcemanager.model.dto.GeneratedReservationDTO;
+import resourcemanager.service.CategoryService;
+import resourcemanager.service.GeminiService;
 
 import javax.management.InstanceNotFoundException;
 import java.nio.file.FileSystemException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class ReservationLogic {
 
@@ -111,5 +125,98 @@ public class ReservationLogic {
             if (r.getId().equals(id)) return r;
         }
         return null;
+    }
+
+    public static GeneratedReservationDTO promptAI(String prompt) throws Exception {
+        if(prompt.isEmpty()) return null; // no se puede contestar una pregunta vacia
+
+        // algo que se construirá una vez termine el hilo
+        AtomicReference<GeneratedReservationDTO> result = new AtomicReference<>();
+
+        // obtener categorias disponibles, si es posible
+        try{
+            ArrayList<Category> categories = DataHandler.findFreeCategories();
+
+            if(categories.isEmpty()) throw new RuntimeException("No hay categorias con recursos libres");
+
+            System.out.print("AAAAAA"); //TODO BORRAR
+            // convertir objetos de categorias a json para que la IA pueda ver cuales estan disponibles
+            Gson gson = new GsonBuilder().create();
+            JsonArray categoryJson = (JsonArray) new Gson().toJsonTree(categories,
+                    new TypeToken<ArrayList<Category>>() {
+                    }.getType());
+
+            // tirar un hilo para que se pueda seguir haciendo cosas mientras gemini ejecuta otra tarea (en paralelo)
+            Thread hiloGemini = new Thread(()->{
+                // funcion vacia con "()" porque la aplicacion no es dueña de lo que es Gemini, el proceso no es mio fuera
+                // del contexto de la aplicación, igual cuando se accede a la base de datos
+
+                // poner try y catch porque no domino Gemini y puede caerse.
+                try{
+                    GeminiService geminiService = new GeminiService();
+
+                    String jsonString = geminiService.requestJSON(prompt, categoryJson); // pedirle JSON a la ia para luego desempaquetarlo
+
+
+                    // cruzar plataforma java con la de gemini
+                    Platform.runLater(()->{
+                        if(jsonString == null){
+                            throw new InvalidParameterException("La descripción no cubre todos los datos necesarios para reservar");
+                        }
+
+                        // que pasa cuando responde
+                        // leer el json
+                        ObjectMapper mapper = new ObjectMapper();
+
+                        JsonNode nameNode = null;
+                        try {
+                            nameNode = mapper.readTree("{\"name\": \"John\"}");
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        System.out.println(jsonString);
+                    });
+
+                }catch(Exception e){
+                    Platform.runLater(()->{
+                        // manejo de error, no se puede lanzar de nuevo asi que se retorna null
+                    });
+                }
+
+            });
+
+            hiloGemini.setDaemon(true); // "Poseer" el flujo principal y cambiarlo al flujo anterior cuando termine
+            hiloGemini.start(); // comenzarlo
+
+            return new GeneratedReservationDTO();
+
+        } catch (Exception e){
+            e.printStackTrace();
+            throw e;
+        }
+
+
+
+    }
+
+    public static boolean deleteReservation(String reservationId, User user) throws Exception {
+        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+
+        for(Reservation r : allReservations){
+            if(r.getId()==reservationId){
+
+                // eliminar reserva del usuario y tambien de todas las reservas (sino no queda ligado a nadie)
+                user.removeReservation(r);
+                allReservations.remove(r);
+
+                // guardar usuario y lista de reservas actualizadas
+                SaveToXML.saveAllReservations(allReservations);
+                SaveToXML.updateUser(user);
+                return true;
+            }
+        }
+
+        return false;
     }
 }

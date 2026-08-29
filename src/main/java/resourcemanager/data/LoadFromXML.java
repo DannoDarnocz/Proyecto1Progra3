@@ -13,12 +13,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 public class LoadFromXML {
-
-    private static final XmlMapper mapper = new XmlMapper();
-    static {
-        // no maneja LocalDate de una vez, se ocupa esta dependencia
-        mapper.registerModule(new JavaTimeModule());
-    }
+    static XmlMapper mapper = MapperSingleton.getInstance();
 
     // cargar lista generica de lo que lea en el archivo, donde cada item es indicado por itemTagName
     private static <T> ArrayList<T> loadList(String resourcePath, String itemTagName, Class<T> itemClass) throws Exception {

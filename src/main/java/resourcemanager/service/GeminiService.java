@@ -1,11 +1,14 @@
 package resourcemanager.service;
+import com.google.gson.JsonArray;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.ArrayList;
 
 public class GeminiService {
     private static final String MODELO = "gemini-3.6-flash";
@@ -21,17 +24,21 @@ public class GeminiService {
         }
         this.httpClient = HttpClient.newHttpClient();
     }
-    public String enviarMensaje(String textoUsuario)
-            throws IOException, InterruptedException {
+    public String requestJSON(String prompt, JsonArray availableCategories) throws IOException, InterruptedException {
         String instruccion = """
-    Responde exclusivamente con un JSON válido, sin texto adicional, con este formato:
+
+    Answer exclusively with a JSON following this format and using comments for your own reference as to what to fill each field with. If any data is missing, just type "null"
+    for the whole thing.
     {
-      "nombre": "string",
-      "ciudad": "string",
-      "categoria": "una de: Electronica, Ropa, Comida",
-      "filaTablaId": "id numérico de la fila a seleccionar o null"
+      "description": "string", // description for the reservation
+      "date": "YYYY-MM-DD", // formatted as a Java LocalDate in the ISO-8601 calendar system
+      "startHour": int, // HOUR at which the reservation is required to start
+      "startMinute": int, // MINUTE at which the reservation is required to start
+      "endHour": int, // HOUR at which the reservation ends
+      "endMinute": int, // MINUTE at which the reservation ends
+      "categories": ["cat1","cat2","cat3"...] // each one is a string for an existent categoryId, if none match, use null
     }
-    Petición del usuario: """ + textoUsuario;
+    The user requests the following: """ + prompt +". The available categories are: " + availableCategories;
 
         String url = ENDPOINT_BASE + MODELO + ":generateContent";
         JSONObject parte = new JSONObject().put("text", instruccion);

@@ -10,4 +10,8 @@ public class CategoryService {
     public static ArrayList<Category> findFreeCategories() throws Exception{
         return DataHandler.findFreeCategories();
     }
+
+    public static ArrayList<String> convertListToIds(ArrayList<Category> categories){
+        return CategoryService.convertListToIds(categories);
+    }
 }

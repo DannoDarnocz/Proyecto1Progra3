@@ -33,7 +33,11 @@ public class Utilities {
         Alert alert = new Alert(type);
         alert.setHeaderText(title);
         alert.setContentText(msg);
-        alert.show();
+
+        // si es de confirmacion entonces importa la respuesta, hay que mostrarla desde afuera y setear su evento
+        if(type!= Alert.AlertType.CONFIRMATION){
+            alert.show();
+        }
         return alert;
     }
 

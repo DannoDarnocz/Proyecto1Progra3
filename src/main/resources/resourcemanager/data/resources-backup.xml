@@ -1,0 +1,17 @@
+<resources>
+    <resource>
+        <id>res1</id>
+        <categoryId>cat1</categoryId>
+        <description>Laptop - Dell XPS 15</description>
+    </resource>
+    <resource>
+        <id>res2</id>
+        <categoryId>cat2</categoryId>
+        <description>Office Desk</description>
+    </resource>
+    <resource>
+        <id>res3</id>
+        <categoryId>cat3</categoryId>
+        <description>Honda Civic</description>
+    </resource>
+</resources>

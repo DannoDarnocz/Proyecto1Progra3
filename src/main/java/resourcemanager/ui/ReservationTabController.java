@@ -17,6 +17,7 @@ import resourcemanager.service.ReservationService;
 import resourcemanager.service.UserService;
 import resourcemanager.structure.CurrentSession;
 
+import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -149,23 +150,27 @@ public class ReservationTabController {
                 Reservation selected = selectedItems.getFirst(); // como es solo 1, deberia solo estar ahi
                 Alert confirmation = Utilities.showAlert("Aviso","Desea borrar?", Alert.AlertType.CONFIRMATION);
 
-                // TODO: IMPLEMENTAR CONFIRMACION (ahora igual lo borra, le vale verga)
-                try{
-                    currentUser.removeReservation(selected);
+                confirmation.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        try{
+                            // TODO: en el xml no se borra por alguna razon
+                            // eliminar la reserva del usuario y de la lista general
+                            ReservationService.deleteReservation(selected.getId(),currentUser);
 
-                    Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
+                            Alert alert = Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
 
-                    // todo: borrarlo del sistema en el xml
-                    // quitar fila
-                    tbl_reserve_current.getItems().remove(selected);
+                            // todo: borrarlo del sistema en el xml
+                            // quitar fila
+                            tbl_reserve_current.getItems().remove(selected);
 
-                    // quitar seleccion
-                    selectionModel.clearSelection();
-                } catch (Exception e) {
-                    Utilities.showAlert("Error","No se pudo eliminar", Alert.AlertType.ERROR);
-                    e.printStackTrace();
-                }
-
+                            // quitar seleccion
+                            selectionModel.clearSelection();
+                        } catch (Exception e) {
+                            Utilities.showAlert("Error","No se pudo eliminar", Alert.AlertType.ERROR);
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
 
         });
@@ -206,7 +211,6 @@ public class ReservationTabController {
                     LocalDate date = dt.getValue();
                     // construir LocalDateTime para guardarlo
                     // TODO: ARREGLAR SPINNER Y CAMBIAR HORA POR DEFECTO
-                    // TODO: ASIGNAR ID AUTOMATICO
                     LocalDateTime start = date.atStartOfDay();
                     LocalDateTime end = date.atStartOfDay();
 
@@ -235,38 +239,24 @@ public class ReservationTabController {
 
 
         btn_reserve_ai.setOnAction(event -> {
-            enviarMensaje();
-        });
-
-
-    }
-
-    private void enviarMensaje(){
-        String texto = txt_reserve_prompt.getText().trim(); // trim quita espacios en blanco o saltos de linea al final
-        if(texto.isEmpty()) return; // no se puede contestar una pregunta vacia
-
-        // tirar un hilo para que se pueda seguir haciendo cosas mientras gemini ejecuta otra tarea (en paralelo)
-        Thread hiloGemini = new Thread(()->{
-            // funcion vacia con "()" porque la aplicacion no es dueña de lo que es Gemini, el proceso no es mio fuera
-            // del contexto de la aplicación, igual cuando se accede a la base de datos
-
-            // poner try y catch porque no domino Gemini y puede caerse.
-            try{
-                GeminiService geminiService = new GeminiService();
-                String respuesta = geminiService.enviarMensaje(texto); // la pregunta que el usuario hace
-                // cruzar plataforma java con la de gemini
-                Platform.runLater(()->{
-                    // append a lo que responde la IA apenas termine de generar la respuesta
-                    //txtHistorialConversacion.appendText("AVI responde: " + respuesta + "\n");
-                });
-            }catch(Exception e){
-                Platform.runLater(()->{
-                    // manejo de error
-                });
+            String prompt = txt_reserve_prompt.getText().trim();
+            if(prompt.isEmpty()){
+                Utilities.showAlert("Error","Debe de describir la reserva", Alert.AlertType.ERROR);
+            }
+            else{
+                try{
+                    ReservationService.promptAI(prompt);
+                    System.out.println("Waos"); //TODO BORRAR
+                } catch(InvalidParameterException e){
+                    Utilities.showAlert("Error",e.getMessage(), Alert.AlertType.ERROR);
+                }catch (InterruptedException e){
+                    Utilities.showAlert("Error","Se ha interrumpido el proceso de generación por IA: "+e.getMessage(), Alert.AlertType.ERROR);
+                } catch (Exception e){
+                    Utilities.showAlert("Error","Ha ocurrido un error: "+e.getMessage(), Alert.AlertType.ERROR);
+                }
             }
         });
 
-        hiloGemini.setDaemon(true); // "Poseer" el flujo principal y cambiarlo al flujo anterior cuando termine
-        hiloGemini.start(); // comenzarlo
+
     }
 }

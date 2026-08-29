@@ -18,4 +18,16 @@ public class CategoryLogic {
         }
         return null;
     }
+
+    // convertir lista de categorias a lista de strings con id
+    public static ArrayList<String> convertListToIds(ArrayList<Category> categories) {
+        ArrayList<String> categoryStrings = new ArrayList<>();
+
+        for (Category c : categories) {
+            categoryStrings.add(c.getId());
+        }
+
+        if (categories.isEmpty()) return null;
+        return categoryStrings;
+    }
 }

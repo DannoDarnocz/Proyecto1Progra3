@@ -1,0 +1,42 @@
+<categories>
+    <category>
+        <id>cat1</id>
+        <description>Electronics</description>
+    </category>
+    <category>
+        <id>cat2</id>
+        <description>Furniture</description>
+    </category>
+    <category>
+        <id>cat3</id>
+        <description>Vehicles</description>
+    </category>
+    <category>
+        <id>cat4</id>
+        <description>Sports Equipment</description>
+    </category>
+    <category>
+        <id>cat5</id>
+        <description>Books</description>
+    </category>
+    <category>
+        <id>cat6</id>
+        <description>Tools</description>
+    </category>
+    <category>
+        <id>cat7</id>
+        <description>Kitchen Appliances</description>
+    </category>
+    <category>
+        <id>cat8</id>
+        <description>Office Supplies</description>
+    </category>
+    <category>
+        <id>cat9</id>
+        <description>Camping Gear</description>
+    </category>
+    <category>
+        <id>cat10</id>
+        <description>Musical Instruments</description>
+    </category>
+</categories>

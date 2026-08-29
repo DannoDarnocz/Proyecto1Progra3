@@ -1,0 +1,22 @@
+<users>
+    <user>
+        <id>1</id>
+        <name>Pepito Papaya</name>
+        <password>123</password>
+        <phoneNumber>8888-1111</phoneNumber>
+        <isAdmin>false</isAdmin>
+        <reservationIdList>
+            <reservationId>rsv1</reservationId>
+        </reservationIdList>
+    </user>
+    <user>
+        <id>admin</id>
+        <name>SuperPepito HyperPapaya</name>
+        <password>123</password>
+        <phoneNumber>8888-1111</phoneNumber>
+        <isAdmin>false</isAdmin>
+        <reservationIdList>
+            <reservationId>rsv2</reservationId>
+        </reservationIdList>
+    </user>
+</users>

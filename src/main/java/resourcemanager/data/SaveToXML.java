@@ -1,41 +1,26 @@
 package resourcemanager.data;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
+import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 
-import javax.xml.crypto.Data;
-import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
-import javax.xml.transform.Transformer;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import static resourcemanager.data.LoadFromXML.loadReservations;
 import static resourcemanager.data.LoadFromXML.loadUsers;
 
 public class SaveToXML {
-    private static final XmlMapper mapper = new XmlMapper();
 
-    static {
-        // no maneja LocalDateTime de una vez, se ocupa esta dependencia
-        mapper.registerModule(new JavaTimeModule());
-    }
+    static XmlMapper mapper = MapperSingleton.getInstance();
 
     /*static {
         mapper.enable(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT);
@@ -63,9 +48,10 @@ public class SaveToXML {
         File reservationsFile = DataPaths.getReservationsFile();
 
         // caerle encima al archivo entero con la lista actualizada
-        mapper.writer()
+        saveAllReservations(allReservations);
+        /*mapper.writer()
                 .withRootName("reservations")
-                .writeValue(reservationsFile, allReservations);
+                .writeValue(reservationsFile, allReservations);*/
     }
 
     public static boolean updateUser(User updatedUser) throws Exception {
@@ -84,15 +70,59 @@ public class SaveToXML {
             if (users.get(i).getId().equals(updatedUser.getId())) {
                 users.set(i, updatedUser);   // reemplazar el usuario viejo con el nuevo actualizado
 
-                // caerle encima al archivo entero
-                mapper.writer()
+                // caerle encima al archivo entero con toda la lista
+                saveAllUsers(users);
+                /*mapper.writer()
                         .withRootName("users")
-                        .writeValue(usersFile, users);
+                        .writeValue(usersFile, users);*/
 
                 return true;
             }
         }
         return false; // no se encontró
+    }
+
+    public static void saveAllUsers(ArrayList<User> items) throws Exception {
+        saveList(DataPaths.getUsersFile(),"users","user",items);
+    }
+
+    public static void saveAllReservations(ArrayList<Reservation> items) throws Exception {
+        saveList(DataPaths.getReservationsFile(),"reservations","reservation",items);
+    }
+
+
+
+    // guardar lista de forma genérica, rootTag es la lista raíz que requiere xml y itemTag es el tag para cada objeto
+    // de la lista que se le pase
+    public static <T> void saveList(File file, String rootTag, String itemTag, ArrayList<T> items) throws Exception {
+        // como es genérico se utiliza factory
+        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
+
+        // try para manejo de recursos, nada más
+        try (Writer fileWriter = new FileWriter(file)) {
+            XMLStreamWriter xmlStreamWriter = outputFactory.createXMLStreamWriter(fileWriter);
+            xmlStreamWriter.writeStartDocument();
+            xmlStreamWriter.writeStartElement(rootTag);
+
+            XmlFactory xmlFactory = (XmlFactory) mapper.getFactory();
+
+            // toxmlgenerator es como intermediario entre objeto java y la escritura xml
+            ToXmlGenerator generator = xmlFactory.createGenerator(xmlStreamWriter);
+
+            ObjectWriter itemWriter = mapper.writer().withRootName(itemTag);
+
+            // guardar todos los items de la lista
+            for (T item : items) {
+                generator.setNextName(new QName(itemTag)); // le dice al generador qué tag usar para el próximo objeto
+                itemWriter.writeValue(generator, item);
+            }
+
+            // escribir y cerrar
+            xmlStreamWriter.writeEndElement();
+            xmlStreamWriter.writeEndDocument();
+            xmlStreamWriter.flush();
+            xmlStreamWriter.close();
+        }
     }
 
     /*public static <T> void saveList(File file, String rootTag, String itemTag, ArrayList<T> items) throws Exception {
