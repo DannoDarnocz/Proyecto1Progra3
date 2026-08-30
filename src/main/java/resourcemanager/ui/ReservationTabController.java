@@ -4,7 +4,17 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.Button;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.SelectionMode;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
 import resourcemanager.data.DataHandler;
 import resourcemanager.model.Category;
@@ -52,36 +62,35 @@ public class ReservationTabController {
 
     @FXML
     private void initialize() {
+        //Politicas para que tabla no tenga espacio sin usar
+        tbl_reserve_categories.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tbl_reserve_current.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        //Habilitación del Spinner y hora por defecto
+        spn_reserve_hour_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
+        spn_reserve_hour_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 1));
+
         // --- INICIALIZAR TABLA DE CATEGORIAS
         try{
-            // crear columnas
-            TableColumn<Category, String> columnId =
-                    new TableColumn<>("ID");
-            columnId.setCellValueFactory(
-                    new PropertyValueFactory<>("id"));
+            // tomar las columnas que ya existen en el FXML, en el mismo orden en que aparecen ahi (Id, Descripcion)
+            TableColumn<Category, String> columnId = (TableColumn<Category, String>) tbl_reserve_categories.getColumns().get(0);
+            columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+            columnId.setStyle("-fx-alignment: CENTER;");
 
-            TableColumn<Category, String> columnDescription =
-                    new TableColumn<>("Descripción");
-            columnDescription.setCellValueFactory(
-                    new PropertyValueFactory<>("description"));
-
-            // agregar columnas a tabla
-            tbl_reserve_categories.getColumns().add(columnId);
-            tbl_reserve_categories.getColumns().add(columnDescription);
+            TableColumn<Category, String> columnDescription = (TableColumn<Category, String>) tbl_reserve_categories.getColumns().get(1);
+            columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+            columnDescription.setStyle("-fx-alignment: CENTER;");
 
             // para obtener modelo de seleccion
             TableView.TableViewSelectionModel selectionModel =
                     tbl_reserve_categories.getSelectionModel();
-            // se pueden seleccionar vairas
-            selectionModel.setSelectionMode(
-                    SelectionMode.MULTIPLE);
+            //Para seleccionar varias
+            selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
 
-            // buscar categorias con al menos 1 recurso dispónible
+            //Se pueden buscar varias
             ArrayList<Category> availableCategories = CategoryService.findFreeCategories();
-
             System.out.print(availableCategories.size());
 
-            // agregar cada categoría disponible
             tbl_reserve_categories.getItems().setAll(availableCategories);
 
         } catch (Exception e){
@@ -90,37 +99,27 @@ public class ReservationTabController {
 
 
         // --- INCIIALIZAR TABLA DE RESERVAS ACTUALES
-        TableColumn<Reservation, String> columnId =
-                new TableColumn<>("ID");
-        columnId.setCellValueFactory(
-                new PropertyValueFactory<>("id"));
 
+        // tomar las columnas que ya existen en el FXML, en el mismo orden en que aparecen ahi (Id, Descripcion)
+        TableColumn<Reservation, String> columnId = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(0);
+        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnId.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Reservation, String> columnDescription =
-                new TableColumn<>("Actividad");
-        columnDescription.setCellValueFactory(
-                new PropertyValueFactory<>("description"));
+        TableColumn<Reservation, String> columnDescription = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(1);
+        columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        columnDescription.setStyle("-fx-alignment: CENTER;");
 
+        TableColumn<Reservation, LocalDateTime> columnStart = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(2);
+        columnStart.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        columnStart.setStyle("-fx-alignment: CENTER;");
 
-        TableColumn<Reservation, LocalDateTime> columnStart =
-                new TableColumn<>("Inicio");
-        columnStart.setCellValueFactory(
-                new PropertyValueFactory<>("startDate"));
-        TableColumn<Reservation, LocalDateTime> columnEnd =
-                new TableColumn<>("Fin");
-        columnEnd.setCellValueFactory(
-                new PropertyValueFactory<>("endDate"));
-
-
-        tbl_reserve_current.getColumns().add(columnId);
-        tbl_reserve_current.getColumns().add(columnDescription);
-        tbl_reserve_current.getColumns().add(columnStart);
-        tbl_reserve_current.getColumns().add(columnEnd);
+        TableColumn<Reservation, LocalDateTime> columnEnd = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(3);
+        columnEnd.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        columnEnd.setStyle("-fx-alignment: CENTER;");
 
         // obtener el usuario que inició sesión para obtener sus reservas
         User currentUser = UserService.getLoggedUser();
         ArrayList<Reservation> userReservations = UserService.findReservationsForUser(currentUser);
-
 
         // agregar todas las encontradas
         if(userReservations!=null){

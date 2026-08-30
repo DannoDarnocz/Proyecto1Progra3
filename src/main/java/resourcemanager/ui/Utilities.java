@@ -6,6 +6,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
+import resourcemanager.model.User;
+
+import java.util.Objects;
 
 public class Utilities {
 
@@ -14,7 +17,7 @@ public class Utilities {
     public static void cambiarPantalla(ActionEvent evento, String archivoFxml, double width, double height, boolean resizable){
         try{
             // cargar archivo pasado por parametro
-            Parent raiz = FXMLLoader.load(Utilities.class.getResource(archivoFxml));
+            Parent raiz = FXMLLoader.load(Objects.requireNonNull(Utilities.class.getResource(archivoFxml)));
             // cambiar el escenario a la siguiente ventana
             Stage stage=(Stage)((Node)evento.getSource()).getScene().getWindow();
             stage.getScene().setRoot(raiz); // devolver a la raiz al cerrarla
@@ -24,6 +27,9 @@ public class Utilities {
             stage.setHeight(height);
             stage.setMinWidth(width);
             stage.setMinHeight(height);
+            stage.centerOnScreen();
+
+            updateTitle(stage);
         } catch (Exception e){
             e.printStackTrace(); // imprimir en consola el errorr
         }
@@ -39,6 +45,12 @@ public class Utilities {
             alert.show();
         }
         return alert;
+    }
+
+    private static void updateTitle(Stage stage){
+        resourcemanager.model.User loggedUser = resourcemanager.structure.CurrentSession.getInstance().getLoggedUser();
+        if (loggedUser != null) {stage.setTitle("Sistema de Reservas - " + loggedUser.getId());}
+        else { stage.setTitle("Sistema de Reservas");}
     }
 
 }

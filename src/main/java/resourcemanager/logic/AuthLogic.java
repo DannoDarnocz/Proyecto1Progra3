@@ -1,5 +1,6 @@
 package resourcemanager.logic;
 
+import resourcemanager.data.SaveToXML;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.UserLoginDTO;
 import resourcemanager.structure.CurrentSession;
@@ -50,8 +51,9 @@ public class AuthLogic {
         String newPassword = newUserLogin.getPassword();
 
         User memUser = UserLogic.findUserById(id); //Obtiene el usuario guardado en memoria
-        if (memUser!=null) {memUser.setPassword(newPassword);} //Si existe, actualiza clave de forma logica
-
-
+        if (memUser!=null) { //Si existe, actualiza clave de forma lógica y luego envia al XML
+            memUser.setPassword(newPassword);
+            SaveToXML.updateUser(memUser);
+        }
     }
 }

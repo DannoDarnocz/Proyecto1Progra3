@@ -11,17 +11,20 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.io.File;
+import java.io.FileInputStream;
 
 public class LoadFromXML {
     static XmlMapper mapper = MapperSingleton.getInstance();
 
     // cargar lista generica de lo que lea en el archivo, donde cada item es indicado por itemTagName
-    private static <T> ArrayList<T> loadList(String resourcePath, String itemTagName, Class<T> itemClass) throws Exception {
+    private static <T> ArrayList<T> loadList(File file, String itemTagName, Class<T> itemClass) throws Exception {
         ArrayList<T> results = new ArrayList<>();
 
-        try (InputStream is = LoadFromXML.class.getResourceAsStream(resourcePath)) {
-            if (is == null) return results;
+        //Cambia a file en vez de Path debido a que la versión generada de Maven no se actualiza en tiempo real con los cambios realizados en el XML
+        if (!file.exists()) return results;
 
+        try (InputStream is = new FileInputStream(file)) {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             XMLStreamReader reader = factory.createXMLStreamReader(is);
 
@@ -37,18 +40,18 @@ public class LoadFromXML {
     }
 
     public static ArrayList<User> loadUsers() throws Exception {
-        return loadList(DataPaths.USERS_PATH, "user", User.class);
+        return loadList(DataPaths.getUsersFile(), "user", User.class);
     }
 
     public static ArrayList<Resource> loadResources() throws Exception {
-        return loadList(DataPaths.RESOURCES_PATH, "resource", Resource.class);
+        return loadList(DataPaths.getResourcesFile(), "resource", Resource.class);
     }
 
     public static ArrayList<Reservation> loadReservations() throws Exception {
-        return loadList(DataPaths.RESERVATIONS_PATH, "reservation", Reservation.class);
+        return loadList(DataPaths.getReservationsFile(), "reservation", Reservation.class);
     }
 
     public static ArrayList<Category> loadCategories() throws Exception {
-        return loadList(DataPaths.CATEGORIES_PATH, "category", Category.class);
+        return loadList(DataPaths.getCategoriesFile(), "category", Category.class);
     }
 }

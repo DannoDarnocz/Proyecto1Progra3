@@ -25,6 +25,7 @@ public class Launcher extends Application {
         escenarioPrincipal.setTitle("Sistema de Reservas"); // ponerle titulo a la ventana
         escenarioPrincipal.setScene(new Scene(raiz,600,400)); // nueva escena del raiz
         escenarioPrincipal.setResizable(false); // que no se pueda cambiar su tamaño
+        escenarioPrincipal.centerOnScreen();
         escenarioPrincipal.show();
     }
 

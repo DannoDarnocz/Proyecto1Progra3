@@ -204,7 +204,7 @@ public class ReservationLogic {
         ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
 
         for(Reservation r : allReservations){
-            if(r.getId()==reservationId){
+            if(r.getId().equals(reservationId)){
 
                 // eliminar reserva del usuario y tambien de todas las reservas (sino no queda ligado a nadie)
                 user.removeReservation(r);
