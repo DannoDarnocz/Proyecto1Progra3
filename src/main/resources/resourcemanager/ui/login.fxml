@@ -4,19 +4,44 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="420.0" prefWidth="600.0" style="-fx-background-color: #ECEFF3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.LoginController">
    <children>
-      <Label fx:id="lbl_appname" alignment="CENTER" layoutX="113.0" layoutY="70.0" prefHeight="40.0" prefWidth="353.0" text="AVI Sistemas de Reserva">
+      <ImageView fitHeight="56.0" fitWidth="56.0" layoutX="272.0" layoutY="53.0" preserveRatio="true" AnchorPane.topAnchor="53.0">
+         <image>
+            <Image url="@../images/login.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="lbl_appname" alignment="CENTER" layoutX="114.0" layoutY="119.0" prefHeight="40.0" prefWidth="373.0" text="AVI - Sistema de Reservas" AnchorPane.leftAnchor="114.0" AnchorPane.rightAnchor="114.0" AnchorPane.topAnchor="119.0">
          <font>
-            <Font size="28.0" />
+            <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="btn_login" layoutX="204.0" layoutY="287.0" mnemonicParsing="false" text="Iniciar sesión" />
-      <TextField fx:id="txt_user" layoutX="215.0" layoutY="168.0" promptText="ID de usuario" />
-      <PasswordField fx:id="pwd_password" layoutX="215.0" layoutY="217.0" promptText="Contraseña" />
-      <Button fx:id="btn_change_pwd" layoutX="309.0" layoutY="287.0" mnemonicParsing="false" text="Cambiar clave" />
+      <AnchorPane layoutX="150.0" layoutY="175.0" prefHeight="150.0" prefWidth="300.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.8" AnchorPane.topAnchor="175.0">
+         <children>
+            <Label layoutX="24.0" layoutY="22.0" text="ID" />
+            <TextField fx:id="txt_user" layoutX="90.0" layoutY="18.0" prefWidth="185.0" promptText="ID de usuario" />
+            <Label layoutX="24.0" layoutY="62.0" text="Clave" />
+            <PasswordField fx:id="pwd_password" layoutX="90.0" layoutY="58.0" prefWidth="185.0" promptText="Contraseña" />
+            <Button fx:id="btn_login" layoutX="35.0" layoutY="105.0" mnemonicParsing="false" text="Ingresar">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/access.png" /></image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button fx:id="btn_change_pwd" layoutX="150.0" layoutY="105.0" mnemonicParsing="false" text="Cambiar clave">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/password.png" /></image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </AnchorPane>
    </children>
-</Pane>
+</AnchorPane>

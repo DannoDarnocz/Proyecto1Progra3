@@ -1,27 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Group?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:controller="resourcemanager.ui.CategoryTabController"  minHeight="0.0" minWidth="0.0" prefHeight="513.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="619.0" prefWidth="720.0" style="-fx-background-color: #ECEFF3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.CategoryTabController">
    <children>
-      <Button fx:id="btn_search1" layoutX="361.0" layoutY="52.0" mnemonicParsing="false" text="Buscar" AnchorPane.topAnchor="52.0" AnchorPane.rightAnchor="189.0" />
-      <Button fx:id="btn_print1" layoutX="444.0" layoutY="52.0" mnemonicParsing="false" text="Imprimir" AnchorPane.topAnchor="52.0" AnchorPane.rightAnchor="95.0" />
-      <Label layoutX="94.0" layoutY="56.0" text="Descripción" AnchorPane.topAnchor="56.0" AnchorPane.leftAnchor="94.0" />
-      <TextField fx:id="txt_id" layoutX="184.0" layoutY="52.0" AnchorPane.topAnchor="52.0" AnchorPane.leftAnchor="184.0" />
-      <Separator layoutX="43.0" layoutY="138.0" prefHeight="0.0" prefWidth="522.0" AnchorPane.topAnchor="138.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="35.0" />
-      <ScrollPane fx:id="scrl_pane_user_list1" layoutX="54.0" layoutY="289.0" prefHeight="101.0" prefWidth="470.0" AnchorPane.topAnchor="289.0" AnchorPane.leftAnchor="54.0" AnchorPane.rightAnchor="76.0" AnchorPane.bottomAnchor="123.0" />
-      <Label layoutX="226.0" layoutY="156.0" text="Categoría encontrada" AnchorPane.topAnchor="156.0" AnchorPane.leftAnchor="226.0" />
-      <TextField fx:id="txt_found_id1" layoutX="202.0" layoutY="185.0" AnchorPane.topAnchor="185.0" AnchorPane.leftAnchor="202.0" />
-      <TextField fx:id="txt_found_name1" layoutX="202.0" layoutY="222.0" AnchorPane.topAnchor="222.0" AnchorPane.leftAnchor="202.0" />
-      <Button fx:id="btn_save1" layoutX="413.0" layoutY="185.0" mnemonicParsing="false" text="Guardar" AnchorPane.topAnchor="185.0" AnchorPane.rightAnchor="126.0" />
-      <Button fx:id="btn_delete1" layoutX="413.0" layoutY="222.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="61.0" text="Borrar" AnchorPane.topAnchor="222.0" AnchorPane.rightAnchor="126.0" />
-      <Button fx:id="btn_clear1" layoutX="413.0" layoutY="254.0" mnemonicParsing="false" text="Limpiar" AnchorPane.topAnchor="254.0" AnchorPane.rightAnchor="126.0" />
-      <Label layoutX="138.0" layoutY="184.0" text="ID" AnchorPane.topAnchor="184.0" AnchorPane.leftAnchor="138.0" />
-      <Label layoutX="113.0" layoutY="226.0" text="Descripción" AnchorPane.topAnchor="226.0" AnchorPane.leftAnchor="113.0" />
+
+      <AnchorPane layoutX="73.0" layoutY="29.0" prefHeight="90.0" prefWidth="574.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.leftAnchor="73.0" AnchorPane.rightAnchor="73.39999999999998" AnchorPane.topAnchor="29.0">
+         <children>
+            <Label layoutX="14.0" layoutY="36.0" text="Descripcion" />
+            <TextField fx:id="txt_category_search_description" layoutX="87.0" layoutY="32.0" prefHeight="26.0" prefWidth="260.0" />
+            <Button fx:id="btn_category_search" layoutX="362.0" layoutY="32.0" mnemonicParsing="false" text="Buscar" AnchorPane.rightAnchor="140.40000000000003">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/search.png" /></image>
+                  </ImageView>
+               </graphic>
+            </Button>
+      
+            <Button fx:id="btn_category_print" layoutX="458.0" layoutY="32.0" mnemonicParsing="false" text="Imprimir" AnchorPane.rightAnchor="34.0">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/print.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+      
+            <Label layoutX="38.0" layoutY="-10.0" style="-fx-background-color: #ECEFF3; -fx-padding: 0 6 0 6; -fx-font-weight: bold;" text="Busqueda" />
+         </children>
+      </AnchorPane>
+
+      <AnchorPane layoutX="101.0" layoutY="141.0" prefHeight="150.0" prefWidth="519.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.leftAnchor="101.0" AnchorPane.rightAnchor="100.60000000000002" AnchorPane.topAnchor="141.0">
+         <children>
+            <Group layoutX="26.0" layoutY="22.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="26.27109375000009">
+               <children>
+                  <Label layoutX="3.6000003814697266" layoutY="4.0" prefHeight="18.0" prefWidth="29.0" text="ID" />
+                  <TextField fx:id="txt_category_id" disable="true" layoutX="87.0" prefHeight="26.0" prefWidth="379.0" />
+                  <Label layoutY="39.0" text="Descripcion" />
+                  <TextField fx:id="txt_category_description" layoutX="87.0" layoutY="35.0" prefHeight="26.0" prefWidth="379.0" />
+      
+                        <Button fx:id="btn_category_save" layoutX="197.0" layoutY="80.0" mnemonicParsing="false" text="Guardar">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/save.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_category_delete" layoutX="300.0" layoutY="80.0" mnemonicParsing="false" text="Borrar">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/cancel.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="btn_category_clear" layoutX="391.0" layoutY="80.0" mnemonicParsing="false" text="Limpiar">
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/clear.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+            </Group>
+      
+            <Label layoutX="30.0" layoutY="-9.0" style="-fx-background-color: #ECEFF3; -fx-padding: 0 6 0 6; -fx-font-weight: bold;" text="Categoria" />
+         </children>
+      </AnchorPane>
+
+      <Label layoutX="40.0" layoutY="301.0" style="-fx-font-weight: bold;" text="Listado" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="301.0" />
+
+      <TableView fx:id="tbl_category_list" layoutX="40.0" layoutY="323.2" prefHeight="271.0" prefWidth="640.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="323.0">
+         <columns>
+            <TableColumn maxWidth="250.0" prefWidth="250.0" text="Id" />
+            <TableColumn prefWidth="390.0" text="Descripcion" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+
    </children>
 </AnchorPane>

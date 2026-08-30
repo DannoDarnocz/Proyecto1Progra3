@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="620.0" prefWidth="1066.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.MainController">
+   <children>
+      <TabPane layoutY="0.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <tabs>
+            <Tab text="Reservas">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/reserve.png" /></image>
+                  </ImageView>
+               </graphic>
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <fx:include source="reservations_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Calendarizacion">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/calender.png" /></image>
+                  </ImageView>
+               </graphic>
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <fx:include source="calendar_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Actividades">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/activity.png" /></image>
+                  </ImageView>
+               </graphic>
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <fx:include source="activity_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Estadisticas">
+               <graphic>
+                  <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
+                     <image><Image url="@../images/statistics.png" /></image>
+                  </ImageView>
+               </graphic>
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="511.0" prefWidth="600.0">
+                     <children>
+                        <fx:include source="stats_tab.fxml" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

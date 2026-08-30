@@ -5,6 +5,9 @@ import javafx.fxml.FXMLLoader; // poder entender y cargar archivos fxml
 import javafx.scene.Parent; // pantallas hijas que se abren sobre la principal en vez de crear nuevas ventanas en el taskbar
 import javafx.scene.Scene; // movernos entre pantallas
 import javafx.stage.Stage; // escenario sobre el que ocurren las escenas
+import javafx.scene.image.Image;
+
+import java.util.Objects;
 
 
 // heredar de aplicación (runnable class)
@@ -17,7 +20,9 @@ public class Launcher extends Application {
 
         java.lang.System.out.println(getClass().getResource("ui/login.fxml"));
         Parent raiz = FXMLLoader.load(getClass().getResource("ui/login.fxml")); // convertir codigo fxml obteniendolo de la clase del recurso especificado
-        escenarioPrincipal.setTitle("Administrador de Recursos"); // ponerle titulo a la ventana
+        Image icono = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/resourcemanager/images/logo.png")));
+        escenarioPrincipal.getIcons().add(icono);
+        escenarioPrincipal.setTitle("Sistema de Reservas"); // ponerle titulo a la ventana
         escenarioPrincipal.setScene(new Scene(raiz,600,400)); // nueva escena del raiz
         escenarioPrincipal.setResizable(false); // que no se pueda cambiar su tamaño
         escenarioPrincipal.show();

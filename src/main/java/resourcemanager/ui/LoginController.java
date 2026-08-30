@@ -65,7 +65,12 @@ public class LoginController {
 
                     // si se encontró entonces pasar a la pantalla principal
                     if(foundUser != null){
-                        Utilities.cambiarPantalla(event, "/resourcemanager/ui/main.fxml",750,700,true);
+                        if (foundUser.getIsAdmin()){
+                            Utilities.cambiarPantalla(event, "/resourcemanager/ui/mainAdmin.fxml",1200,700,true);
+                        }
+                        else{
+                            Utilities.cambiarPantalla(event, "/resourcemanager/ui/mainFuncionario.fxml",1200,700,true);
+                        }
                     }
                     else{
                         Utilities.showAlert("Error","Usuario o contraseña incorrecto", Alert.AlertType.ERROR);
