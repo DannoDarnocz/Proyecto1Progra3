@@ -14,4 +14,9 @@ public class ResourceLogic {
         }
         return null; // no se encontro
     }
+
+
+    public static ArrayList<Resource> getAllResources() throws Exception{
+        return LoadFromXML.loadResources();
+    }
 }

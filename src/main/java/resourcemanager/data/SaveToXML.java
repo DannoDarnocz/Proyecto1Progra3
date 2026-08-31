@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
+import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 
@@ -15,8 +16,7 @@ import java.io.FileWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 
-import static resourcemanager.data.LoadFromXML.loadReservations;
-import static resourcemanager.data.LoadFromXML.loadUsers;
+import static resourcemanager.data.LoadFromXML.*;
 
 public class SaveToXML {
 
@@ -48,7 +48,7 @@ public class SaveToXML {
         File reservationsFile = DataPaths.getReservationsFile();
 
         // caerle encima al archivo entero con la lista actualizada
-        saveAllReservations(allReservations);
+        overwriteReservations(allReservations);
         /*mapper.writer()
                 .withRootName("reservations")
                 .writeValue(reservationsFile, allReservations);*/
@@ -71,7 +71,7 @@ public class SaveToXML {
                 users.set(i, updatedUser);   // reemplazar el usuario viejo con el nuevo actualizado
 
                 // caerle encima al archivo entero con toda la lista
-                saveAllUsers(users);
+                overwriteUsers(users);
                 /*mapper.writer()
                         .withRootName("users")
                         .writeValue(usersFile, users);*/
@@ -82,12 +82,41 @@ public class SaveToXML {
         return false; // no se encontró
     }
 
-    public static void saveAllUsers(ArrayList<User> items) throws Exception {
+    public static boolean updateCategory(Category updatedCategory) throws Exception {
+        // cargar todos las categorias del archivo XML que se sobreescribirá
+        ArrayList<Category> categories = loadCategories();
+
+        // obtener archivo de usuarios desde la ruta almacenada como constante
+        File categoryFile = DataPaths.getCategoriesFile();
+
+        // recorrer lista de categorias del xml hasta encontrar el que se quiere actualizar
+        // como solo el id no cambia entonces se asume que mismo id es el mismo y el resto de
+        // atributos se cambian
+
+        // se ocupa recorrer por indice por el users.set() que requiere indice
+        for (int i = 0; i < categories.size(); i++) {
+            if (categories.get(i).getId().equals(updatedCategory.getId())) {
+                categories.set(i, updatedCategory);   // reemplazar el usuario viejo con el nuevo actualizado
+
+                // caerle encima al archivo entero con toda la lista
+                overwriteCategories(categories);
+
+                return true;
+            }
+        }
+        return false; // no se encontró
+    }
+
+    public static void overwriteUsers(ArrayList<User> items) throws Exception {
         saveList(DataPaths.getUsersFile(),"users","user",items);
     }
 
-    public static void saveAllReservations(ArrayList<Reservation> items) throws Exception {
+    public static void overwriteReservations(ArrayList<Reservation> items) throws Exception {
         saveList(DataPaths.getReservationsFile(),"reservations","reservation",items);
+    }
+
+    public static void overwriteCategories(ArrayList<Category> items) throws Exception {
+        saveList(DataPaths.getCategoriesFile(),"categories","category",items);
     }
 
 

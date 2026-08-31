@@ -1,7 +1,6 @@
 package resourcemanager.logic;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -19,7 +18,6 @@ import resourcemanager.model.Resource;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.ReservationDTO;
 import resourcemanager.model.dto.GeneratedReservationDTO;
-import resourcemanager.service.CategoryService;
 import resourcemanager.service.GeminiService;
 
 import javax.management.InstanceNotFoundException;
@@ -30,8 +28,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ReservationLogic {
 
-    // TODO: DTO o no?
-    //  agregar resource a una reserva
 
     // obtiene el ID actual y lo avanza
     private static String generateID() throws FileSystemException {
@@ -211,7 +207,7 @@ public class ReservationLogic {
                 allReservations.remove(r);
 
                 // guardar usuario y lista de reservas actualizadas
-                SaveToXML.saveAllReservations(allReservations);
+                SaveToXML.overwriteReservations(allReservations);
                 SaveToXML.updateUser(user);
                 return true;
             }

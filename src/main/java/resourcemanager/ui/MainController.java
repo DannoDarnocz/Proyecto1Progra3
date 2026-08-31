@@ -9,11 +9,5 @@ import resourcemanager.data.DataPaths;
 public class MainController {
     @FXML
     private void initialize() {
-        // todo: borrar
-        try{
-            System.out.println(DataPaths.getUsersFile().getAbsolutePath());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }

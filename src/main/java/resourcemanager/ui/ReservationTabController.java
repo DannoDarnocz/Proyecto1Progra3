@@ -126,7 +126,7 @@ public class ReservationTabController {
             tbl_reserve_current.getItems().setAll(userReservations);
         }
         else{
-            System.out.println("NO HAY RESERVAS!!!!");
+            System.out.println("NO HAY RESERVAS!!!!"); // TODO ELIMINAR
         }
 
         // cancelar reserva seleccionada
