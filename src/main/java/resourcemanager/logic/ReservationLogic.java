@@ -34,8 +34,13 @@ public class ReservationLogic {
         try{
             // obtener lista de reservaciones
             ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
-            // los ids de reservas eliminadas nunca se vuelven a asignar, porque eso complicaría las cosas innecesariamente
-            return Integer.toString(allReservations.size()+1);
+            // obtener ultimo id
+            String lastIdString = allReservations.getLast().getId();
+
+            // convertirlo a int y sumarle uno
+            int lastId = Integer.parseInt(lastIdString);
+
+            return Integer.toString(lastId+1);
         } catch (Exception e) {
             e.printStackTrace();
             throw new FileSystemException("No se ha podido obtener el ID autogenerado"); //lanzar hacia arriba de nuevo

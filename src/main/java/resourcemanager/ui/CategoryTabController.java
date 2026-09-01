@@ -1,13 +1,28 @@
 package resourcemanager.ui;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import javafx.scene.Node;
+import javafx.stage.Stage;
+import org.openpdf.text.Document;
+import org.openpdf.text.DocumentException;
+import org.openpdf.text.Paragraph;
+import org.openpdf.text.pdf.PdfName;
+import org.openpdf.text.pdf.PdfString;
+import org.openpdf.text.pdf.PdfWriter;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import resourcemanager.model.Category;
 import resourcemanager.service.CategoryService;
+import resourcemanager.service.PrintService;
 import resourcemanager.service.ReservationService;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class CategoryTabController {
@@ -16,6 +31,9 @@ public class CategoryTabController {
 
     @FXML
     private Button btn_category_search;
+
+    @FXML
+    private Button btn_category_print;
 
     @FXML
     private TextField txt_category_id;
@@ -175,6 +193,15 @@ public class CategoryTabController {
                         }
                     }
                 });
+            }
+        });
+
+        btn_category_print.setOnAction(event-> {
+            // enviar a capa servicios que dirige a logica para luego delegarle a la de imprimir la tarea de imprimir
+            try{
+                CategoryService.printAllCategories();
+            } catch (Exception e) {
+                Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
             }
         });
     }

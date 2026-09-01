@@ -55,7 +55,6 @@ public class User {
     public ArrayList<String> getReservationIdList() { return reservationIdList; }
     public void setReservationIdList(ArrayList<String> reservationList) { this.reservationIdList = reservationList; }
 
-    // TODO: DTO o no?
     // se maneja la lista por fuera porque User es un DTO, no puede tener métodos específicos
     public void addReservation(Reservation r) throws InstanceAlreadyExistsException {
         if(reservationIdList.contains(r.getId())){
@@ -65,6 +64,7 @@ public class User {
     }
 
     public void removeReservation(Reservation r) throws InstanceNotFoundException{
+        // TODO: arreglar sistema de borrado porque hace thro
         // solo la quita del usuario, NO la elimina del archivo xml de resources ni lo pone disactivo porque eso no le corresponde
         if(reservationIdList.contains(r.getId())){
             reservationIdList.remove(r.getId());

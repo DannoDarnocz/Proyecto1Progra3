@@ -7,6 +7,12 @@ import javafx.scene.Parent;
 import javafx.stage.Stage;
 import javafx.scene.control.Alert;
 import resourcemanager.model.User;
+import javafx.print.PrinterJob;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import java.lang.reflect.Field;
+import java.util.List;
 
 import java.util.Objects;
 
@@ -52,5 +58,7 @@ public class Utilities {
         if (loggedUser != null) {stage.setTitle("Sistema de Reservas - " + loggedUser.getId());}
         else { stage.setTitle("Sistema de Reservas");}
     }
+
+
 
 }

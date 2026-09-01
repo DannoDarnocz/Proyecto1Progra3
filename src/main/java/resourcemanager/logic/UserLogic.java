@@ -5,6 +5,7 @@ import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 import resourcemanager.service.ReservationService;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class UserLogic {
@@ -32,5 +33,14 @@ public class UserLogic {
 
         if (reservations.isEmpty()) return null; // esta vacia, no se puede hacer nada
         return reservations;
+    }
+
+    public static void printUserReservations(User user) throws Exception {
+        // obtener lista de reservas del usuario
+        ArrayList<Reservation> reservations = findReservationsForUser(user);
+
+        // generar archivo pdf y abrirselo al usuario
+        File pdf = PrintLogic.generatePdf(reservations, Reservation.class, "reservas_usuario.pdf");
+        PrintLogic.openPdf(pdf);
     }
 }

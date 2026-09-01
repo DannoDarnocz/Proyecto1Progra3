@@ -20,4 +20,8 @@ public class UserService {
     public static ArrayList<Reservation> findReservationsForUser(User user){
         return UserLogic.findReservationsForUser(user);
     }
+
+    public static void printUserReservations(User user) throws Exception {
+        UserLogic.printUserReservations(user);
+    }
 }

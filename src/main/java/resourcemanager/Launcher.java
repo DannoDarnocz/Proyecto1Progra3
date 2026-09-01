@@ -8,15 +8,22 @@ import javafx.stage.Stage; // escenario sobre el que ocurren las escenas
 import javafx.scene.image.Image;
 
 import java.util.Objects;
+import java.util.logging.*;
+
 
 
 // heredar de aplicación (runnable class)
 public class Launcher extends Application {
+
     @Override // sobrecargar metodo que levanta la aplicacion
 
     // parametro es el escenario principal
     // siempre hay que tirar excepcion cuando es codigo externo al de nosotros
     public void start(Stage escenarioPrincipal) throws Exception{
+        // hay que cambiar la configuracion del logger de fontbox y pdfbox porque a la hora de generar el archivo pdf para impresión
+        // puede tirar un billón de warnings a la hora de leer los fonts instalados en la computadora si están corruptos o algo anda raro
+        Logger.getLogger("org.apache.fontbox").setLevel(Level.SEVERE);
+        Logger.getLogger("org.apache.pdfbox").setLevel(Level.SEVERE);
 
         java.lang.System.out.println(getClass().getResource("ui/login.fxml"));
         Parent raiz = FXMLLoader.load(getClass().getResource("ui/login.fxml")); // convertir codigo fxml obteniendolo de la clase del recurso especificado

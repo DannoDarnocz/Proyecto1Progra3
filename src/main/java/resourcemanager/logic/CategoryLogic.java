@@ -1,11 +1,14 @@
 package resourcemanager.logic;
 
+import javafx.stage.Stage;
 import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
+import resourcemanager.service.PrintService;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.io.File;
 import java.util.ArrayList;
 
 public class CategoryLogic {
@@ -107,5 +110,14 @@ public class CategoryLogic {
 
         // ningún recurso tiene esa categoría;
         return true;
+    }
+
+    public static void printAllCategories() throws Exception {
+        // obtener lista de todas las categorias
+        ArrayList<Category> allCategories = getAllCategories();
+
+        // enviar a que la clase de impresion se encargue de generar el pdf
+        File pdf = PrintService.generatePdf(allCategories, Category.class, "lista_de_categorias.pdf");
+        PrintService.openPdf(pdf);
     }
 }

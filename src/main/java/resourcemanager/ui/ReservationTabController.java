@@ -60,18 +60,32 @@ public class ReservationTabController {
     @FXML
     private Button btn_reserve_cancel;
 
-    @FXML
-    private void initialize() {
-        //Politicas para que tabla no tenga espacio sin usar
-        tbl_reserve_categories.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        tbl_reserve_current.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    private void reloadCurrentReservations(){
+        // quitar lo que ya haya
+        tbl_reserve_current.getItems().clear();
 
-        //Habilitación del Spinner y hora por defecto
-        spn_reserve_hour_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
-        spn_reserve_hour_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 1));
+        // tomar las columnas que ya existen en el FXML, en el mismo orden en que aparecen ahi (Id, Descripcion)
+        TableColumn<Reservation, String> columnId = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(0);
+        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        columnId.setStyle("-fx-alignment: CENTER;");
 
-        // --- INICIALIZAR TABLA DE CATEGORIAS
+        TableColumn<Reservation, String> columnDescription = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(1);
+        columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        columnDescription.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<Reservation, LocalDateTime> columnStart = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(2);
+        columnStart.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        columnStart.setStyle("-fx-alignment: CENTER;");
+
+        TableColumn<Reservation, LocalDateTime> columnEnd = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(3);
+        columnEnd.setCellValueFactory(new PropertyValueFactory<>("endDate"));
+        columnEnd.setStyle("-fx-alignment: CENTER;");
+    }
+
+    private void reloadCategories(){
         try{
+            // quitar lo que ya haya
+            tbl_reserve_categories.getItems().clear();
             // tomar las columnas que ya existen en el FXML, en el mismo orden en que aparecen ahi (Id, Descripcion)
             TableColumn<Category, String> columnId = (TableColumn<Category, String>) tbl_reserve_categories.getColumns().get(0);
             columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -92,30 +106,26 @@ public class ReservationTabController {
             System.out.print(availableCategories.size());
 
             tbl_reserve_categories.getItems().setAll(availableCategories);
-
         } catch (Exception e){
-            e.printStackTrace();
+            Utilities.showAlert("Error","Ha ocurrido un error al obtener las categorías disponibles: " + e.getMessage(), Alert.AlertType.ERROR);
         }
+    }
 
+    @FXML
+    private void initialize() {
+        //Politicas para que tabla no tenga espacio sin usar
+        tbl_reserve_categories.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        tbl_reserve_current.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        //Habilitación del Spinner y hora por defecto
+        spn_reserve_hour_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
+        spn_reserve_hour_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 1));
+
+        // --- INICIALIZAR TABLA DE CATEGORIAS
+        reloadCategories();
 
         // --- INCIIALIZAR TABLA DE RESERVAS ACTUALES
-
-        // tomar las columnas que ya existen en el FXML, en el mismo orden en que aparecen ahi (Id, Descripcion)
-        TableColumn<Reservation, String> columnId = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(0);
-        columnId.setCellValueFactory(new PropertyValueFactory<>("id"));
-        columnId.setStyle("-fx-alignment: CENTER;");
-
-        TableColumn<Reservation, String> columnDescription = (TableColumn<Reservation, String>) tbl_reserve_current.getColumns().get(1);
-        columnDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
-        columnDescription.setStyle("-fx-alignment: CENTER;");
-
-        TableColumn<Reservation, LocalDateTime> columnStart = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(2);
-        columnStart.setCellValueFactory(new PropertyValueFactory<>("startDate"));
-        columnStart.setStyle("-fx-alignment: CENTER;");
-
-        TableColumn<Reservation, LocalDateTime> columnEnd = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(3);
-        columnEnd.setCellValueFactory(new PropertyValueFactory<>("endDate"));
-        columnEnd.setStyle("-fx-alignment: CENTER;");
+        reloadCurrentReservations();
 
         // obtener el usuario que inició sesión para obtener sus reservas
         User currentUser = UserService.getLoggedUser();
@@ -223,8 +233,9 @@ public class ReservationTabController {
                         // quitar seleccion
                         selectionModel.clearSelection();
 
-                        // agregar nueva reserva a la tabla
-                        tbl_reserve_current.getItems().add(r);
+                        // actualizar tablas
+                        reloadCategories();
+                        reloadCurrentReservations();
                     } catch (Exception e) {
                         Utilities.showAlert("Error","No se ha podido reservar. " + e.getMessage(), Alert.AlertType.ERROR);
                         e.printStackTrace();
@@ -256,6 +267,12 @@ public class ReservationTabController {
             }
         });
 
-
+        btn_reserve_print.setOnAction(event -> {
+            try{
+                UserService.printUserReservations(currentUser);
+            } catch (Exception e) {
+                Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
     }
 }

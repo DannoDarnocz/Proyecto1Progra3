@@ -1,5 +1,6 @@
 package resourcemanager.service;
 
+import javafx.stage.Stage;
 import resourcemanager.data.DataHandler;
 import resourcemanager.logic.CategoryLogic;
 import resourcemanager.model.Category;
@@ -34,5 +35,9 @@ public class CategoryService {
 
     public static boolean updateCategory(Category c) throws Exception {
         return CategoryLogic.updateCategory(c);
+    }
+
+    public static void printAllCategories() throws Exception {
+        CategoryLogic.printAllCategories();
     }
 }
