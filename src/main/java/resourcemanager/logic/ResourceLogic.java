@@ -3,10 +3,9 @@ package resourcemanager.logic;
 import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.data.DataPaths;
-import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
 import resourcemanager.model.Reservation;
-import javax.management.InstanceAlreadyExistsException;
+
 import javax.management.InstanceNotFoundException;
 import java.security.InvalidParameterException;
 
@@ -33,6 +32,25 @@ public class ResourceLogic {
             }
         }
         return null;
+    }
+
+    public static ArrayList<Reservation> findReservationsForCategory(String id) throws Exception {
+        ArrayList<Reservation> matchingReservations = new ArrayList<>();
+        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+
+        // ver cuales reservas tienen asignado el recurso
+        for(Reservation r:allReservations){
+            ArrayList<String> resourcesForReservation = r.getResourceIdList();
+            for(String resourceId : resourcesForReservation){
+                // si al menos un recurso coincide con la categoria, agregar la reserva
+                if(ResourceLogic.findResourceById(resourceId).getCategoryId().equals(id)) {
+                    matchingReservations.add(r);
+                 break;}
+            }
+        }
+
+        if(matchingReservations.isEmpty()) return null;
+        return matchingReservations;
     }
 
     public static ArrayList<Resource> getAllResources() throws Exception{

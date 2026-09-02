@@ -8,6 +8,8 @@ import resourcemanager.model.User;
 import resourcemanager.model.dto.GeneratedReservationDTO;
 import resourcemanager.model.dto.ReservationDTO;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class ReservationService {
@@ -27,5 +29,9 @@ public class ReservationService {
 
     public static void promptAI(String prompt, Consumer<GeneratedReservationDTO> onSuccess, Consumer<Exception> onError){
         ReservationLogic.promptAI(prompt, onSuccess, onError);
+    }
+
+    public static ArrayList<Reservation> filterByDate(ArrayList<Reservation> list, LocalDate start, LocalDate end){
+        return ReservationLogic.filterByDate(list,start,end);
     }
 }

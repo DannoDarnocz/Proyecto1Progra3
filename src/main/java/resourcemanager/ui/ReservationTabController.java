@@ -48,10 +48,6 @@ public class ReservationTabController {
     @FXML
     private Spinner spn_reserve_hour_end;
     @FXML
-    private Spinner spn_reserve_minute_start;
-    @FXML
-    private Spinner spn_reserve_minute_end;
-    @FXML
     private TableView tbl_reserve_categories;
     @FXML
     private TableView tbl_reserve_current;
@@ -84,6 +80,15 @@ public class ReservationTabController {
         TableColumn<Reservation, LocalDateTime> columnEnd = (TableColumn<Reservation, LocalDateTime>) tbl_reserve_current.getColumns().get(3);
         columnEnd.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         columnEnd.setStyle("-fx-alignment: CENTER;");
+
+        // obtener el usuario que inició sesión para obtener sus reservas
+        User currentUser = UserService.getLoggedUser();
+        ArrayList<Reservation> userReservations = UserService.findReservationsForUser(currentUser);
+
+        // agregar todas las encontradas
+        if(userReservations!=null){
+            tbl_reserve_current.getItems().setAll(userReservations);
+        }
     }
 
     private void reloadCategories(){
@@ -133,12 +138,6 @@ public class ReservationTabController {
         if (generated.getEndHour() != null) {
             spn_reserve_hour_end.getValueFactory().setValue(clampHour(generated.getEndHour()));
         }
-        if (generated.getStartMinute() != null) {
-            spn_reserve_minute_start.getValueFactory().setValue(clampMinute(generated.getStartMinute()));
-        }
-        if (generated.getEndMinute() != null) {
-            spn_reserve_minute_end.getValueFactory().setValue(clampMinute(generated.getEndMinute()));
-        }
 
         // seleccionar en la tabla las categorias que la IA identifico y que ademas siguen disponibles
         TableView.TableViewSelectionModel selectionModel = tbl_reserve_categories.getSelectionModel();
@@ -163,8 +162,6 @@ public class ReservationTabController {
         if (generated.getDate() == null) faltantes.append("- Fecha\n");
         if (generated.getStartHour() == null) faltantes.append("- Hora de inicio\n");
         if (generated.getEndHour() == null) faltantes.append("- Hora de fin\n");
-        if (generated.getStartMinute() == null) faltantes.append("- Minuto de inicio\n");
-        if (generated.getEndMinute() == null) faltantes.append("- Minuto de fin\n");
         if (sugeridas == null || sugeridas.isEmpty()) faltantes.append("- Categorías\n");
 
         if (faltantes.isEmpty()) {
@@ -179,11 +176,6 @@ public class ReservationTabController {
         if (hour > 23) return 23;
         return hour;
     }
-    private int clampMinute(int minute) {
-        if (minute < 0) return 0;
-        if (minute > 59) return 59;
-        return minute;
-    }
 
 
     @FXML
@@ -195,26 +187,12 @@ public class ReservationTabController {
         //Habilitación del Spinner y hora por defecto
         spn_reserve_hour_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
         spn_reserve_hour_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 1));
-        spn_reserve_minute_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
-        spn_reserve_minute_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
 
         // --- INICIALIZAR TABLA DE CATEGORIAS
         reloadCategories();
 
         // --- INCIIALIZAR TABLA DE RESERVAS ACTUALES
         reloadCurrentReservations();
-
-        // obtener el usuario que inició sesión para obtener sus reservas
-        User currentUser = UserService.getLoggedUser();
-        ArrayList<Reservation> userReservations = UserService.findReservationsForUser(currentUser);
-
-        // agregar todas las encontradas
-        if(userReservations!=null){
-            tbl_reserve_current.getItems().setAll(userReservations);
-        }
-        else{
-            System.out.println("NO HAY RESERVAS!!!!"); // TODO ELIMINAR
-        }
 
         // cancelar reserva seleccionada
         btn_reserve_cancel.setOnAction(event -> {
@@ -241,11 +219,11 @@ public class ReservationTabController {
                         try{
                             // TODO: en el xml no se borra por alguna razon
                             // eliminar la reserva del usuario y de la lista general
+                            User currentUser = UserService.getLoggedUser();
                             ReservationService.deleteReservation(selected.getId(),currentUser);
 
                             Alert alert = Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
 
-                            // todo: borrarlo del sistema en el xml
                             // quitar fila
                             tbl_reserve_current.getItems().remove(selected);
 
@@ -296,13 +274,13 @@ public class ReservationTabController {
                     // obtener fecha
                     LocalDate date = dt.getValue();
                     // construir LocalDateTime para guardarlo
-                    // TODO: ARREGLAR SPINNER Y CAMBIAR HORA POR DEFECTO
                     LocalDateTime start = date.atStartOfDay();
                     LocalDateTime end = date.atStartOfDay();
 
                     ReservationDTO dto = new ReservationDTO(description, start, end);
                     try {
                         // lógica maneja la creación y asignación de recursos
+                        User currentUser = UserService.getLoggedUser();
                         Reservation r = ReservationService.createReservationForUser(dto, selectedItems, currentUser);
 
                         Utilities.showAlert("Confirmacion", "Se ha reservado con exito", Alert.AlertType.INFORMATION);
@@ -352,6 +330,7 @@ public class ReservationTabController {
 
         btn_reserve_print.setOnAction(event -> {
             try{
+                User currentUser = UserService.getLoggedUser();
                 UserService.printUserReservations(currentUser);
             } catch (Exception e) {
                 Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);

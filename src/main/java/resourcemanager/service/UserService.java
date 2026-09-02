@@ -24,4 +24,8 @@ public class UserService {
     public static void printUserReservations(User user) throws Exception {
         UserLogic.printUserReservations(user);
     }
+
+    public static User findUserForReservation(Reservation r) throws Exception {
+        return UserLogic.findUserForReservation(r);
+    }
 }

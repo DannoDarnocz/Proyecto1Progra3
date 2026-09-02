@@ -263,4 +263,21 @@ public class ReservationLogic {
 
         return false;
     }
+
+    public static ArrayList<Reservation> filterByDate(ArrayList<Reservation> list, LocalDate start, LocalDate end){
+        ArrayList<Reservation> newList = new ArrayList<>();
+
+
+        for(Reservation r: list){
+            // si la fecha de la reserva esta en el rango especificado, agregar
+            // atStartOfDay es para asignarle una hora, que en este caso es apenas empieza el dia para el inicio y al final cuando termina
+            // se usan negaciones porque usar "isAfter" no incluye la primera hora 0:00
+            if(!r.getStartDate().isBefore(start.atStartOfDay()) && !r.getEndDate().isAfter(end.atTime(23,59,59))){
+                newList.add(r);
+            }
+        }
+
+        if (newList.isEmpty()) return null;
+        return newList;
+    }
 }

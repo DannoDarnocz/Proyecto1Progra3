@@ -1,5 +1,7 @@
 package resourcemanager.ui;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
@@ -20,9 +22,9 @@ import java.util.ArrayList;
 public class ResourcesTabController {
 
     @FXML
-    private ChoiceBox cb_resource_filter_category;
+    private ChoiceBox<Category> cb_resource_filter_category;
     @FXML
-    private ChoiceBox cb_resource_category;
+    private ChoiceBox<Category> cb_resource_category;
 
     @FXML
     private TextField txt_resource_search_description;
@@ -54,9 +56,6 @@ public class ResourcesTabController {
         txt_resource_search_description.clear();
         txt_resource_id.clear();
         txt_resource_description.clear();
-
-        cb_resource_filter_category.setValue("Seleccionar");
-        cb_resource_category.setValue("Seleccionar");
     }
 
     private void reloadCategories(){
@@ -87,9 +86,10 @@ public class ResourcesTabController {
     private void reloadCategoryChoices(){
         try {
             ArrayList<Category> availableCategories = CategoryService.getAllCategories();
-            ArrayList<String> strCategories = CategoryService.convertListToIds(availableCategories);
-
-            if (strCategories == null || strCategories.isEmpty()) {
+            // obtener categorias como arraylist y luego convertirlas a observablelist para meterlas en el choicebox
+            ArrayList<Category> categories = CategoryService.getAllCategories();
+            ObservableList<Category> categoriesObservable = FXCollections.observableArrayList(categories);
+            if (categoriesObservable.isEmpty()) {
                 // no hay categorias, no se puede filtrar ni asignar categoria a un recurso
                 cb_resource_filter_category.getItems().clear();
                 cb_resource_category.getItems().clear();
@@ -97,10 +97,8 @@ public class ResourcesTabController {
                 cb_resource_category.setDisable(true);
                 //Desabilita los ChoiceBox al no haber forma de poder realizar recursos sin categorias
             } else {
-                cb_resource_filter_category.getItems().setAll(strCategories);
-                cb_resource_category.getItems().setAll(strCategories);
-                cb_resource_filter_category.setValue("Seleccionar");
-                cb_resource_category.setValue("Seleccionar");
+                cb_resource_category.setItems(categoriesObservable);
+                cb_resource_filter_category.setItems(categoriesObservable);
                 cb_resource_filter_category.setDisable(false);
                 cb_resource_category.setDisable(false);
             }
@@ -124,7 +122,6 @@ public class ResourcesTabController {
 
                 txt_resource_id.setText(seleccionado.getId());
                 txt_resource_description.setText(seleccionado.getDescription());
-                cb_resource_category.setValue(seleccionado.getCategoryId());
 
                 btn_resource_save.setDisable(false);
                 btn_resource_delete.setDisable(false);
@@ -159,7 +156,9 @@ public class ResourcesTabController {
 
                         txt_resource_id.setText(id);
                         txt_resource_description.setText(description);
-                        cb_resource_category.setValue(foundResource.getCategoryId());
+                        Category foundCategory = CategoryService.searchById(foundResource.getCategoryId());
+
+                        cb_resource_category.setValue(foundCategory);
 
                         // ahora el usuario puede cambiar datos o eliminarla
                         btn_resource_save.setDisable(false);

@@ -32,10 +32,8 @@ public class GeminiService {
     {
       "description": "string", // description for the reservation
       "date": "YYYY-MM-DD", // formatted as a Java LocalDate in the ISO-8601 calendar system
-      "startHour": int, // HOUR at which the reservation is required to start
-      "startMinute": int, // MINUTE at which the reservation is required to start
-      "endHour": int, // HOUR at which the reservation ends
-      "endMinute": int, // MINUTE at which the reservation ends
+      "startHour": int, // HOUR at which the reservation is required to start (0-23, rounded)
+      "endHour": int, // HOUR at which the reservation ends (0-23, rounded)
       "categories": ["cat1","cat2","cat3"...] // each one is a string for an existent categoryId, if none match, use null
     }
     Do not wrap it in markdown code fences, do not add comments, and do not add any explanation before or after it.

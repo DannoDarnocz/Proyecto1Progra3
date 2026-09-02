@@ -30,6 +30,9 @@ public class Category {
         return id.hashCode();
     }
 
+    @Override // el usuario solo deberia ver la descripcion, le vale el id
+    public String toString(){return description;}
+
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 

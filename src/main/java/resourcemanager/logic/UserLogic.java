@@ -43,4 +43,13 @@ public class UserLogic {
         File pdf = PrintLogic.generatePdf(reservations, Reservation.class, "reservas_usuario.pdf");
         PrintLogic.openPdf(pdf);
     }
+
+    public static User findUserForReservation(Reservation r) throws Exception {
+        ArrayList<User> users = LoadFromXML.loadUsers();
+        for(User u : users){
+            if(u.getReservationIdList().contains(r.getId())) return u;
+        }
+
+        return null;
+    }
 }

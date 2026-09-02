@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
@@ -16,10 +17,10 @@
       <AnchorPane layoutX="40.0" layoutY="28.0" prefHeight="90.0" prefWidth="640.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="28.0">
          <children>
             <Label layoutX="14.0" layoutY="36.0" text="Fecha" AnchorPane.leftAnchor="14.0" />
-            <DatePicker fx:id="dt_calendar_date" layoutX="54.0" layoutY="32.0" prefWidth="180.0" AnchorPane.leftAnchor="54.0" />
+            <DatePicker fx:id="dt_date" layoutX="54.0" layoutY="32.0" prefWidth="180.0" AnchorPane.leftAnchor="54.0" />
             <Label layoutX="247.0" layoutY="36.0" text="Categoria" AnchorPane.leftAnchor="247.0" />
-            <ChoiceBox fx:id="cb_calendar_category" layoutX="305.0" layoutY="32.0" prefWidth="180.0" AnchorPane.leftAnchor="305.0" />
-            <Button fx:id="btn_calendar_load" layoutX="514.0" layoutY="33.0" mnemonicParsing="false" text="Cargar" AnchorPane.rightAnchor="139.0">
+            <ChoiceBox fx:id="cb_category" layoutX="305.0" layoutY="32.0" prefWidth="180.0" AnchorPane.leftAnchor="305.0" />
+            <Button fx:id="btn_load" layoutX="514.0" layoutY="33.0" mnemonicParsing="false" text="Cargar" AnchorPane.rightAnchor="139.0">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
                      <image><Image url="@../images/confirm.png" /></image>
@@ -27,7 +28,7 @@
                </graphic>
             </Button>
       
-            <Button fx:id="btn_calendar_print" layoutX="603.0" layoutY="33.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Imprimir" AnchorPane.rightAnchor="40.0">
+            <Button fx:id="btn_print" layoutX="603.0" layoutY="33.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Imprimir" AnchorPane.rightAnchor="40.0">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
                      <image>
@@ -42,12 +43,20 @@
       <Label layoutX="60.0" layoutY="20.0" style="-fx-background-color: #ECEFF3; -fx-padding: 0 6 0 6; -fx-font-weight: bold;" text="Filtros" />
 
       <Label layoutX="45.0" layoutY="140.0" style="-fx-font-weight: bold;" text="Calendarizacion de recursos" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="140.0" />
-
-      <TableView fx:id="tbl_calendar_matrix" layoutX="40.0" layoutY="162.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="162.0">
-         <columns>
-            <TableColumn maxWidth="80.0" prefWidth="70.0" text="Hora" />
-         </columns>
-      </TableView>
+      <ScrollPane layoutX="60.0" layoutY="180.0" prefHeight="324.0" prefWidth="666.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="462.0" prefWidth="891.0">
+               <children>
+            
+                              <TableView fx:id="tbl_matrix" layoutX="-237.0" layoutY="-43.0" AnchorPane.bottomAnchor="230.2" AnchorPane.leftAnchor="-237.0" AnchorPane.rightAnchor="317.79999999999995" AnchorPane.topAnchor="-43.0">
+                     <columns>
+                        <TableColumn maxWidth="80.0" prefWidth="70.0" text="Hora" />
+                     </columns>
+                  </TableView>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
 
    </children>
 </AnchorPane>
