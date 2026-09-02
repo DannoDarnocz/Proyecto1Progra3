@@ -127,6 +127,7 @@ public class LoginController {
 
     private Optional<String> pedirTelefono(){
         TextInputDialog dialog = new TextInputDialog();
+        dialog.initOwner(resourcemanager.structure.AppContext.getPrimaryStage()); //Establece donde está el padre
         dialog.setTitle("Verificación adicional");
         dialog.setHeaderText("Para continuar, confirmá el teléfono registrado en tu cuenta");
         dialog.setContentText("Teléfono:");
@@ -137,6 +138,7 @@ public class LoginController {
     private Optional<String> pedirNuevaContrasena(){
         //Se crea un pop up de dialogo
         Dialog<String> dialog = new Dialog<>();
+        dialog.initOwner(resourcemanager.structure.AppContext.getPrimaryStage()); //Establece donde está el padre
         dialog.setTitle("Cambiar contraseña");
         dialog.setHeaderText("Ingresá tu nueva contraseña");
 

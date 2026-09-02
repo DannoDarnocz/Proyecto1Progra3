@@ -1,17 +1,1 @@
-<resources>
-    <resource>
-        <id>res1</id>
-        <categoryId>cat1</categoryId>
-        <description>Laptop - Dell XPS 15</description>
-    </resource>
-    <resource>
-        <id>res2</id>
-        <categoryId>cat2</categoryId>
-        <description>Office Desk</description>
-    </resource>
-    <resource>
-        <id>res3</id>
-        <categoryId>cat3</categoryId>
-        <description>Honda Civic</description>
-    </resource>
-</resources>
+<?xml version='1.0' encoding='UTF-8'?><resources><resource><id>res1</id><categoryId>cat1</categoryId><description>Laptop - Dell XPS 15</description></resource><resource><id>res2</id><categoryId>cat2</categoryId><description>Office Desk</description></resource><resource><id>res3</id><categoryId>cat3</categoryId><description>Honda Civic</description></resource><resource><id>res4</id><categoryId>cat1</categoryId><description>Laptop - HP</description></resource><resource><id>res5</id><categoryId>cat1</categoryId><description>Laptop - Victus</description></resource><resource><id>res6</id><categoryId>cat5</categoryId><description>El Principito</description></resource></resources>

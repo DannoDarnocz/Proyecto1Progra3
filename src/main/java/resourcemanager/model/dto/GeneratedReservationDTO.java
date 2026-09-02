@@ -7,13 +7,14 @@ import java.util.ArrayList;
 
 public class GeneratedReservationDTO {
     // para recibir lo que la IA respondio
-    ArrayList<Category> categories;
-    String description;
-    LocalDate date;
-    int startHour;
-    int startMinute;
-    int endHour;
-    int endMinute;
+    private ArrayList<Category> categories;
+    private String description;
+    private LocalDate date;
+    private Integer startHour;
+    private Integer startMinute;
+    private Integer endHour;
+    private Integer endMinute;
+    //Integer para poder validar un null en un int
 
     public ArrayList<Category> getCategories() {
         return categories;
@@ -39,35 +40,35 @@ public class GeneratedReservationDTO {
         this.date = date;
     }
 
-    public int getStartHour() {
+    public Integer getStartHour() {
         return startHour;
     }
 
-    public void setStartHour(int startHour) {
+    public void setStartHour(Integer startHour) {
         this.startHour = startHour;
     }
 
-    public int getStartMinute() {
+    public Integer getStartMinute() {
         return startMinute;
     }
 
-    public void setStartMinute(int startMinute) {
+    public void setStartMinute(Integer startMinute) {
         this.startMinute = startMinute;
     }
 
-    public int getEndHour() {
+    public Integer getEndHour() {
         return endHour;
     }
 
-    public void setEndHour(int endHour) {
+    public void setEndHour(Integer endHour) {
         this.endHour = endHour;
     }
 
-    public int getEndMinute() {
+    public Integer getEndMinute() {
         return endMinute;
     }
 
-    public void setEndMinute(int endMinute) {
+    public void setEndMinute(Integer endMinute) {
         this.endMinute = endMinute;
     }
 }

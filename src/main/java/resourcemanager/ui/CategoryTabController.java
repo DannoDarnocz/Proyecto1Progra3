@@ -1,28 +1,18 @@
 package resourcemanager.ui;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import javafx.scene.Node;
-import javafx.stage.Stage;
-import org.openpdf.text.Document;
-import org.openpdf.text.DocumentException;
-import org.openpdf.text.Paragraph;
-import org.openpdf.text.pdf.PdfName;
-import org.openpdf.text.pdf.PdfString;
-import org.openpdf.text.pdf.PdfWriter;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import resourcemanager.model.Category;
 import resourcemanager.service.CategoryService;
-import resourcemanager.service.PrintService;
-import resourcemanager.service.ReservationService;
 
 import javax.management.InstanceAlreadyExistsException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 public class CategoryTabController {
@@ -56,7 +46,6 @@ public class CategoryTabController {
     // para borrar text fields y deshabilitar los botones
     private void resetDefaultStates(){
         // ya no hay categoria encontrada asi que hay que buscar de nuevo antes de poder hacer cambios o eliminar
-        btn_category_save.setDisable(true);
         btn_category_delete.setDisable(true);
 
         // resetear text fields
@@ -86,10 +75,7 @@ public class CategoryTabController {
 
     @FXML
     private void initialize() {
-
-
         // apenas el usuario ingresa el boton de guardar cambios y borrar categoria esta deshabilitado porque primero tiene que buscar una valida
-        btn_category_save.setDisable(true);
         btn_category_delete.setDisable(true);
 
         // mostrar categorias disponibles en la tabla
@@ -133,29 +119,30 @@ public class CategoryTabController {
             String id = txt_category_id.getText().trim();
             String description = txt_category_description.getText().trim();
 
-            // debe de buscar categoria primero, aunque el boton deberia de estar deshabilitado. por si acaso verificar
-            if(id.isEmpty()){
-                Utilities.showAlert("Error","Debe de buscar una categoria para hacerle cambios.", Alert.AlertType.ERROR);
+            if(description.isEmpty()){
+                Utilities.showAlert("Error", "Debe de escribir una descripción para la categoría.", Alert.AlertType.ERROR);
+                return;
             }
-            else{
-                // crear DTO para enviar los datos nuevos
-                Category categoryDTO = new Category(id,description);
-                try{
-                    if(CategoryService.updateCategory(categoryDTO)){
-                        // si se encontro y se pudo actualizar porque la descripcion si era diferente
-                        Utilities.showAlert("Confirmacion","Se ha actualizado la categoria correctamente", Alert.AlertType.INFORMATION);
-
-                        // recargar tabla de categorias
-                        reloadCategories();
+            try {
+                if (id.isEmpty()) {
+                    // no hay id cargado, categoria nueva
+                    Category nueva = CategoryService.addCategory(description);
+                    Utilities.showAlert("Confirmacion", "Se ha agregado la categoría " + nueva.getId(), Alert.AlertType.INFORMATION);
+                    resetDefaultStates();
+                } else {
+                    // hay un id cargado, se esta editando
+                    Category categoryDTO = new Category(id, description);
+                    if (CategoryService.updateCategory(categoryDTO)) {
+                        Utilities.showAlert("Confirmacion", "Se ha actualizado la categoria correctamente", Alert.AlertType.INFORMATION);
+                    } else {
+                        Utilities.showAlert("Error", "No se ha encontrado la categoría.", Alert.AlertType.ERROR);
                     }
-                    else{
-                        Utilities.showAlert("Error","No se ha encontrado la categoría.", Alert.AlertType.ERROR);
-                    }
-                }catch (InstanceAlreadyExistsException e) {
-                    Utilities.showAlert("Error","La descripción nueva de la categoría debe de ser diferente a la actual.", Alert.AlertType.ERROR);
-                } catch (Exception e) {
-                    Utilities.showAlert("Error","Ha ocurrido un error al buscar la categoria: " + e.getMessage(), Alert.AlertType.ERROR);
                 }
+                reloadCategories();
+            } catch (InvalidParameterException | InstanceAlreadyExistsException e){
+                Utilities.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            } catch (Exception e) {
+                Utilities.showAlert("Error", "Ha ocurrido un error al guardar la categoria: " + e.getMessage(), Alert.AlertType.ERROR);
             }
         });
 

@@ -16,13 +16,13 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.cell.PropertyValueFactory;
-import resourcemanager.data.DataHandler;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.ReservationDTO;
+import resourcemanager.model.dto.GeneratedReservationDTO;
+
 import resourcemanager.service.CategoryService;
-import resourcemanager.service.GeminiService;
 import resourcemanager.service.ReservationService;
 import resourcemanager.service.UserService;
 import resourcemanager.structure.CurrentSession;
@@ -47,6 +47,10 @@ public class ReservationTabController {
     private Spinner spn_reserve_hour_start;
     @FXML
     private Spinner spn_reserve_hour_end;
+    @FXML
+    private Spinner spn_reserve_minute_start;
+    @FXML
+    private Spinner spn_reserve_minute_end;
     @FXML
     private TableView tbl_reserve_categories;
     @FXML
@@ -111,6 +115,77 @@ public class ReservationTabController {
         }
     }
 
+
+    // aplica al formulario lo que la IA logro extraer de la frase en lenguaje natural.
+    // solo toca los campos que la IA pudo llenar, el resto los deja como estaban
+    private void applyAiSuggestion(GeneratedReservationDTO generated) {
+        if (generated.getDescription() != null && !generated.getDescription().isBlank()) {
+            txt_reserve_activity.setText(generated.getDescription());
+        }
+
+        if (generated.getDate() != null) {
+            dt.setValue(generated.getDate());
+        }
+
+        if (generated.getStartHour() != null) {
+            spn_reserve_hour_start.getValueFactory().setValue(clampHour(generated.getStartHour()));
+        }
+        if (generated.getEndHour() != null) {
+            spn_reserve_hour_end.getValueFactory().setValue(clampHour(generated.getEndHour()));
+        }
+        if (generated.getStartMinute() != null) {
+            spn_reserve_minute_start.getValueFactory().setValue(clampMinute(generated.getStartMinute()));
+        }
+        if (generated.getEndMinute() != null) {
+            spn_reserve_minute_end.getValueFactory().setValue(clampMinute(generated.getEndMinute()));
+        }
+
+        // seleccionar en la tabla las categorias que la IA identifico y que ademas siguen disponibles
+        TableView.TableViewSelectionModel selectionModel = tbl_reserve_categories.getSelectionModel();
+        selectionModel.clearSelection();
+
+        ArrayList<Category> sugeridas = generated.getCategories();
+        if (sugeridas != null) {
+            ObservableList<Category> disponibles = tbl_reserve_categories.getItems();
+            for (Category sugerida : sugeridas) {
+                for (Category disponible : disponibles) {
+                    if (disponible.getId().equals(sugerida.getId())) {
+                        selectionModel.select(disponible);
+                        break;
+                    }
+                }
+            }
+        }
+
+        // avisar si quedo algo sin llenar, para que el usuario sepa que debe completarlo a mano
+        StringBuilder faltantes = new StringBuilder();
+        if (generated.getDescription() == null) faltantes.append("- Actividad\n");
+        if (generated.getDate() == null) faltantes.append("- Fecha\n");
+        if (generated.getStartHour() == null) faltantes.append("- Hora de inicio\n");
+        if (generated.getEndHour() == null) faltantes.append("- Hora de fin\n");
+        if (generated.getStartMinute() == null) faltantes.append("- Minuto de inicio\n");
+        if (generated.getEndMinute() == null) faltantes.append("- Minuto de fin\n");
+        if (sugeridas == null || sugeridas.isEmpty()) faltantes.append("- Categorías\n");
+
+        if (faltantes.isEmpty()) {
+            Utilities.showAlert("Confirmación", "Se llenó el formulario por IA. Puede revisarlo antes de reservar.", Alert.AlertType.INFORMATION);
+        } else {
+            Utilities.showAlert("Revise el formulario", "La IA no pudo determinar lo siguiente, complételo manualmente:\n" + faltantes, Alert.AlertType.WARNING);
+        }
+    }
+
+    private int clampHour(int hour) {
+        if (hour < 0) return 0;
+        if (hour > 23) return 23;
+        return hour;
+    }
+    private int clampMinute(int minute) {
+        if (minute < 0) return 0;
+        if (minute > 59) return 59;
+        return minute;
+    }
+
+
     @FXML
     private void initialize() {
         //Politicas para que tabla no tenga espacio sin usar
@@ -120,6 +195,8 @@ public class ReservationTabController {
         //Habilitación del Spinner y hora por defecto
         spn_reserve_hour_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
         spn_reserve_hour_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 1));
+        spn_reserve_minute_start.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+        spn_reserve_minute_end.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
 
         // --- INICIALIZAR TABLA DE CATEGORIAS
         reloadCategories();
@@ -252,19 +329,25 @@ public class ReservationTabController {
             String prompt = txt_reserve_prompt.getText().trim();
             if(prompt.isEmpty()){
                 Utilities.showAlert("Error","Debe de describir la reserva", Alert.AlertType.ERROR);
+                return;
             }
-            else{
-                try{
-                    ReservationService.promptAI(prompt);
-                    System.out.println("Waos"); //TODO BORRAR
-                } catch(InvalidParameterException e){
-                    Utilities.showAlert("Error",e.getMessage(), Alert.AlertType.ERROR);
-                }catch (InterruptedException e){
-                    Utilities.showAlert("Error","Se ha interrumpido el proceso de generación por IA: "+e.getMessage(), Alert.AlertType.ERROR);
-                } catch (Exception e){
-                    Utilities.showAlert("Error","Ha ocurrido un error: "+e.getMessage(), Alert.AlertType.ERROR);
-                }
-            }
+            btn_reserve_ai.setDisable(true);
+            btn_reserve_ai.setText("Extrayendo...");
+
+            ReservationService.promptAI(
+                    prompt,
+                    generated -> {
+                        btn_reserve_ai.setDisable(false);
+                        btn_reserve_ai.setText("Extraer con IA");
+                        applyAiSuggestion(generated);
+                        },
+                    error -> {
+                        btn_reserve_ai.setDisable(false);
+                        btn_reserve_ai.setText("Extraer con IA");
+                        String mensaje = error.getMessage() != null ? error.getMessage() : "Ha ocurrido un error inesperado";
+                        Utilities.showAlert("Error", mensaje, Alert.AlertType.ERROR);
+                    }
+                );
         });
 
         btn_reserve_print.setOnAction(event -> {

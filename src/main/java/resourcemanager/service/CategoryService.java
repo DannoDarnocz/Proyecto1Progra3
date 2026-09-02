@@ -40,4 +40,8 @@ public class CategoryService {
     public static void printAllCategories() throws Exception {
         CategoryLogic.printAllCategories();
     }
+
+    public static Category addCategory(String description) throws Exception{
+        return CategoryLogic.addCategory(description);
+    }
 }

@@ -31,6 +31,10 @@ public class Resource {
         Resource otherResource = (Resource) other;
         return this.id.equals(otherResource.getId());
     }
+    @Override
+    public int hashCode() {
+        return id.hashCode();
+    }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

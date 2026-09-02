@@ -5,10 +5,12 @@ import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
-import resourcemanager.service.PrintService;
+import resourcemanager.logic.PrintLogic;
 
 import javax.management.InstanceAlreadyExistsException;
+import javax.management.InstanceNotFoundException;
 import java.io.File;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 public class CategoryLogic {
@@ -90,12 +92,25 @@ public class CategoryLogic {
     public static boolean updateCategory(Category updatedTarget) throws Exception{
         Category currentTarget = searchById(updatedTarget.getId()); // asumiendo que el id nunca deberia cambiar
 
-        if(updatedTarget.getDescription().equals(currentTarget.getDescription())){
+        if (currentTarget == null) {
+            throw new InstanceNotFoundException("No se encontró una categoría con ese ID");
+        }
+        if (updatedTarget.getDescription() == null || updatedTarget.getDescription().isBlank()) {
+            throw new InvalidParameterException("La descripción no puede estar vacía");
+        }
+
+        if (haveNumbers(updatedTarget.getDescription())) {throw new InvalidParameterException("La descripción no puede tener números");}
+
+
+        String descNorm = normalizeDescription(updatedTarget.getDescription());
+
+        if (descNorm.equals(currentTarget.getDescription())) {
             // no hay cambio, no se puede
             throw new InstanceAlreadyExistsException("La descripción de la categoría es la misma");
         }
 
-        return SaveToXML.updateCategory(updatedTarget);
+        Category catNormalizada = new Category(updatedTarget.getId(), descNorm);
+        return SaveToXML.updateCategory(catNormalizada);
     }
 
     public static boolean categoryIsOrphan(Category target) throws Exception {
@@ -117,7 +132,69 @@ public class CategoryLogic {
         ArrayList<Category> allCategories = getAllCategories();
 
         // enviar a que la clase de impresion se encargue de generar el pdf
-        File pdf = PrintService.generatePdf(allCategories, Category.class, "lista_de_categorias.pdf");
-        PrintService.openPdf(pdf);
+        File pdf = PrintLogic.generatePdf(allCategories, Category.class, "lista_de_categorias.pdf");
+        PrintLogic.openPdf(pdf);
+    }
+
+    public static Category addCategory(String description) throws Exception {
+        if (description == null || description.isBlank()){
+            throw new InvalidParameterException("La descripción no puede estar vacía");
+        }
+        if (haveNumbers(description)) {throw new InvalidParameterException("La descripción no puede tener números");}
+
+        String descNorm = normalizeDescription(description);
+
+        //Obtiene todas las categorias
+        ArrayList<Category> allCat = LoadFromXML.loadCategories();
+
+        //Verifica que no exista ya dicha categoria
+        for (Category c : allCat){
+            if (c.getDescription().equalsIgnoreCase(descNorm)){
+                throw new InstanceAlreadyExistsException("Ya existe una categoría con esa descripción");
+            }
+        }
+
+        //Usa regex para extraer los digitos y selecciona el máximo de todas las id para evitar duplicaciones
+        int maxN = 0;
+        for (Category c : allCat){
+            String digits = c.getId().replaceAll("\\D+", "");
+            if (!digits.isEmpty()) maxN = Math.max(maxN,Integer.parseInt(digits));
+        }
+
+        //Auto genera las id nuevas y las agrega a la base de datos.
+        String newId = "cat" + (maxN + 1);
+        Category newCat = new Category(newId,descNorm);
+        allCat.add(newCat);
+        SaveToXML.overwriteCategories(allCat);
+
+        return newCat;
+    }
+
+    // normaliza el formato del texto
+    // (ej: "SALA DE juntas" o "sala   de JUNTAS" -> "Sala De Juntas")
+    private static String normalizeDescription(String texto) {
+        String clean = texto.trim();
+        if (clean.isEmpty()) return clean;
+
+        String[] palabras = clean.split("\\s+");
+        StringBuilder resultado = new StringBuilder();
+
+        for (int i = 0; i < palabras.length; i++) {
+            String palabra = palabras[i];
+            if (!palabra.isEmpty()) {
+                resultado.append(Character.toUpperCase(palabra.charAt(0)))
+                        .append(palabra.substring(1).toLowerCase());
+            }
+            if (i < palabras.length - 1) resultado.append(" ");
+        }
+
+        return resultado.toString();
+    }
+    // true si el texto tiene al menos un dígito (0-9) en cualquier parte
+    private static boolean haveNumbers(String texto) {
+        for (char c : texto.toCharArray()) {
+            if (Character.isDigit(c)) return true;
+        }
+        return false;
     }
 }

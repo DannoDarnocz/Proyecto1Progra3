@@ -12,14 +12,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="560.0" prefWidth="832.0" style="-fx-background-color: #ECEFF3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.ReservationTabController">
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="560.0" prefWidth="886.0" style="-fx-background-color: #ECEFF3;" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="resourcemanager.ui.ReservationTabController">
    <children>
 
       <AnchorPane layoutX="40.0" layoutY="28.0" prefHeight="305.0" prefWidth="768.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="28.0">
          <children>
             <Label layoutX="18.0" layoutY="18.0" text="Frase" />
             <TextArea fx:id="txt_reserve_prompt" layoutX="90.0" layoutY="14.0" prefHeight="50.0" prefWidth="517.0" />
-            <Button fx:id="btn_reserve_ai" layoutX="617.0" layoutY="19.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="110.0" text="Extraer con IA">
+            <Button fx:id="btn_reserve_ai" layoutX="628.0" layoutY="18.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="174.0" text="Extraer con IA">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
                      <image><Image url="@../images/ai.png" /></image>
@@ -32,39 +32,45 @@
             <Label layoutX="17.0" layoutY="118.0" text="Fecha" />
             <DatePicker fx:id="dt" layoutX="92.0" layoutY="114.0" prefHeight="25.0" prefWidth="200.0" />
 
-            <Label layoutX="310.0" layoutY="118.0" text="Hora inicio" />
-            <Spinner fx:id="spn_reserve_hour_start" layoutX="380.0" layoutY="114.0" prefWidth="120.0" />
-            <Label layoutX="310.0" layoutY="153.0" text="Hora fin" />
-            <Spinner fx:id="spn_reserve_hour_end" layoutX="380.0" layoutY="149.0" prefWidth="120.0" />
+            <Label layoutX="310.0" layoutY="117.0" text="Hora inicio" />
+            <Spinner fx:id="spn_reserve_hour_start" layoutX="376.0" layoutY="113.0" prefWidth="120.0" />
+            <Label layoutX="310.0" layoutY="152.0" text="Hora fin" />
+            <Spinner fx:id="spn_reserve_hour_end" layoutX="377.0" layoutY="148.0" prefWidth="120.0" />
 
             <Label layoutX="18.0" layoutY="153.0" text="Categorias requeridas" />
-            <TableView fx:id="tbl_reserve_categories" layoutX="20.0" layoutY="178.0" prefHeight="113.0" prefWidth="730.0" AnchorPane.leftAnchor="19.0" AnchorPane.rightAnchor="19.0">
+            <TableView fx:id="tbl_reserve_categories" layoutX="24.0" layoutY="182.0" prefHeight="110.0" prefWidth="784.0" AnchorPane.leftAnchor="22.0" AnchorPane.rightAnchor="16.0">
                <columns>
                   <TableColumn prefWidth="200.0" text="Id" />
                   <TableColumn prefWidth="400.0" text="Descripcion" />
                </columns>
             </TableView>
 
-            <Button fx:id="btn_clear11" layoutX="653.0" layoutY="114.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="76.0" text="Limpiar" AnchorPane.rightAnchor="41.0">
+            <Button fx:id="btn_clear11" layoutX="719.6" layoutY="74.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="82.0" text="Limpiar">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
-                     <image><Image url="@../images/clear.png" /></image>
+                     <image>
+                        <Image url="@../images/clear.png" />
+                     </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button fx:id="btn_reserve_confirm" layoutX="525.0" layoutY="114.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="82.0" text="Reservar" AnchorPane.rightAnchor="163.0">
+            <Button fx:id="btn_reserve_confirm" layoutX="628.4" layoutY="74.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="82.0" text="Reservar">
                <graphic>
                   <ImageView fitHeight="16.0" fitWidth="16.0" preserveRatio="true">
                      <image><Image url="@../images/save.png" /></image>
                   </ImageView>
                </graphic>
             </Button>
+            <Label layoutX="514.0" layoutY="118.0" text="Minuto inicio" />
+            <Spinner fx:id="spn_reserve_minute_start" layoutX="590.0" layoutY="114.0" prefWidth="120.0" />
+            <Label layoutX="514.0" layoutY="153.0" text="Minuto fin" />
+            <Spinner fx:id="spn_reserve_minute_end" layoutX="591.0" layoutY="149.0" prefWidth="120.0" />
          </children>
       </AnchorPane>
 
       <Label layoutX="60.0" layoutY="20.0" style="-fx-background-color: #ECEFF3; -fx-padding: 0 6 0 6; -fx-font-weight: bold;" text="Nueva reserva" />
 
-      <AnchorPane layoutX="40.0" layoutY="346.0" prefHeight="189.0" prefWidth="768.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="346.0">
+      <AnchorPane layoutX="40.0" layoutY="352.8" prefHeight="182.0" prefWidth="822.0" style="-fx-background-color: white; -fx-border-color: #4A4A4A; -fx-border-width: 1.3;" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="24.0" AnchorPane.topAnchor="346.0">
          <children>
             <TableView fx:id="tbl_reserve_current" layoutX="17.0" layoutY="17.0" prefHeight="123.0" prefWidth="736.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="16.0" AnchorPane.rightAnchor="16.0" AnchorPane.topAnchor="16.0">
                <columns>

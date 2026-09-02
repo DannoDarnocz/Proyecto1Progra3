@@ -1,25 +1,35 @@
 package resourcemanager.ui;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Button;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.w3c.dom.Text;
 import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
 import resourcemanager.service.CategoryService;
-import resourcemanager.model.Category;
-import resourcemanager.service.CategoryService;
 import resourcemanager.service.ResourceService;
-
+import javax.management.InstanceAlreadyExistsException;
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 public class ResourcesTabController {
 
     @FXML
     private ChoiceBox cb_resource_filter_category;
+    @FXML
+    private ChoiceBox cb_resource_category;
 
     @FXML
     private TextField txt_resource_search_description;
+    @FXML
+    private TextField txt_resource_description;
+    @FXML
+    private TextField txt_resource_id;
 
     @FXML
     private Button btn_resource_save;
@@ -29,6 +39,8 @@ public class ResourcesTabController {
     private Button btn_resource_clear;
     @FXML
     private Button btn_resource_search;
+    @FXML
+    private Button btn_resource_print;
 
     @FXML
     private TableView tbl_resource_list;
@@ -36,11 +48,15 @@ public class ResourcesTabController {
     // para borrar text fields y deshabilitar los botones
     private void resetDefaultStates(){
         // ya no hay categoria encontrada asi que hay que buscar de nuevo antes de poder hacer cambios o eliminar
-        btn_resource_save.setDisable(true);
         btn_resource_delete.setDisable(true);
 
         // resetear text fields
         txt_resource_search_description.clear();
+        txt_resource_id.clear();
+        txt_resource_description.clear();
+
+        cb_resource_filter_category.setValue("Seleccionar");
+        cb_resource_category.setValue("Seleccionar");
     }
 
     private void reloadCategories(){
@@ -62,40 +78,181 @@ public class ResourcesTabController {
             // buscar todas las categorias y meterlas como filas en la tabla
             ArrayList<Resource> availableResources = ResourceService.getAllResources();
             tbl_resource_list.getItems().setAll(availableResources);
-
+            reloadCategoryChoices();
         } catch (Exception e) {
             Utilities.showAlert("Error","Se produjo un error al cargar los recursos", Alert.AlertType.ERROR);
         }
     }
 
+    private void reloadCategoryChoices(){
+        try {
+            ArrayList<Category> availableCategories = CategoryService.getAllCategories();
+            ArrayList<String> strCategories = CategoryService.convertListToIds(availableCategories);
+
+            if (strCategories == null || strCategories.isEmpty()) {
+                // no hay categorias, no se puede filtrar ni asignar categoria a un recurso
+                cb_resource_filter_category.getItems().clear();
+                cb_resource_category.getItems().clear();
+                cb_resource_filter_category.setDisable(true);
+                cb_resource_category.setDisable(true);
+                //Desabilita los ChoiceBox al no haber forma de poder realizar recursos sin categorias
+            } else {
+                cb_resource_filter_category.getItems().setAll(strCategories);
+                cb_resource_category.getItems().setAll(strCategories);
+                cb_resource_filter_category.setValue("Seleccionar");
+                cb_resource_category.setValue("Seleccionar");
+                cb_resource_filter_category.setDisable(false);
+                cb_resource_category.setDisable(false);
+            }
+        } catch (Exception e) {
+            Utilities.showAlert("Error","No existen categorias disponibles",Alert.AlertType.ERROR);
+            cb_resource_filter_category.setDisable(true);
+            cb_resource_category.setDisable(true);
+            //Desabilita los ChoiceBox al no haber forma de poder realizar recursos sin categorias
+        }
+    }
+    public void refreshCategoryChoices(){
+        reloadCategoryChoices();
+    }
+
     @FXML
     private void initialize() {
-        // agregar categorias disponibles en el combobox
-        reloadCategories();
-        try {
-            cb_resource_filter_category.setValue("Seleccionar");
-            ArrayList<Category> availableCategories = CategoryService.getAllCategories();
-            // convertir todas las categorias a solo IDs
-            ArrayList<String> strCategories = CategoryService.convertListToIds(availableCategories);
-            cb_resource_filter_category.getItems().setAll(strCategories);
-        } catch (Exception e) {
-            // todo: aslkdjaslkd
-        }
+        //En caso de recursos de descripciones y categorias repetidas, se selecciona directamente de la tabla basandose en el ID
+        tbl_resource_list.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null) {
+                Resource seleccionado = (Resource) newValue;
 
+                txt_resource_id.setText(seleccionado.getId());
+                txt_resource_description.setText(seleccionado.getDescription());
+                cb_resource_category.setValue(seleccionado.getCategoryId());
+
+                btn_resource_save.setDisable(false);
+                btn_resource_delete.setDisable(false);
+            }
+        });
+        // agregar categorias disponibles en el combobox
+        btn_resource_delete.setDisable(true);
+        txt_resource_id.setDisable(true);
+        reloadCategories();
 
         btn_resource_search.setOnAction(event -> {
-            // obtener categoria seleccionada
             String categoryId = cb_resource_filter_category.getValue().toString();
-            String resourceDescription = txt_resource_search_description.getText();
+            String resourceDescription = txt_resource_search_description.getText().trim();
 
-            if(categoryId == "Seleccionar"){
+            if(categoryId == "Seleccionar" || resourceDescription.isEmpty()){
                 Utilities.showAlert("Error","Debe de seleccionar una categoría y la descripción del recurso", Alert.AlertType.ERROR);
+                return;
             }
             else{
-                System.out.println(categoryId);
+                try{
+                    // buscar recurso por descripcion (el usuario no deberia de aprenderse el id porque es algo arbitrario para identificarlas)
+                    Resource foundResource = ResourceService.searchByDescriptionAndCategory(resourceDescription, categoryId);
+
+                    if(foundResource==null){
+                        // no se encontro el recurso
+                        Utilities.showAlert("Error","No se ha encontrado el recurso.", Alert.AlertType.ERROR);
+                    }
+                    else{
+                        // reemplazar datos de los text field con lo que se encontró
+                        String id = foundResource.getId();
+                        String description = foundResource.getDescription();
+
+                        txt_resource_id.setText(id);
+                        txt_resource_description.setText(description);
+                        cb_resource_category.setValue(foundResource.getCategoryId());
+
+                        // ahora el usuario puede cambiar datos o eliminarla
+                        btn_resource_save.setDisable(false);
+                        btn_resource_delete.setDisable(false);
+
+                    }
+                } catch (Exception e) {
+                    Utilities.showAlert("Error","Ha ocurrido un error al buscar la categoria: " + e.getMessage(), Alert.AlertType.ERROR);
+                }
             }
         });
 
+        btn_resource_save.setOnAction(event -> {
+            String id = txt_resource_id.getText().trim();
+            String description = txt_resource_description.getText().trim();
+            Object categoryValue = cb_resource_category.getValue();
+            String categoryId = categoryValue != null ? categoryValue.toString() : null;
 
+            if(description.isEmpty()){
+                Utilities.showAlert("Error", "Debe de escribir una descripción para el recurso.", Alert.AlertType.ERROR);
+                return;
+            }
+            if(categoryId == null || categoryId.equals("Seleccionar")){
+                Utilities.showAlert("Error", "Debe de seleccionar una categoría para el recurso.", Alert.AlertType.ERROR);
+                return;
+            }
+            try {
+                if (id.isEmpty()) {
+                    // no hay id cargado, recurso nuevo
+                    Resource nuevo = ResourceService.addResource(categoryId, description);
+                    Utilities.showAlert("Confirmacion", "Se ha agregado el recurso " + nuevo.getId(), Alert.AlertType.INFORMATION);
+                    resetDefaultStates();
+                } else {
+                    // hay un id cargado, se esta editando
+                    Resource resourceDTO = new Resource(id, categoryId, description);
+                    if (ResourceService.updateResource(resourceDTO)) {
+                        Utilities.showAlert("Confirmacion", "Se ha actualizado el recurso correctamente", Alert.AlertType.INFORMATION);
+                    } else {
+                        Utilities.showAlert("Error", "No se ha encontrado el recurso.", Alert.AlertType.ERROR);
+                    }
+                }
+                reloadCategories();
+            } catch (InvalidParameterException | InstanceAlreadyExistsException e){
+                Utilities.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+            } catch (Exception e) {
+                Utilities.showAlert("Error", "Ha ocurrido un error al guardar el recurso: " + e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
+
+        // limpiar todos los datos introducidos y los de la categoria encontrada
+        btn_resource_clear.setOnAction(event -> {
+            resetDefaultStates();
+        });
+
+        btn_resource_delete.setOnAction(event -> {
+            String id = txt_resource_id.getText().trim();
+
+            // debe de buscar un recurso primero
+            if(id.isEmpty()){
+                Utilities.showAlert("Error","Debe de buscar  un recurso para eliminarla.", Alert.AlertType.ERROR);
+            }
+            else{
+                // pedir confirmacion
+                Alert confirmation = Utilities.showAlert("Aviso","Desea borrar el recurso con el ID " + id + "?", Alert.AlertType.CONFIRMATION);
+
+                confirmation.showAndWait().ifPresent(response -> {
+                    if (response == ButtonType.OK) {
+                        // borrar
+                        try{
+                            if(ResourceService.deleteResource(id)){
+                                Utilities.showAlert("Confirmacion","Se ha borrado el recurso correctamente", Alert.AlertType.INFORMATION);
+                                resetDefaultStates();
+                                // recargar tabla de categorias
+                                reloadCategories();
+                            }
+                            else{
+                                Utilities.showAlert("Error","El recurso ingresado no se pudo borrar debido a que no se encontró en la lista.", Alert.AlertType.ERROR);
+                            }
+                        } catch (Exception e) {
+                            Utilities.showAlert("Error","Ha ocurrido un error al borrar el recurso: " + e.getMessage(), Alert.AlertType.ERROR);
+                        }
+                    }
+                });
+            }
+        });
+
+        btn_resource_print.setOnAction(event-> {
+            // enviar a capa servicios que dirige a logica para luego delegarle a la de imprimir la tarea de imprimir
+            try{
+                ResourceService.printAllCategories();
+            } catch (Exception e) {
+                Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
+            }
+        });
     }
 }

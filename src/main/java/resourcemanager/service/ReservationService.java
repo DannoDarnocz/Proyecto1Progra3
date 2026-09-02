@@ -8,6 +8,8 @@ import resourcemanager.model.User;
 import resourcemanager.model.dto.GeneratedReservationDTO;
 import resourcemanager.model.dto.ReservationDTO;
 
+import java.util.function.Consumer;
+
 public class ReservationService {
     // servicio direcciona al controlador a donde necesita (recepcionista)
     // deja pasar la excepción con "throws" porque eso le vale
@@ -23,7 +25,7 @@ public class ReservationService {
         return ReservationLogic.findReservationById(id);
     }
 
-    public static GeneratedReservationDTO promptAI(String prompt) throws Exception{
-        return ReservationLogic.promptAI(prompt);
+    public static void promptAI(String prompt, Consumer<GeneratedReservationDTO> onSuccess, Consumer<Exception> onError){
+        ReservationLogic.promptAI(prompt, onSuccess, onError);
     }
 }

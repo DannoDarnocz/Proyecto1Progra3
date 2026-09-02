@@ -20,6 +20,7 @@ public class Launcher extends Application {
     // parametro es el escenario principal
     // siempre hay que tirar excepcion cuando es codigo externo al de nosotros
     public void start(Stage escenarioPrincipal) throws Exception{
+        resourcemanager.structure.AppContext.setPrimaryStage(escenarioPrincipal);
         // hay que cambiar la configuracion del logger de fontbox y pdfbox porque a la hora de generar el archivo pdf para impresión
         // puede tirar un billón de warnings a la hora de leer los fonts instalados en la computadora si están corruptos o algo anda raro
         Logger.getLogger("org.apache.fontbox").setLevel(Level.SEVERE);
@@ -36,9 +37,6 @@ public class Launcher extends Application {
         escenarioPrincipal.show();
     }
 
-    public static void main(String[] args)
-    {
-        launch(args); //arrancar
+    public static void main(String[] args) {launch(args); //arrancar
     }
-
 }

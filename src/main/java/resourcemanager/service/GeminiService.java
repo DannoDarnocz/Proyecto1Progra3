@@ -38,7 +38,8 @@ public class GeminiService {
       "endMinute": int, // MINUTE at which the reservation ends
       "categories": ["cat1","cat2","cat3"...] // each one is a string for an existent categoryId, if none match, use null
     }
-    The user requests the following: """ + prompt +". The available categories are: " + availableCategories;
+    Do not wrap it in markdown code fences, do not add comments, and do not add any explanation before or after it.
+    The user requests the following: """ + prompt + ". The available categories are: " + availableCategories;
 
         String url = ENDPOINT_BASE + MODELO + ":generateContent";
         JSONObject parte = new JSONObject().put("text", instruccion);
@@ -62,10 +63,12 @@ public class GeminiService {
     }
     private String extraerTexto(String jsonRespuesta) {
         JSONObject raiz = new JSONObject(jsonRespuesta);
+
         JSONArray candidatos = raiz.getJSONArray("candidates");
         JSONObject primerCandidato = candidatos.getJSONObject(0);
         JSONObject contenido = primerCandidato.getJSONObject("content");
         JSONArray partes = contenido.getJSONArray("parts");
+
         return partes.getJSONObject(0).getString("text");
     }
 }
