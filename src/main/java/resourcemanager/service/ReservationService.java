@@ -4,6 +4,7 @@ import javafx.collections.ObservableList;
 import resourcemanager.logic.ReservationLogic;
 import resourcemanager.model.Category;
 import resourcemanager.model.Reservation;
+import resourcemanager.model.Resource;
 import resourcemanager.model.User;
 import resourcemanager.model.dto.GeneratedReservationDTO;
 import resourcemanager.model.dto.ReservationDTO;
@@ -33,5 +34,8 @@ public class ReservationService {
 
     public static ArrayList<Reservation> filterByDate(ArrayList<Reservation> list, LocalDate start, LocalDate end){
         return ReservationLogic.filterByDate(list,start,end);
+    }
+    public static ArrayList<Resource> extractResources(ArrayList<Reservation> list) throws Exception {
+        return ReservationLogic.extractResources(list);
     }
 }

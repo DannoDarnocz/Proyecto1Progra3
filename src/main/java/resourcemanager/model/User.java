@@ -64,11 +64,10 @@ public class User {
     }
 
     public void removeReservation(Reservation r) throws InstanceNotFoundException{
-        // TODO: arreglar sistema de borrado porque hace thro
-        // solo la quita del usuario, NO la elimina del archivo xml de resources ni lo pone disactivo porque eso no le corresponde
         if(reservationIdList.contains(r.getId())){
             reservationIdList.remove(r.getId());
+        } else {
+            throw new InstanceNotFoundException("Reserva a borrar no existe");
         }
-        throw new InstanceNotFoundException("Reserva a borrar no existe");
     }
 }

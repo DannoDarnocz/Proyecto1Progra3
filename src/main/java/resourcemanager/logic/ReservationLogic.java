@@ -280,4 +280,21 @@ public class ReservationLogic {
         if (newList.isEmpty()) return null;
         return newList;
     }
+
+    public static ArrayList<Resource> extractResources(ArrayList<Reservation> list) throws Exception{
+        ArrayList<Resource> resources = new ArrayList<>();
+        for(Reservation r : list){
+            for(String s : r.getResourceIdList()){
+                try{
+                    Resource foundResource = ResourceLogic.findResourceById(s);
+                    resources.add(foundResource);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw e;
+                }
+            }
+        }
+        if (resources.isEmpty()) return null;
+        return resources;
+    }
 }

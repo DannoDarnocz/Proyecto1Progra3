@@ -83,46 +83,63 @@ public class CalendarTabController {
                         // un map tiene cada elemento asociado a un id
                         Map<LocalTime, Map<String, ResourceInfoCell>> grid = new HashMap<>();
 
-                        for (Reservation res : matchingReservations) {
-                            User user = UserService.findUserForReservation(res); // called once per reservation
-                            if(user!=null){
+                        // obtener pool de recursos de las reservas
+                        try{
+                            ArrayList<Resource> matchingResources = ReservationService.extractResources(matchingReservations);
 
-                                ResourceInfoCell info = new ResourceInfoCell();
-                                info.userName = user.getName();
-                                info.description = res.getDescription();
+                            for (Reservation res : matchingReservations) {
+                                User user = UserService.findUserForReservation(res); // called once per reservation
+                                if(user!=null){
 
-                                // ir recorriendo cada hora, de saltos de 1 por intervalo, obteniendo la fila entera para los recursos que en esa hora
-                                // tengan una reserva asociada
-                                for (LocalTime t = res.getStartDate().toLocalTime(); t.isBefore(res.getEndDate().toLocalTime()); t = t.plusHours(1)) {
-                                    for (String resourceId : res.getResourceIdList()) {
-                                        // crea un mapa vacío para la "clave" actual si no existe y añade el resourceId y la informacion del recurso
-                                        grid.computeIfAbsent(t, k -> new HashMap<>()).put(resourceId, info);
+                                    ResourceInfoCell info = new ResourceInfoCell();
+                                    info.userName = user.getName();
+                                    info.description = res.getDescription();
+
+                                    // ir recorriendo cada hora, de saltos de 1 por intervalo, obteniendo la fila entera para los recursos que en esa hora
+                                    // tengan una reserva asociada
+                                    for (LocalTime t = res.getStartDate().toLocalTime(); t.isBefore(res.getEndDate().toLocalTime()); t = t.plusHours(1)) {
+                                        for (String resourceId : res.getResourceIdList()) {
+                                            // crea un mapa vacío para la "clave" actual si no existe y añade el resourceId y la informacion del recurso
+                                            grid.computeIfAbsent(t, k -> new HashMap<>()).put(resourceId, info);
+                                        }
                                     }
                                 }
+                                else{
+                                    Utilities.showAlert("Error","No se ha podido encontrar un usuario asociado a la reserva. ", Alert.AlertType.ERROR);
+                                }
+
                             }
-                            else{
-                                Utilities.showAlert("Error","No se ha podido encontrar un usuario asociado a la reserva. ", Alert.AlertType.ERROR);
+
+                            ObservableList<ResouceInfoRow> rows = FXCollections.observableArrayList();
+                            for (LocalTime t = LocalTime.of(0, 0); t.isBefore(LocalTime.of(23, 0)); t = t.plusHours(1)) {
+                                rows.add(new ResouceInfoRow(t, grid.getOrDefault(t, Collections.emptyMap())));
                             }
+                            tbl_matrix.setItems(rows);
 
-                        }
-
-                        ObservableList<ResouceInfoRow> rows = FXCollections.observableArrayList();
-                        for (LocalTime t = LocalTime.of(8, 0); t.isBefore(LocalTime.of(20, 0)); t = t.plusHours(1)) {
-                            rows.add(new ResouceInfoRow(t, grid.getOrDefault(t, Collections.emptyMap())));
-                        }
-                        tbl_matrix.setItems(rows);
-
-                        // TODO TERMINAR
-/*
-                        for (Resource resource : matchingReservations) {
-                            TableColumn<ResouceInfoRow, String> col = new TableColumn<>(resource.getName());
-                            col.setCellValueFactory(cellData -> {
-                                ResourceInfoCell info = cellData.getValue().getInfo(resource.getId());
-                                String text = (info == null) ? "" : info.userName + "\n" + info.description;
+                            // columna para mostrar la hora
+                            TableColumn<ResouceInfoRow, String> timeCol = new TableColumn<>("Hora");
+                            timeCol.setCellValueFactory(cellData -> {
+                                // obtener el valor de la hora de fila actual, ponerle menos y leugo sumarle una hora a la misma
+                                LocalTime start = cellData.getValue().getHour();
+                                String text = start + " - " + start.plusHours(1);
                                 return new ReadOnlyStringWrapper(text);
                             });
-                            tbl_matrix.getColumns().add(col);
-                        }*/
+                            tbl_matrix.getColumns().add(timeCol);
+
+                            for (Resource resource : matchingResources) {
+                                TableColumn<ResouceInfoRow, String> col = new TableColumn<>(resource.getDescription());
+                                col.setCellValueFactory(cellData -> {
+                                    ResourceInfoCell info = cellData.getValue().getInfo(resource.getId());
+                                    String text = (info == null) ? "" : info.userName + "\n" + info.description;
+                                    return new ReadOnlyStringWrapper(text);
+                                });
+                                tbl_matrix.getColumns().add(col);
+                            }
+                        } catch (Exception e) {
+                            Utilities.showAlert("Error","ha ocurrido un error al buscar recursos asociados a la fecha y categoria", Alert.AlertType.ERROR);
+                        }
+
+
                     }
                 } catch (Exception e) {
                     Utilities.showAlert("Error","No se ha podido obtener la lista de reservas para la categoria seleccionada. " + e.getMessage(), Alert.AlertType.ERROR);
