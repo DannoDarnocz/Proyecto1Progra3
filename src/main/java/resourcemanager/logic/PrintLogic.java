@@ -15,7 +15,7 @@ import java.util.List;
 
 public class PrintLogic {
     // generar pdf de forma genérica
-    public static <T> File generatePdf(List<T> items, Class<T> classType, String fileName) throws Exception {
+    public <T> File generatePdf(List<T> items, Class<T> classType, String fileName) throws Exception {
 
         // generar nuevo documento PDF
         PDDocument document = new PDDocument();
@@ -106,7 +106,7 @@ public class PrintLogic {
         return file;
     }
 
-    public static void openPdf(File file) throws Exception {
+    public void openPdf(File file) throws Exception {
         // si se puede abrir, entonces abrirlo con el visualizador predeterminado del sistema
         if (Desktop.isDesktopSupported()) {
             Desktop.getDesktop().open(file);

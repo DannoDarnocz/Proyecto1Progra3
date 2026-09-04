@@ -7,19 +7,21 @@ import resourcemanager.model.dto.UserLoginDTO;
 import resourcemanager.structure.CurrentSession;
 
 public class AuthService {
-    public static User authenticate(UserLoginDTO input) throws Exception{
-        return AuthLogic.authenticate(input);
+    private AuthLogic authLogic = new AuthLogic();
+
+    public User authenticate(UserLoginDTO input) throws Exception{
+        return authLogic.authenticate(input);
     }
-    public static boolean verifyPhone(User user, String phoneNumber) throws Exception{
-        return AuthLogic.verifyPhone(user,phoneNumber);
+    public boolean verifyPhone(User user, String phoneNumber) throws Exception{
+        return authLogic.verifyPhone(user,phoneNumber);
     }
-    public static void updatePassword(UserLoginDTO newUserLogin) throws Exception{
-        AuthLogic.updatePassword(newUserLogin);
+    public void updatePassword(UserLoginDTO newUserLogin) throws Exception{
+        authLogic.updatePassword(newUserLogin);
     }
-    public static Boolean satisfiesPolicy(String password) {
-        return AuthLogic.satisfiesPolicy(password);
+    public Boolean satisfiesPolicy(String password) {
+        return authLogic.satisfiesPolicy(password);
     }
-    public static String policyPassword(){
+    public String policyPassword(){
         return AuthLogic.PASSWORD_POLICY_MSG;
     }
 }

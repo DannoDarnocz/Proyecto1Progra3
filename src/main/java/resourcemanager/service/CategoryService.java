@@ -1,47 +1,46 @@
 package resourcemanager.service;
 
-import javafx.stage.Stage;
-import resourcemanager.data.DataHandler;
 import resourcemanager.logic.CategoryLogic;
 import resourcemanager.model.Category;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 
 public class CategoryService {
-    public static ArrayList<Category> findFreeCategories() throws Exception{
-        return DataHandler.findFreeCategories();
+    private CategoryLogic categoryLogic=new CategoryLogic();
+
+    public ArrayList<Category> findFreeCategories() throws Exception{
+        return categoryLogic.findFreeCategories();
     }
 
-    public static ArrayList<Category> getAllCategories() throws Exception{
-        return CategoryLogic.getAllCategories();
+    public ArrayList<Category> getAllCategories() throws Exception{
+        return categoryLogic.getAllCategories();
     }
 
 
-    public static ArrayList<String> convertListToIds(ArrayList<Category> categories){
-        return CategoryLogic.convertListToIds(categories);
+    public ArrayList<String> convertListToIds(ArrayList<Category> categories){
+        return categoryLogic.convertListToIds(categories);
     }
 
-    public static boolean deleteCategory(String id) throws Exception {
-        return CategoryLogic.deleteCategory(id);
+    public boolean deleteCategory(String id) throws Exception {
+        return categoryLogic.deleteCategory(id);
     }
 
-    public static Category searchById(String id) throws Exception {
-        return CategoryLogic.searchById(id);
+    public Category searchById(String id) throws Exception {
+        return categoryLogic.searchById(id);
     }
-    public static Category searchByDescription(String desc) throws Exception {
-        return CategoryLogic.searchByDescription(desc);
-    }
-
-    public static boolean updateCategory(Category c) throws Exception {
-        return CategoryLogic.updateCategory(c);
+    public Category searchByDescription(String desc) throws Exception {
+        return categoryLogic.searchByDescription(desc);
     }
 
-    public static void printAllCategories() throws Exception {
-        CategoryLogic.printAllCategories();
+    public boolean updateCategory(Category c) throws Exception {
+        return categoryLogic.updateCategory(c);
     }
 
-    public static Category addCategory(String description) throws Exception{
-        return CategoryLogic.addCategory(description);
+    public void printAllCategories() throws Exception {
+        categoryLogic.printAllCategories();
+    }
+
+    public Category addCategory(String description) throws Exception{
+        return categoryLogic.addCategory(description);
     }
 }

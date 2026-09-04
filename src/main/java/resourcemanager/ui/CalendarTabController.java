@@ -36,10 +36,15 @@ public class CalendarTabController {
     @FXML
     private TableView tbl_matrix;
 
+    private ReservationService reservationService = new ReservationService();
+    private ResourceService resourceService = new ResourceService();
+    private CategoryService categoryService = new CategoryService();
+    private UserService userService = new UserService();
+
     private void reload(){
         try{
             // obtener categorias como arraylist y luego convertirlas a observablelist para meterlas en el choicebox
-            ArrayList<Category> categories = CategoryService.getAllCategories();
+            ArrayList<Category> categories = categoryService.getAllCategories();
             ObservableList<Category> categoriesObservable = FXCollections.observableArrayList(categories);
             cb_category.setItems(categoriesObservable);
         } catch (Exception e) {
@@ -70,11 +75,11 @@ public class CalendarTabController {
                 ArrayList<Reservation> matchingReservations = null;
                 try{
                     // primero obtener reservas que coinciden con la categoria
-                    matchingReservations = ResourceService.findReservationsForCategory(category.getId());
+                    matchingReservations = resourceService.findReservationsForCategory(category.getId());
 
 
                     // luego filtrarlas por fecha (la fecha es la misma)
-                    matchingReservations = ReservationService.filterByDate(matchingReservations,date,date);
+                    matchingReservations = reservationService.filterByDate(matchingReservations,date,date);
 
                     if(matchingReservations==null){
                         Utilities.showAlert("Informacion","No hay recursos asignados en la categoria y fecha", Alert.AlertType.INFORMATION);
@@ -85,10 +90,10 @@ public class CalendarTabController {
 
                         // obtener pool de recursos de las reservas
                         try{
-                            ArrayList<Resource> matchingResources = ReservationService.extractResources(matchingReservations);
+                            ArrayList<Resource> matchingResources = reservationService.extractResources(matchingReservations);
 
                             for (Reservation res : matchingReservations) {
-                                User user = UserService.findUserForReservation(res); // called once per reservation
+                                User user = userService.findUserForReservation(res); // called once per reservation
                                 if(user!=null){
 
                                     ResourceInfoCell info = new ResourceInfoCell();
@@ -122,11 +127,12 @@ public class CalendarTabController {
                                 // obtener el valor de la hora de fila actual, ponerle menos y leugo sumarle una hora a la misma
                                 LocalTime start = cellData.getValue().getHour();
                                 String text = start + " - " + start.plusHours(1);
-                                return new ReadOnlyStringWrapper(text);
+                                return new ReadOnlyStringWrapper(text); // readonlystringwrapper porque sino no sirve solo string
                             });
                             tbl_matrix.getColumns().add(timeCol);
 
                             for (Resource resource : matchingResources) {
+                                // para cada recurso creamos una columna que contiene un titulo String y una parte de la fila
                                 TableColumn<ResouceInfoRow, String> col = new TableColumn<>(resource.getDescription());
                                 col.setCellValueFactory(cellData -> {
                                     ResourceInfoCell info = cellData.getValue().getInfo(resource.getId());
@@ -143,6 +149,7 @@ public class CalendarTabController {
                     }
                 } catch (Exception e) {
                     Utilities.showAlert("Error","No se ha podido obtener la lista de reservas para la categoria seleccionada. " + e.getMessage(), Alert.AlertType.ERROR);
+                    e.printStackTrace();
                 }
 
 

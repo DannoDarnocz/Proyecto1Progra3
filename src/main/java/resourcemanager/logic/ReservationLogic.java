@@ -1,16 +1,13 @@
 package resourcemanager.logic;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
 import com.google.gson.reflect.TypeToken;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import resourcemanager.data.DataHandler;
 import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.model.Category;
@@ -22,23 +19,25 @@ import resourcemanager.model.dto.GeneratedReservationDTO;
 import resourcemanager.service.GeminiService;
 
 import javax.management.InstanceNotFoundException;
-import javax.swing.text.TabExpander;
 import java.nio.file.FileSystemException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicReference;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.function.Consumer;
 
 public class ReservationLogic {
+    private LoadFromXML loadFromXML=new LoadFromXML();
+    private SaveToXML saveToXML=new SaveToXML();
+    private CategoryLogic categoryLogic = new CategoryLogic();
+    private ResourceLogic resourceLogic = new ResourceLogic();
 
 
     // obtiene el ID actual y lo avanza
-    private static String generateID() throws FileSystemException {
+    private String generateID() throws FileSystemException {
         try{
             // obtener lista de reservaciones
-            ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+            ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
             // obtener ultimo id
             String lastIdString = allReservations.getLast().getId();
 
@@ -53,7 +52,7 @@ public class ReservationLogic {
     }
 
 
-    private static Reservation createFromDTO(ReservationDTO dto) throws FileSystemException  {
+    private Reservation createFromDTO(ReservationDTO dto) throws FileSystemException  {
         // crear reservación real desde la información enviada por DTO
         Reservation r = new Reservation(
                 generateID(),
@@ -64,7 +63,7 @@ public class ReservationLogic {
         return r;
     }
 
-    private static Reservation assignResources(Reservation r, ObservableList<Category> observableList) throws Exception {
+    private Reservation assignResources(Reservation r, ObservableList<Category> observableList) throws Exception {
         // convertir de ObservableList (asi devuelve JavaFX las filas seleccionadas) a ArrayList
         ArrayList<Category> selectedCategories = new ArrayList<>(observableList);
         // crear lista donde se guardara un recurso para cada categoria
@@ -73,15 +72,15 @@ public class ReservationLogic {
         // recorrer todas las categorias, buscar el primer recurso
         for (Category c : selectedCategories) {
             try {
-                Resource firstFound = DataHandler.findFirstResourceFree(c);
+                Resource firstFound = resourceLogic.findFirstResourceFree(c);
                 if (firstFound != null) {
                     selectedResources.add(firstFound);
 
                     // agregar recurso a la reserva
-                    r.addResource(firstFound.getId());
+                    addResource(firstFound.getId(), r);
                 } else {
                     // algo anda raro porque se supone que deberia haber recurso
-                    throw new InstanceNotFoundException("No se encontró recurso para la categoría seleccionada.");
+                    throw new InstanceNotFoundException("No se encontró recurso para la categoría seleccionada: " + c.toString());
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -91,7 +90,7 @@ public class ReservationLogic {
         return r;
     }
 
-    public static Reservation createReservationForUser(ReservationDTO dto, ObservableList<Category> observableList, User user) throws Exception {
+    public Reservation createReservationForUser(ReservationDTO dto, ObservableList<Category> observableList, User user) throws Exception {
         // crear reservación real desde la información enviada por DTO
         Reservation newReservation = createFromDTO(dto);
 
@@ -99,14 +98,15 @@ public class ReservationLogic {
         assignResources(newReservation, observableList);
 
         // agregar reserva construida
-        user.addReservation(newReservation);
+        UserLogic userLogic = new UserLogic();
+        userLogic.addReservation(newReservation, user);
 
         // guardar a XML
         try{
             // actualizar usuario porque ahora tiene reserva
-            if(SaveToXML.updateUser(user)){
+            if(saveToXML.updateUser(user)){
                 // si se pudo guardar entonces ahora guardamos la reserva en su propio archivo
-                SaveToXML.addReservation(newReservation);
+                saveToXML.addReservation(newReservation);
             }
             else{
                 throw new InstanceNotFoundException("No se pudo actualizar el usuario en el XML porque no se encontró");
@@ -120,10 +120,10 @@ public class ReservationLogic {
 
 
     // buscar reserva por id
-    public static Reservation findReservationById(String id) throws Exception {
+    public Reservation findReservationById(String id) throws Exception {
         // encontrar primero todos los recursos disponibles, luego recorrerlos añadiendo categorías libres para
         // estar seguros de su disponibilidad de al menos 1
-        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+        ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
 
         // recorrer todas las reservas
         for(Reservation r : allReservations){
@@ -133,7 +133,7 @@ public class ReservationLogic {
         return null;
     }
 
-    public static void promptAI(String prompt, Consumer<GeneratedReservationDTO> onSuccess, Consumer<Exception> onError) {
+    public void promptAI(String prompt, Consumer<GeneratedReservationDTO> onSuccess, Consumer<Exception> onError) {
         if(prompt == null || prompt.isBlank()) {
             onError.accept(new InvalidParameterException("Debe de describir la reserva"));
             return; // no se puede contestar una pregunta vacia
@@ -142,7 +142,7 @@ public class ReservationLogic {
         // obtener categorias disponibles, si es posible
         Thread hiloGemini = new Thread(()->{
             try{
-                ArrayList<Category> categories = DataHandler.findFreeCategories();
+                ArrayList<Category> categories = categoryLogic.findFreeCategories();
 
                 if(categories.isEmpty()) throw new RuntimeException("No hay categorias con recursos libres");
 
@@ -171,7 +171,7 @@ public class ReservationLogic {
         hiloGemini.start(); // comenzarlo
     }
 
-    private static GeneratedReservationDTO parseAI(String jsonString, ArrayList<Category> availableCategories) throws Exception {
+    private GeneratedReservationDTO parseAI(String jsonString, ArrayList<Category> availableCategories) throws Exception {
         if(jsonString == null){
             throw new InvalidParameterException("La IA no devolvió ninguna respuesta");
         }
@@ -221,7 +221,7 @@ public class ReservationLogic {
         return dto;
     }
 
-    private static String stripMarkdownFences(String text) {
+    private String stripMarkdownFences(String text) {
         String t = text.trim();
         //Elimina etiquetas adicionales que envie la IA
         if (t.startsWith("```")) {
@@ -234,29 +234,30 @@ public class ReservationLogic {
     }
 
     //Verificaciones de datos obtenidos del JSON
-    private static String textOrNull(JsonNode root, String field) {
+    private String textOrNull(JsonNode root, String field) {
         JsonNode node = root.get(field);
         return (node == null || node.isNull()) ? null : node.asText();
     }
 
-    private static Integer intOrNull(JsonNode root, String field) {
+    private Integer intOrNull(JsonNode root, String field) {
         JsonNode node = root.get(field);
         return (node == null || node.isNull()) ? null : node.asInt();
     }
 
-    public static boolean deleteReservation(String reservationId, User user) throws Exception {
-        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+    public boolean deleteReservation(String reservationId, User user) throws Exception {
+        ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
 
         for(Reservation r : allReservations){
             if(r.getId().equals(reservationId)){
 
                 // eliminar reserva del usuario y tambien de todas las reservas (sino no queda ligado a nadie)
-                user.removeReservation(r);
+                UserLogic userLogic = new UserLogic();
+                userLogic.removeReservation(r, user);
                 allReservations.remove(r);
 
                 // guardar usuario y lista de reservas actualizadas
-                SaveToXML.overwriteReservations(allReservations);
-                SaveToXML.updateUser(user);
+                saveToXML.overwriteReservations(allReservations);
+                saveToXML.updateUser(user);
                 return true;
             }
         }
@@ -264,9 +265,9 @@ public class ReservationLogic {
         return false;
     }
 
-    public static ArrayList<Reservation> filterByDate(ArrayList<Reservation> list, LocalDate start, LocalDate end){
+    public ArrayList<Reservation> filterByDate(ArrayList<Reservation> list, LocalDate start, LocalDate end){
         ArrayList<Reservation> newList = new ArrayList<>();
-
+        if(list.isEmpty()) return null; // no se puede iterar porque no hay nada
 
         for(Reservation r: list){
             // si la fecha de la reserva esta en el rango especificado, agregar
@@ -281,12 +282,13 @@ public class ReservationLogic {
         return newList;
     }
 
-    public static ArrayList<Resource> extractResources(ArrayList<Reservation> list) throws Exception{
+    public ArrayList<Resource> extractResources(ArrayList<Reservation> list) throws Exception{
         ArrayList<Resource> resources = new ArrayList<>();
         for(Reservation r : list){
             for(String s : r.getResourceIdList()){
                 try{
-                    Resource foundResource = ResourceLogic.findResourceById(s);
+                    ResourceLogic resourceLogic = new ResourceLogic();
+                    Resource foundResource = resourceLogic.findResourceById(s);
                     resources.add(foundResource);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -296,5 +298,14 @@ public class ReservationLogic {
         }
         if (resources.isEmpty()) return null;
         return resources;
+    }
+
+    public void addResource(String r, Reservation reservation) throws Exception {
+        ArrayList<String> resourceIdList = reservation.getResourceIdList();
+
+        // si no existe dentro de la lista de recursos y ademas sí existe el recurso
+        if(!resourceIdList.contains(r) && resourceLogic.findResourceById(r)!=null){
+            resourceIdList.add(r);
+        }
     }
 }

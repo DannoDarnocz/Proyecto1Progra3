@@ -2,16 +2,19 @@ package resourcemanager.service;
 
 import javafx.stage.Stage;
 import resourcemanager.logic.PrintLogic;
+import resourcemanager.logic.ResourceLogic;
 
 import java.io.File;
 import java.util.List;
 
 public class PrintService {
-    public static void openPdf(File file) throws Exception{
-        PrintLogic.openPdf(file);
+    private PrintLogic printLogic = new PrintLogic();
+
+    public void openPdf(File file) throws Exception{
+        printLogic.openPdf(file);
     }
 
-    public static <T> File generatePdf(List<T> items, Class<T> classType, String fileName) throws Exception{
-        return PrintLogic.generatePdf(items, classType, fileName);
+    public <T> File generatePdf(List<T> items, Class<T> classType, String fileName) throws Exception{
+        return printLogic.generatePdf(items, classType, fileName);
     }
 }

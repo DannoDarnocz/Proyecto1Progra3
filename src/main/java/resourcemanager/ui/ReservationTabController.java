@@ -27,6 +27,7 @@ import resourcemanager.service.ReservationService;
 import resourcemanager.service.UserService;
 import resourcemanager.structure.CurrentSession;
 
+import javax.management.InstanceNotFoundException;
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -60,6 +61,10 @@ public class ReservationTabController {
     @FXML
     private Button btn_reserve_cancel;
 
+    private ReservationService reservationService = new ReservationService();
+    private CategoryService categoryService = new CategoryService();
+    private UserService userService = new UserService();
+
     private void reloadCurrentReservations(){
         // quitar lo que ya haya
         tbl_reserve_current.getItems().clear();
@@ -82,8 +87,8 @@ public class ReservationTabController {
         columnEnd.setStyle("-fx-alignment: CENTER;");
 
         // obtener el usuario que inició sesión para obtener sus reservas
-        User currentUser = UserService.getLoggedUser();
-        ArrayList<Reservation> userReservations = UserService.findReservationsForUser(currentUser);
+        User currentUser = userService.getLoggedUser();
+        ArrayList<Reservation> userReservations = userService.findReservationsForUser(currentUser);
 
         // agregar todas las encontradas
         if(userReservations!=null){
@@ -110,9 +115,8 @@ public class ReservationTabController {
             //Para seleccionar varias
             selectionModel.setSelectionMode(SelectionMode.MULTIPLE);
 
-            //Se pueden buscar varias
-            ArrayList<Category> availableCategories = CategoryService.findFreeCategories();
-            System.out.print(availableCategories.size());
+            // obtener todas las categorias disponibles
+            ArrayList<Category> availableCategories = categoryService.getAllCategories();
 
             tbl_reserve_categories.getItems().setAll(availableCategories);
         } catch (Exception e){
@@ -219,8 +223,8 @@ public class ReservationTabController {
                         try{
                             // TODO: en el xml no se borra por alguna razon
                             // eliminar la reserva del usuario y de la lista general
-                            User currentUser = UserService.getLoggedUser();
-                            ReservationService.deleteReservation(selected.getId(),currentUser);
+                            User currentUser = userService.getLoggedUser();
+                            reservationService.deleteReservation(selected.getId(),currentUser);
 
                             Alert alert = Utilities.showAlert("Confirmacion","Se ha eliminado la reserva", Alert.AlertType.INFORMATION);
 
@@ -273,15 +277,21 @@ public class ReservationTabController {
 
                     // obtener fecha
                     LocalDate date = dt.getValue();
-                    // construir LocalDateTime para guardarlo
-                    LocalDateTime start = date.atStartOfDay();
-                    LocalDateTime end = date.atStartOfDay();
+
+                    // obtener hora de inicio y fin
+                    int startHour = (int) spn_reserve_hour_start.getValue();
+                    int endHour = (int) spn_reserve_hour_end.getValue();
+
+
+                    // construir LocalDateTime para guardarlo tanto con fecha como hora
+                    LocalDateTime start = date.atTime(startHour,0);
+                    LocalDateTime end = date.atTime(endHour,0);
 
                     ReservationDTO dto = new ReservationDTO(description, start, end);
                     try {
                         // lógica maneja la creación y asignación de recursos
-                        User currentUser = UserService.getLoggedUser();
-                        Reservation r = ReservationService.createReservationForUser(dto, selectedItems, currentUser);
+                        User currentUser = userService.getLoggedUser();
+                        Reservation r = reservationService.createReservationForUser(dto, selectedItems, currentUser);
 
                         Utilities.showAlert("Confirmacion", "Se ha reservado con exito", Alert.AlertType.INFORMATION);
 
@@ -291,7 +301,11 @@ public class ReservationTabController {
                         // actualizar tablas
                         reloadCategories();
                         reloadCurrentReservations();
-                    } catch (Exception e) {
+                    } catch (InstanceNotFoundException e) {
+                        // si no hay recurso para la categoria tira esto
+                        Utilities.showAlert("Error", e.getMessage(), Alert.AlertType.ERROR);
+                        e.printStackTrace();
+                    }catch (Exception e) {
                         Utilities.showAlert("Error","No se ha podido reservar. " + e.getMessage(), Alert.AlertType.ERROR);
                         e.printStackTrace();
                     }
@@ -312,7 +326,7 @@ public class ReservationTabController {
             btn_reserve_ai.setDisable(true);
             btn_reserve_ai.setText("Extrayendo...");
 
-            ReservationService.promptAI(
+            reservationService.promptAI(
                     prompt,
                     generated -> {
                         btn_reserve_ai.setDisable(false);
@@ -330,8 +344,8 @@ public class ReservationTabController {
 
         btn_reserve_print.setOnAction(event -> {
             try{
-                User currentUser = UserService.getLoggedUser();
-                UserService.printUserReservations(currentUser);
+                User currentUser = userService.getLoggedUser();
+                userService.printUserReservations(currentUser);
             } catch (Exception e) {
                 Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
             }

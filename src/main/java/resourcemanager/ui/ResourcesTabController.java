@@ -47,6 +47,9 @@ public class ResourcesTabController {
     @FXML
     private TableView tbl_resource_list;
 
+    private ResourceService resourceService = new ResourceService();
+    private CategoryService categoryService = new CategoryService();
+
     // para borrar text fields y deshabilitar los botones
     private void resetDefaultStates(){
         // ya no hay categoria encontrada asi que hay que buscar de nuevo antes de poder hacer cambios o eliminar
@@ -75,7 +78,7 @@ public class ResourcesTabController {
         // buscar categorias
         try{
             // buscar todas las categorias y meterlas como filas en la tabla
-            ArrayList<Resource> availableResources = ResourceService.getAllResources();
+            ArrayList<Resource> availableResources = resourceService.getAllResources();
             tbl_resource_list.getItems().setAll(availableResources);
             reloadCategoryChoices();
         } catch (Exception e) {
@@ -85,9 +88,9 @@ public class ResourcesTabController {
 
     private void reloadCategoryChoices(){
         try {
-            ArrayList<Category> availableCategories = CategoryService.getAllCategories();
+            ArrayList<Category> availableCategories = categoryService.getAllCategories();
             // obtener categorias como arraylist y luego convertirlas a observablelist para meterlas en el choicebox
-            ArrayList<Category> categories = CategoryService.getAllCategories();
+            ArrayList<Category> categories = categoryService.getAllCategories();
             ObservableList<Category> categoriesObservable = FXCollections.observableArrayList(categories);
             if (categoriesObservable.isEmpty()) {
                 // no hay categorias, no se puede filtrar ni asignar categoria a un recurso
@@ -143,7 +146,7 @@ public class ResourcesTabController {
             else{
                 try{
                     // buscar recurso por descripcion (el usuario no deberia de aprenderse el id porque es algo arbitrario para identificarlas)
-                    Resource foundResource = ResourceService.searchByDescriptionAndCategory(resourceDescription, categoryId);
+                    Resource foundResource = resourceService.searchByDescriptionAndCategory(resourceDescription, categoryId);
 
                     if(foundResource==null){
                         // no se encontro el recurso
@@ -156,7 +159,7 @@ public class ResourcesTabController {
 
                         txt_resource_id.setText(id);
                         txt_resource_description.setText(description);
-                        Category foundCategory = CategoryService.searchById(foundResource.getCategoryId());
+                        Category foundCategory = categoryService.searchById(foundResource.getCategoryId());
 
                         cb_resource_category.setValue(foundCategory);
 
@@ -188,13 +191,13 @@ public class ResourcesTabController {
             try {
                 if (id.isEmpty()) {
                     // no hay id cargado, recurso nuevo
-                    Resource nuevo = ResourceService.addResource(categoryId, description);
+                    Resource nuevo = resourceService.addResource(categoryId, description);
                     Utilities.showAlert("Confirmacion", "Se ha agregado el recurso " + nuevo.getId(), Alert.AlertType.INFORMATION);
                     resetDefaultStates();
                 } else {
                     // hay un id cargado, se esta editando
                     Resource resourceDTO = new Resource(id, categoryId, description);
-                    if (ResourceService.updateResource(resourceDTO)) {
+                    if (resourceService.updateResource(resourceDTO)) {
                         Utilities.showAlert("Confirmacion", "Se ha actualizado el recurso correctamente", Alert.AlertType.INFORMATION);
                     } else {
                         Utilities.showAlert("Error", "No se ha encontrado el recurso.", Alert.AlertType.ERROR);
@@ -228,7 +231,7 @@ public class ResourcesTabController {
                     if (response == ButtonType.OK) {
                         // borrar
                         try{
-                            if(ResourceService.deleteResource(id)){
+                            if(resourceService.deleteResource(id)){
                                 Utilities.showAlert("Confirmacion","Se ha borrado el recurso correctamente", Alert.AlertType.INFORMATION);
                                 resetDefaultStates();
                                 // recargar tabla de categorias
@@ -248,7 +251,7 @@ public class ResourcesTabController {
         btn_resource_print.setOnAction(event-> {
             // enviar a capa servicios que dirige a logica para luego delegarle a la de imprimir la tarea de imprimir
             try{
-                ResourceService.printAllCategories();
+                resourceService.printAllCategories();
             } catch (Exception e) {
                 Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
             }

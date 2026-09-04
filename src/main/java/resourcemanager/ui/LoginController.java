@@ -30,6 +30,8 @@ public class LoginController {
     @FXML TextField txt_user;
     @FXML PasswordField pwd_password;
 
+    private AuthService authService = new AuthService();
+
     @FXML
     private void initialize(){
         // verificar inicio de sesión al darle al botón
@@ -46,7 +48,7 @@ public class LoginController {
 
                 // enviarlo a serivicio que envia a capa logica y recibir el usuario encontrado (si hay) y sale bien
                 try{
-                    User foundUser = AuthService.authenticate(loginDTO);
+                    User foundUser = authService.authenticate(loginDTO);
 
                     // si se encontró entonces pasar a la pantalla principal
                     if(foundUser != null){
@@ -74,10 +76,10 @@ public class LoginController {
             }
 
         });
-        btn_change_pwd.setOnAction(event -> cambioClave());
+        btn_change_pwd.setOnAction(event -> changePassword());
     }
 
-    private void cambioClave(){
+    private void changePassword(){
         //Reutiliza verificación
         String userInput = txt_user.getText().trim();
         String currentPwdInput = pwd_password.getText().trim();
@@ -89,7 +91,7 @@ public class LoginController {
 
         try{
             UserLoginDTO loginDTO = new UserLoginDTO(userInput, currentPwdInput);
-            User foundUser = AuthService.authenticate(loginDTO);
+            User foundUser = authService.authenticate(loginDTO);
 
             // si es null es porque no se encontró o la contraseña es incorrecta (por seguridad es mejor no concoer ninguno)
             if(foundUser == null){
@@ -97,21 +99,21 @@ public class LoginController {
                 return;
             }
 
-            Optional<String> telefonoIngresado = pedirTelefono();
+            Optional<String> telefonoIngresado = askPhone();
             if(telefonoIngresado.isEmpty()) return; // canceló
-            if(!AuthService.verifyPhone(foundUser,telefonoIngresado.get())){
+            if(!authService.verifyPhone(foundUser,telefonoIngresado.get())){
                 Utilities.showAlert("Error","El teléfono ingresado no coincide con el registrado", Alert.AlertType.ERROR);
                 return;
             }
 
             //Optional es valor que puede estar presente o no, mejor solución a un null para verificación
-            Optional<String> nuevaPassword = pedirNuevaContrasena();
+            Optional<String> nuevaPassword = askNewPassword();
             if(nuevaPassword.isEmpty()) return; // canceló o no coincidían
 
             // crear dto para la nueva contraseña (el user queda igual obviamente)
             UserLoginDTO newUserLogin = new UserLoginDTO(userInput,nuevaPassword.get());
 
-            AuthService.updatePassword(newUserLogin);
+            authService.updatePassword(newUserLogin);
 
             Utilities.showAlert("Exito","Contraseña actualizada correctamente", Alert.AlertType.INFORMATION);
             pwd_password.clear();
@@ -125,7 +127,7 @@ public class LoginController {
         }
     }
 
-    private Optional<String> pedirTelefono(){
+    private Optional<String> askPhone(){
         TextInputDialog dialog = new TextInputDialog();
         dialog.initOwner(resourcemanager.structure.AppContext.getPrimaryStage()); //Establece donde está el padre
         dialog.setTitle("Verificación adicional");
@@ -135,7 +137,7 @@ public class LoginController {
         return dialog.showAndWait().map(String::trim);
     }
 
-    private Optional<String> pedirNuevaContrasena(){
+    private Optional<String> askNewPassword(){
         //Se crea un pop up de dialogo
         Dialog<String> dialog = new Dialog<>();
         dialog.initOwner(resourcemanager.structure.AppContext.getPrimaryStage()); //Establece donde está el padre
@@ -152,7 +154,7 @@ public class LoginController {
         PasswordField confirmarPwd = new PasswordField();
         confirmarPwd.setPromptText("Confirmar contraseña");
 
-        Label requisitosLabel = new Label(AuthService.policyPassword());
+        Label requisitosLabel = new Label(authService.policyPassword());
         requisitosLabel.setWrapText(true);
         requisitosLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #666666;");
 
@@ -175,8 +177,8 @@ public class LoginController {
                     Utilities.showAlert("Error","Las contraseñas no coinciden", Alert.AlertType.ERROR);
                     return null;
                 }
-                if(!AuthService.satisfiesPolicy(nueva)){
-                    Utilities.showAlert("Contraseña inválida", AuthService.policyPassword(), Alert.AlertType.ERROR);
+                if(!authService.satisfiesPolicy(nueva)){
+                    Utilities.showAlert("Contraseña inválida", authService.policyPassword(), Alert.AlertType.ERROR);
                     return null;
                 }
 

@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import static resourcemanager.data.LoadFromXML.*;
 
 public class SaveToXML {
-
-    static XmlMapper mapper = MapperSingleton.getInstance();
+    private LoadFromXML loadFromXML = new LoadFromXML();
+    private static XmlMapper mapper = MapperSingleton.getInstance();
 
     /*static {
         mapper.enable(com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT);
@@ -36,9 +36,10 @@ public class SaveToXML {
                 .writeValue(xmlFile, objects);
     }*/
 
-    public static void addReservation(Reservation r) throws Exception {
+    // --- Metodos que obtienen solo un dato y lo agregan o lo actualizan a la lista automaticamente para reutilizar codigo
+    public void addReservation(Reservation r) throws Exception {
         // cargar todas las reservas que hay en sistema
-        ArrayList<Reservation> allReservations = loadReservations();
+        ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
 
         // asumiendo que está bien se agrega a la lista
         allReservations.add(r);
@@ -49,14 +50,12 @@ public class SaveToXML {
 
         // caerle encima al archivo entero con la lista actualizada
         overwriteReservations(allReservations);
-        /*mapper.writer()
-                .withRootName("reservations")
-                .writeValue(reservationsFile, allReservations);*/
+        //mapper.writer().withRootName("reservations").writeValue(reservationsFile, allReservations);
     }
 
-    public static boolean updateUser(User updatedUser) throws Exception {
+    public  boolean updateUser(User updatedUser) throws Exception {
         // cargar todos los usuarios del archivo XML que se sobreescribirá
-        ArrayList<User> users = loadUsers();
+        ArrayList<User> users = loadFromXML.loadUsers();
 
         // obtener archivo de usuarios desde la ruta almacenada como constante
         File usersFile = DataPaths.getUsersFile();
@@ -72,9 +71,7 @@ public class SaveToXML {
 
                 // caerle encima al archivo entero con toda la lista
                 overwriteUsers(users);
-                /*mapper.writer()
-                        .withRootName("users")
-                        .writeValue(usersFile, users);*/
+                //mapper.writer().withRootName("users").writeValue(usersFile, users);
 
                 return true;
             }
@@ -82,9 +79,10 @@ public class SaveToXML {
         return false; // no se encontró
     }
 
-    public static boolean updateCategory(Category updatedCategory) throws Exception {
+
+    public boolean updateCategory(Category updatedCategory) throws Exception {
         // cargar todos las categorias del archivo XML que se sobreescribirá
-        ArrayList<Category> categories = loadCategories();
+        ArrayList<Category> categories = loadFromXML.loadCategories();
 
         // obtener archivo de usuarios desde la ruta almacenada como constante
         File categoryFile = DataPaths.getCategoriesFile();
@@ -107,15 +105,17 @@ public class SaveToXML {
         return false; // no se encontró
     }
 
-    public static void overwriteUsers(ArrayList<User> items) throws Exception {
+    // métodos más básicos que solo se encargan de sobreescibir la lista entera correspondiente al archivo
+
+    public void overwriteUsers(ArrayList<User> items) throws Exception {
         saveList(DataPaths.getUsersFile(),"users","user",items);
     }
 
-    public static void overwriteReservations(ArrayList<Reservation> items) throws Exception {
+    public void overwriteReservations(ArrayList<Reservation> items) throws Exception {
         saveList(DataPaths.getReservationsFile(),"reservations","reservation",items);
     }
 
-    public static void overwriteCategories(ArrayList<Category> items) throws Exception {
+    public void overwriteCategories(ArrayList<Category> items) throws Exception {
         saveList(DataPaths.getCategoriesFile(),"categories","category",items);
     }
 
@@ -123,7 +123,7 @@ public class SaveToXML {
 
     // guardar lista de forma genérica, rootTag es la lista raíz que requiere xml y itemTag es el tag para cada objeto
     // de la lista que se le pase
-    public static <T> void saveList(File file, String rootTag, String itemTag, ArrayList<T> items) throws Exception {
+    public <T> void saveList(File file, String rootTag, String itemTag, ArrayList<T> items) throws Exception {
         // como es genérico se utiliza factory
         XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
 

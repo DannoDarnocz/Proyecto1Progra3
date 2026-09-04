@@ -53,7 +53,6 @@ public class Reservation {
     public boolean isActive() {
         return isActive;
     }
-
     public void setActive(boolean active) {
         isActive = active;
     }
@@ -63,11 +62,4 @@ public class Reservation {
         return "id: " + id+", description: "+ description+", startDate: "+startDate+", endDate: " +endDate;
     }
 
-    // TODO: DTO o no?
-    public void addResource(String r) throws Exception {
-        // si no existe dentro de la lista de recursos y ademas sí existe el recurso
-        if(!resourceIdList.contains(r) && ResourceLogic.findResourceById(r)!=null){
-            this.resourceIdList.add(r);
-        }
-    }
 }

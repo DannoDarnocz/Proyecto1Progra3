@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
+// instancia singleton para el mapper configurado de tal forma que pueda manipular localdate y las escriba con un formato consistente en un solo string
 public class MapperSingleton {
     private static final XmlMapper mapper = new XmlMapper();
     static {

@@ -1,34 +1,37 @@
 package resourcemanager.logic;
 
-import javafx.stage.Stage;
 import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
-import resourcemanager.logic.PrintLogic;
 
 import javax.management.InstanceAlreadyExistsException;
 import javax.management.InstanceNotFoundException;
 import java.io.File;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class CategoryLogic {
+    private LoadFromXML loadFromXML=new LoadFromXML();
+    private SaveToXML saveToXML=new SaveToXML();
+    private PrintLogic printLogic = new PrintLogic();
+
     // buscar categoria por id
-    public static Category findCategoryById(String id) throws Exception {
-        ArrayList<Category> allCategories = LoadFromXML.loadCategories();
+    public Category findCategoryById(String id) throws Exception {
+        ArrayList<Category> allCategories = loadFromXML.loadCategories();
 
 
         // recorrer todas las categorias hatsa encontra una con esa id
         for(Category c : allCategories) {
-            System.out.println("id categoria actual: "+c.getId() + " id de la categoria que se busca: "+ id);
             if (c.getId().equals(id)) return c;
         }
         return null;
     }
 
     // convertir lista de categorias a lista de strings con id
-    public static ArrayList<String> convertListToIds(ArrayList<Category> categories) {
+    public ArrayList<String> convertListToIds(ArrayList<Category> categories) {
         ArrayList<String> categoryStrings = new ArrayList<>();
 
         for (Category c : categories) {
@@ -39,12 +42,12 @@ public class CategoryLogic {
         return categoryStrings;
     }
 
-    public static ArrayList<Category> getAllCategories() throws Exception {
-        return LoadFromXML.loadCategories();
+    public ArrayList<Category> getAllCategories() throws Exception {
+        return loadFromXML.loadCategories();
     }
 
-    public static Category searchById(String id) throws Exception {
-        ArrayList<Category> allCategories = LoadFromXML.loadCategories();
+    public Category searchById(String id) throws Exception {
+        ArrayList<Category> allCategories = loadFromXML.loadCategories();
 
         for(Category c : allCategories){
             if(c.getId().equals(id)) return c;
@@ -54,7 +57,7 @@ public class CategoryLogic {
         return null;
     }
 
-    public static boolean deleteCategory(String id) throws Exception {
+    public boolean deleteCategory(String id) throws Exception {
         Category c = searchById(id);
         if(c==null) return false;
 
@@ -65,16 +68,16 @@ public class CategoryLogic {
         }
 
         // obtener lista completa y remover ese en especifico
-        ArrayList<Category> allCategories = LoadFromXML.loadCategories();
+        ArrayList<Category> allCategories = loadFromXML.loadCategories();
         allCategories.remove(c);
 
         // sobreescribir archivo
-        SaveToXML.overwriteCategories(allCategories);
+        saveToXML.overwriteCategories(allCategories);
         return true;
     }
 
-    public static Category searchByDescription(String description) throws Exception {
-        ArrayList<Category> allCategories = LoadFromXML.loadCategories();
+    public Category searchByDescription(String description) throws Exception {
+        ArrayList<Category> allCategories = loadFromXML.loadCategories();
 
         // convertir a minuscula
         description = description.toLowerCase();
@@ -89,7 +92,7 @@ public class CategoryLogic {
         return null;
     }
 
-    public static boolean updateCategory(Category updatedTarget) throws Exception{
+    public boolean updateCategory(Category updatedTarget) throws Exception{
         Category currentTarget = searchById(updatedTarget.getId()); // asumiendo que el id nunca deberia cambiar
 
         if (currentTarget == null) {
@@ -110,13 +113,13 @@ public class CategoryLogic {
         }
 
         Category catNormalizada = new Category(updatedTarget.getId(), descNorm);
-        return SaveToXML.updateCategory(catNormalizada);
+        return saveToXML.updateCategory(catNormalizada);
     }
 
-    public static boolean categoryIsOrphan(Category target) throws Exception {
+    public boolean categoryIsOrphan(Category target) throws Exception {
         // obtener lista de recursos. si alguna tiene asociada la categoria
         // si tiene asociado un recurso entonces no se puede borrar (si no tiene recurso asociado entonces no tiene reserva asociada tampoco)
-        ArrayList<Resource> allResources = LoadFromXML.loadResources();
+        ArrayList<Resource> allResources = loadFromXML.loadResources();
         String targetId = target.getId();
 
         for(Resource r : allResources){
@@ -127,16 +130,16 @@ public class CategoryLogic {
         return true;
     }
 
-    public static void printAllCategories() throws Exception {
+    public void printAllCategories() throws Exception {
         // obtener lista de todas las categorias
         ArrayList<Category> allCategories = getAllCategories();
 
         // enviar a que la clase de impresion se encargue de generar el pdf
-        File pdf = PrintLogic.generatePdf(allCategories, Category.class, "lista_de_categorias.pdf");
-        PrintLogic.openPdf(pdf);
+        File pdf = printLogic.generatePdf(allCategories, Category.class, "lista_de_categorias.pdf");
+        printLogic.openPdf(pdf);
     }
 
-    public static Category addCategory(String description) throws Exception {
+    public Category addCategory(String description) throws Exception {
         if (description == null || description.isBlank()){
             throw new InvalidParameterException("La descripción no puede estar vacía");
         }
@@ -145,7 +148,7 @@ public class CategoryLogic {
         String descNorm = normalizeDescription(description);
 
         //Obtiene todas las categorias
-        ArrayList<Category> allCat = LoadFromXML.loadCategories();
+        ArrayList<Category> allCat = loadFromXML.loadCategories();
 
         //Verifica que no exista ya dicha categoria
         for (Category c : allCat){
@@ -165,14 +168,14 @@ public class CategoryLogic {
         String newId = "cat" + (maxN + 1);
         Category newCat = new Category(newId,descNorm);
         allCat.add(newCat);
-        SaveToXML.overwriteCategories(allCat);
+        saveToXML.overwriteCategories(allCat);
 
         return newCat;
     }
 
     // normaliza el formato del texto
     // (ej: "SALA DE juntas" o "sala   de JUNTAS" -> "Sala De Juntas")
-    private static String normalizeDescription(String texto) {
+    private String normalizeDescription(String texto) {
         String clean = texto.trim();
         if (clean.isEmpty()) return clean;
 
@@ -191,10 +194,35 @@ public class CategoryLogic {
         return resultado.toString();
     }
     // true si el texto tiene al menos un dígito (0-9) en cualquier parte
-    private static boolean haveNumbers(String texto) {
+    private boolean haveNumbers(String texto) {
         for (char c : texto.toCharArray()) {
             if (Character.isDigit(c)) return true;
         }
         return false;
+    }
+
+    public ArrayList<Category> findFreeCategories() throws Exception {
+        // encontrar primero todos los recursos disponibles, luego recorrerlos añadiendo categorías libres para
+        // estar seguros de su disponibilidad de al menos 1
+        ResourceLogic resourceLogic = new ResourceLogic(); // utiliza la logica pero no es una dependencia
+        ArrayList<Resource> freeResouces = resourceLogic.findFreeResources();
+
+        // set automaticamente se asegura de no duplicar categorías
+        Set<Category> categoriesWithFreeResources = new LinkedHashSet<>();
+
+        for(Resource currentResource : freeResouces){
+            // obtener id de categoria actual y buscar la instancia
+            String categoryId = currentResource.getCategoryId();
+
+            Category currentCategory = findCategoryById(categoryId);
+
+            // si no se encuentra hay algo raro
+            if(currentCategory==null) throw new InstanceNotFoundException("La categoria con ese ID no existe");
+
+            categoriesWithFreeResources.add(currentCategory);
+        }
+
+        // convertir a arraylist creandola y copiando lo que tiene
+        return new ArrayList<>(categoriesWithFreeResources);
     }
 }

@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.URL;
 
 public class DataPaths {
+    // centralizacion de paths "quemados" por simplicidad del proyecto
     static final String USERS_PATH = "/resourcemanager/data/users.xml";
     static final String RESOURCES_PATH = "/resourcemanager/data/resources.xml";
     static final String RESERVATIONS_PATH = "/resourcemanager/data/reservations.xml";

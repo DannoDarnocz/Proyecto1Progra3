@@ -41,9 +41,8 @@ public class Resource {
 
     public String getCategoryId() { return categoryId; }
     public void setCategoryId(String category) throws Exception {
-        // verificar que exista
-        Category c = CategoryLogic.findCategoryById(category);
-        if (c != null) this.categoryId = category;
+        // puede ser que no exista? si, pero verificar que exista FUERA, no dentro porque esto es un paquete de datos nada mas
+        this.categoryId = category;
     }
 
     public String getDescription() { return description; }

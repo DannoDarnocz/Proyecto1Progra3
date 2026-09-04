@@ -3,8 +3,10 @@ package resourcemanager.logic;
 import resourcemanager.data.LoadFromXML;
 import resourcemanager.data.SaveToXML;
 import resourcemanager.data.DataPaths;
+import resourcemanager.model.Category;
 import resourcemanager.model.Resource;
 import resourcemanager.model.Reservation;
+import resourcemanager.model.User;
 
 import javax.management.InstanceNotFoundException;
 import java.security.InvalidParameterException;
@@ -13,17 +15,22 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ResourceLogic {
+    private SaveToXML saveToXML=new SaveToXML();
+    private LoadFromXML loadFromXML=new LoadFromXML();
+    private CategoryLogic categoryLogic = new CategoryLogic();
+    private PrintLogic printLogic = new PrintLogic();
+
     // buscar el recurso que corresponda con el ID
-    public static Resource findResourceById(String id) throws Exception {
-        ArrayList<Resource> resources = LoadFromXML.loadResources();
+    public  Resource findResourceById(String id) throws Exception {
+        ArrayList<Resource> resources = loadFromXML.loadResources();
         for(Resource currentResource : resources){
             if(currentResource .getId().equals(id)) return currentResource ;
         }
         return null; // no se encontro
     }
 
-    public static Resource searchByDescriptionAndCategory(String description, String categoryId) throws Exception {
-        ArrayList<Resource> allResources = LoadFromXML.loadResources();
+    public  Resource searchByDescriptionAndCategory(String description, String categoryId) throws Exception {
+        ArrayList<Resource> allResources = loadFromXML.loadResources();
         description = description.toLowerCase();
 
         for (Resource r : allResources) {
@@ -34,16 +41,16 @@ public class ResourceLogic {
         return null;
     }
 
-    public static ArrayList<Reservation> findReservationsForCategory(String id) throws Exception {
+    public ArrayList<Reservation> findReservationsForCategory(String id) throws Exception {
         ArrayList<Reservation> matchingReservations = new ArrayList<>();
-        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+        ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
 
         // ver cuales reservas tienen asignado el recurso
         for(Reservation r:allReservations){
             ArrayList<String> resourcesForReservation = r.getResourceIdList();
             for(String resourceId : resourcesForReservation){
                 // si al menos un recurso coincide con la categoria, agregar la reserva
-                if(ResourceLogic.findResourceById(resourceId).getCategoryId().equals(id)) {
+                if(findResourceById(resourceId).getCategoryId().equals(id)) {
                     matchingReservations.add(r);
                  break;}
             }
@@ -53,21 +60,21 @@ public class ResourceLogic {
         return matchingReservations;
     }
 
-    public static ArrayList<Resource> getAllResources() throws Exception{
-        return LoadFromXML.loadResources();
+    public  ArrayList<Resource> getAllResources() throws Exception{
+        return loadFromXML.loadResources();
     }
 
-    public static void printAllCategories() throws Exception {
+    public void printAllCategories() throws Exception {
         // obtener lista de todas las categorias
         ArrayList<Resource> allResources = getAllResources();
 
         // enviar a que la clase de impresion se encargue de generar el pdf
-        File pdf = PrintLogic.generatePdf(allResources, Resource.class, "lista_de_recursos.pdf");
-        PrintLogic.openPdf(pdf);
+        File pdf = printLogic.generatePdf(allResources, Resource.class, "lista_de_recursos.pdf");
+        printLogic.openPdf(pdf);
     }
 
-    public static Resource addResource(String idCat, String description) throws Exception {
-        if (idCat == null || idCat.isBlank() || CategoryLogic.findCategoryById(idCat) == null) {
+    public  Resource addResource(String idCat, String description) throws Exception {
+        if (idCat == null || idCat.isBlank() || categoryLogic.findCategoryById(idCat) == null) {
             throw new InvalidParameterException("Debe seleccionar una categoría válida");
         }
         if (description == null || description.isBlank()) {
@@ -86,10 +93,10 @@ public class ResourceLogic {
 
         Resource nuevo = new Resource(newId, idCat, description.trim());
         allResources.add(nuevo);
-        SaveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
+        saveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
         return nuevo;
     }
-    public static boolean updateResource(Resource updatedTarget) throws Exception {
+    public  boolean updateResource(Resource updatedTarget) throws Exception {
         Resource currentTarget = findResourceById(updatedTarget.getId());
         if (currentTarget == null) {
             throw new InstanceNotFoundException("No se encontró un recurso con ese ID");
@@ -97,22 +104,22 @@ public class ResourceLogic {
         if (updatedTarget.getDescription() == null || updatedTarget.getDescription().isBlank()) {
             throw new InvalidParameterException("La descripción no puede estar vacía");
         }
-        if (updatedTarget.getCategoryId() == null || CategoryLogic.findCategoryById(updatedTarget.getCategoryId()) == null) {
+        if (updatedTarget.getCategoryId() == null || categoryLogic.findCategoryById(updatedTarget.getCategoryId()) == null) {
             throw new InvalidParameterException("Debe seleccionar una categoría válida");
         }
 
-        ArrayList<Resource> allResources = LoadFromXML.loadResources();
+        ArrayList<Resource> allResources = loadFromXML.loadResources();
         for (int i = 0; i < allResources.size(); i++) {
             if (allResources.get(i).getId().equals(updatedTarget.getId())) {
                 allResources.set(i, updatedTarget);
-                SaveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
+                saveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
                 return true;
             }
         }
         return false;
     }
 
-    public static boolean deleteResource(String id) throws Exception {
+    public boolean deleteResource(String id) throws Exception {
         Resource target = findResourceById(id);
         if (target == null) return false;
 
@@ -120,20 +127,63 @@ public class ResourceLogic {
             throw new RuntimeException("Existe al menos una reserva asociada con este recurso.");
         }
 
-        ArrayList<Resource> allResources = LoadFromXML.loadResources();
+        ArrayList<Resource> allResources = loadFromXML.loadResources();
         allResources.remove(target);
-        SaveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
+        saveToXML.saveList(DataPaths.getResourcesFile(), "resources", "resource", allResources);
         return true;
     }
 
-    public static boolean resourceIsOrphan(Resource target) throws Exception {
+    public boolean resourceIsOrphan(Resource target) throws Exception {
         // obtener lista de reservas. si alguna tiene asociada el recurso
         // si tiene asociado un recurso entonces no se puede borrar
-        ArrayList<Reservation> allReservations = LoadFromXML.loadReservations();
+        ArrayList<Reservation> allReservations = loadFromXML.loadReservations();
         for (Reservation r : allReservations) {
             if (r.getResourceIdList() != null && r.getResourceIdList().contains(target.getId())) return false;
         }
         //No tiene reserva asociada
         return true;
+    }
+
+    public  ArrayList<Resource> findFreeResources() throws Exception {
+        // cargar todos los recursos (la lista se modificará conforme se encuentren recursos ocupados)
+
+        ArrayList<Resource> leftoverResources= loadFromXML.loadResources();
+        ArrayList<User> allUsers = loadFromXML.loadUsers();
+
+        // recorrer todos los usuarios e ir viendo cuáles estan ocupados
+        for(User currentUser : allUsers){
+            ArrayList<String> currentUserReservations = currentUser.getReservationIdList();
+            // recorrer todas las id de reservaciones del usuario
+            for(String currentReservationid : currentUserReservations) {
+                // buscar reserva por id
+                ReservationLogic reservationLogic = new ReservationLogic(); // aca se necesita saber sobre reservas pero no es una dependencia
+
+                Reservation currentReservation = reservationLogic.findReservationById(currentReservationid);
+                if(currentReservation!=null) {
+                    ArrayList<String> currentResourcesIDs = currentReservation.getResourceIdList();
+                    // recorrer todos los recursos de la reservación
+                    for (String currentResourceID : currentResourcesIDs) {
+                        Resource currentResource = findResourceById(currentResourceID);
+                        if (leftoverResources.contains(currentResource)) {
+                            leftoverResources.remove(currentResource);
+                        } else {
+                            // todo: algo anda raro porque todas las resources deberian estar
+                        }
+                    }
+                }
+            }
+        }
+
+        return leftoverResources;
+    }
+
+    public  Resource findFirstResourceFree(Category category) throws Exception{
+        ArrayList<Resource> freeResources = findFreeResources();
+
+        // buscar cual recurso de los libres tiene un ID de categoria que se busca
+        for(Resource r : freeResources){
+            if(r.getCategoryId().equals(category.getId())) return r;
+        }
+        return null;
     }
 }

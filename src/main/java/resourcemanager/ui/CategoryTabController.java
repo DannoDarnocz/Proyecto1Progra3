@@ -43,6 +43,8 @@ public class CategoryTabController {
     @FXML
     private TableView tbl_category_list;
 
+    private CategoryService categoryService = new CategoryService();
+
     // para borrar text fields y deshabilitar los botones
     private void resetDefaultStates(){
         // ya no hay categoria encontrada asi que hay que buscar de nuevo antes de poder hacer cambios o eliminar
@@ -66,7 +68,7 @@ public class CategoryTabController {
         // buscar categorias
         try{
             // buscar todas las categorias y meterlas como filas en la tabla
-            ArrayList<Category> availableCategories = CategoryService.getAllCategories();
+            ArrayList<Category> availableCategories = categoryService.getAllCategories();
             tbl_category_list.getItems().setAll(availableCategories);
         } catch (Exception e) {
             Utilities.showAlert("Error","Se produjo un error al cargar las categorías", Alert.AlertType.ERROR);
@@ -90,7 +92,7 @@ public class CategoryTabController {
             else{
                 try{
                     // buscar categoria por descripcion (el usuario no deberia de aprenderse el id porque es algo arbitrario para identificarlas)
-                    Category foundCategory = CategoryService.searchByDescription(categoryDescription);
+                    Category foundCategory = categoryService.searchByDescription(categoryDescription);
 
                     if(foundCategory==null){
                         // no se encontro la categoria
@@ -126,13 +128,13 @@ public class CategoryTabController {
             try {
                 if (id.isEmpty()) {
                     // no hay id cargado, categoria nueva
-                    Category nueva = CategoryService.addCategory(description);
+                    Category nueva = categoryService.addCategory(description);
                     Utilities.showAlert("Confirmacion", "Se ha agregado la categoría " + nueva.getId(), Alert.AlertType.INFORMATION);
                     resetDefaultStates();
                 } else {
                     // hay un id cargado, se esta editando
                     Category categoryDTO = new Category(id, description);
-                    if (CategoryService.updateCategory(categoryDTO)) {
+                    if (categoryService.updateCategory(categoryDTO)) {
                         Utilities.showAlert("Confirmacion", "Se ha actualizado la categoria correctamente", Alert.AlertType.INFORMATION);
                     } else {
                         Utilities.showAlert("Error", "No se ha encontrado la categoría.", Alert.AlertType.ERROR);
@@ -166,7 +168,7 @@ public class CategoryTabController {
                     if (response == ButtonType.OK) {
                         // borrar
                         try{
-                            if(CategoryService.deleteCategory(id)){
+                            if(categoryService.deleteCategory(id)){
                                 Utilities.showAlert("Confirmacion","Se ha borrado la categoria correctamente", Alert.AlertType.INFORMATION);
                                 resetDefaultStates();
                                 // recargar tabla de categorias
@@ -186,7 +188,7 @@ public class CategoryTabController {
         btn_category_print.setOnAction(event-> {
             // enviar a capa servicios que dirige a logica para luego delegarle a la de imprimir la tarea de imprimir
             try{
-                CategoryService.printAllCategories();
+                categoryService.printAllCategories();
             } catch (Exception e) {
                 Utilities.showAlert("Error","Se ha producido un error al generar el PDF para impresión:  "+e.getMessage(), Alert.AlertType.ERROR);
             }

@@ -8,24 +8,26 @@ import resourcemanager.structure.CurrentSession;
 import java.util.ArrayList;
 
 public class UserService {
-    public static User getLoggedUser(){
+    private UserLogic userLogic = new UserLogic();
+
+    public User getLoggedUser(){
         CurrentSession session = CurrentSession.getInstance();
         return session.getLoggedUser();
     }
 
-    public static User findUserById(String id) throws Exception{
-        return UserLogic.findUserById(id);
+    public User findUserById(String id) throws Exception{
+        return userLogic.findUserById(id);
     }
 
-    public static ArrayList<Reservation> findReservationsForUser(User user){
-        return UserLogic.findReservationsForUser(user);
+    public ArrayList<Reservation> findReservationsForUser(User user){
+        return userLogic.findReservationsForUser(user);
     }
 
-    public static void printUserReservations(User user) throws Exception {
-        UserLogic.printUserReservations(user);
+    public void printUserReservations(User user) throws Exception {
+        userLogic.printUserReservations(user);
     }
 
-    public static User findUserForReservation(Reservation r) throws Exception {
-        return UserLogic.findUserForReservation(r);
+    public User findUserForReservation(Reservation r) throws Exception {
+        return userLogic.findUserForReservation(r);
     }
 }

@@ -18,7 +18,7 @@ public class LoadFromXML {
     static XmlMapper mapper = MapperSingleton.getInstance();
 
     // cargar lista generica de lo que lea en el archivo, donde cada item es indicado por itemTagName
-    private static <T> ArrayList<T> loadList(File file, String itemTagName, Class<T> itemClass) throws Exception {
+    private  <T> ArrayList<T> loadList(File file, String itemTagName, Class<T> itemClass) throws Exception {
         ArrayList<T> results = new ArrayList<>();
 
         //Cambia a file en vez de Path debido a que la versión generada de Maven no se actualiza en tiempo real con los cambios realizados en el XML
@@ -39,19 +39,19 @@ public class LoadFromXML {
         return results;
     }
 
-    public static ArrayList<User> loadUsers() throws Exception {
+    public ArrayList<User> loadUsers() throws Exception {
         return loadList(DataPaths.getUsersFile(), "user", User.class);
     }
 
-    public static ArrayList<Resource> loadResources() throws Exception {
+    public  ArrayList<Resource> loadResources() throws Exception {
         return loadList(DataPaths.getResourcesFile(), "resource", Resource.class);
     }
 
-    public static ArrayList<Reservation> loadReservations() throws Exception {
+    public  ArrayList<Reservation> loadReservations() throws Exception {
         return loadList(DataPaths.getReservationsFile(), "reservation", Reservation.class);
     }
 
-    public static ArrayList<Category> loadCategories() throws Exception {
+    public ArrayList<Category> loadCategories() throws Exception {
         return loadList(DataPaths.getCategoriesFile(), "category", Category.class);
     }
 }

@@ -55,19 +55,5 @@ public class User {
     public ArrayList<String> getReservationIdList() { return reservationIdList; }
     public void setReservationIdList(ArrayList<String> reservationList) { this.reservationIdList = reservationList; }
 
-    // se maneja la lista por fuera porque User es un DTO, no puede tener métodos específicos
-    public void addReservation(Reservation r) throws InstanceAlreadyExistsException {
-        if(reservationIdList.contains(r.getId())){
-            throw new InstanceAlreadyExistsException("Reserva a agregar ya esta asignada a usuario");
-        }
-        reservationIdList.add(r.getId()); // automaticamente revisa si existe, sino no hace nada
-    }
 
-    public void removeReservation(Reservation r) throws InstanceNotFoundException{
-        if(reservationIdList.contains(r.getId())){
-            reservationIdList.remove(r.getId());
-        } else {
-            throw new InstanceNotFoundException("Reserva a borrar no existe");
-        }
-    }
 }
